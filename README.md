@@ -59,4 +59,4 @@ The API executes external scanners. Extend `server/Dockerfile` to install the re
 
 ## License
 
-This project is provided as-is. Replace `JWT_SECRET` and review security posture prior to production deployment.
+This project is provided as-is. Replace `JWT_SECRET` and review security posture prior to production deployment. (Tuan -branch)
