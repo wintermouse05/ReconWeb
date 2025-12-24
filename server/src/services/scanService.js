@@ -1,7 +1,17 @@
 const { spawn } = require('child_process');
 
+// ============================================================================
+// SUPPORTED TOOLS
+// ============================================================================
 const SUPPORTED_TOOLS = ['nikto', 'gobuster', 'nuclei', 'sqlmap', 'xsstrike'];
 
+// ============================================================================
+// VALIDATION & SANITIZATION FUNCTIONS
+// ============================================================================
+
+/**
+ * Sanitize string inputs with control character validation
+ */
 const sanitizeString = (value, { maxLength = 300, allowEmpty = false, name } = {}) => {
   if (value === undefined || value === null) {
     throw new Error(`Option '${name}' requires a value`);
@@ -17,6 +27,7 @@ const sanitizeString = (value, { maxLength = 300, allowEmpty = false, name } = {
     throw new Error(`Option '${name}' exceeds ${maxLength} characters`);
   }
 
+  // Prevent command injection via control characters
   if (/[\0\r\n]/.test(str)) {
     throw new Error(`Option '${name}' contains invalid control characters`);
   }
@@ -24,6 +35,9 @@ const sanitizeString = (value, { maxLength = 300, allowEmpty = false, name } = {
   return str;
 };
 
+/**
+ * Sanitize and validate numeric inputs
+ */
 const sanitizeNumber = (value, { min, max, integer = false, name } = {}) => {
   const num = Number(value);
 
@@ -46,6 +60,9 @@ const sanitizeNumber = (value, { min, max, integer = false, name } = {}) => {
   return num;
 };
 
+/**
+ * Convert various types to boolean
+ */
 const sanitizeBoolean = (value) => {
   if (typeof value === 'boolean') {
     return value;
@@ -58,6 +75,9 @@ const sanitizeBoolean = (value) => {
   return Boolean(value);
 };
 
+/**
+ * Sanitize list/array inputs (CSV or array)
+ */
 const sanitizeList = (value, definition) => {
   const list = Array.isArray(value)
     ? value
@@ -79,6 +99,9 @@ const sanitizeList = (value, definition) => {
   );
 };
 
+/**
+ * Extract and validate extraArgs array
+ */
 const extractExtraArgs = (options, toolName) => {
   if (!options || options.extraArgs === undefined) {
     return [];
@@ -104,6 +127,9 @@ const extractExtraArgs = (options, toolName) => {
   );
 };
 
+/**
+ * Process options based on schema definition
+ */
 const processOptions = (toolName, schema, options = {}) => {
   const args = [];
   const sanitizedOptions = {};
@@ -167,6 +193,9 @@ const processOptions = (toolName, schema, options = {}) => {
   return { args, sanitizedOptions };
 };
 
+/**
+ * Sanitize Gobuster mode with allowed values
+ */
 const sanitizeGobusterMode = (mode) => {
   const allowed = ['dir', 'dns', 'vhost', 'fuzz'];
   const normalized = sanitizeString(mode || 'dir', { name: 'mode', maxLength: 10 });
@@ -178,12 +207,19 @@ const sanitizeGobusterMode = (mode) => {
   return normalized;
 };
 
+/**
+ * Sanitize file path input (prevent directory traversal)
+ */
 const sanitizePath = (value, name) =>
   sanitizeString(value, {
     name,
     maxLength: 400,
     allowEmpty: false,
   });
+
+// ============================================================================
+// TOOL OPTION SCHEMAS
+// ============================================================================
 
 const niktoOptionSchema = {
   timeout: { flag: '-timeout', type: 'number', min: 1, max: 3600, integer: true },
@@ -201,8 +237,8 @@ const gobusterOptionSchema = {
   extensions: { flag: '-x', type: 'csv', maxItems: 10, maxLength: 40 },
   statusCodes: { flag: '-s', type: 'csv', maxItems: 20, maxLength: 20 },
   threads: { flag: '-t', type: 'number', min: 1, max: 200, integer: true },
-  delay: { flag: '--delay', type: 'number', min: 0, max: 10 },
-  timeout: { flag: '-to', type: 'number', min: 1, max: 300, integer: true },
+  delay: { flag: '--delay', type: 'string', maxLength: 20 },
+  timeout: { flag: '--timeout', type: 'string', maxLength: 20 },
   userAgent: { flag: '-a', type: 'string', maxLength: 200 },
   proxy: { flag: '-p', type: 'string', maxLength: 200 },
   followRedirect: { flag: '-r', type: 'boolean' },
@@ -248,6 +284,10 @@ const xsstrikeOptionSchema = {
   threads: { flag: '--threads', type: 'number', min: 1, max: 20, integer: true },
 };
 
+// ============================================================================
+// TOOL DEFINITIONS
+// ============================================================================
+
 const TOOL_DEFINITIONS = {
   nikto: {
     command: 'nikto',
@@ -270,12 +310,16 @@ const TOOL_DEFINITIONS = {
     buildArgs: (targetUrl, rawOptions = {}) => {
       const options = { ...rawOptions };
       const mode = sanitizeGobusterMode(options.mode);
+      
+      // Gobuster requires wordlist
       if (!options.wordlist) {
         throw new Error('Gobuster requires the "wordlist" option.');
       }
       const wordlist = sanitizePath(options.wordlist, 'wordlist');
+      
       delete options.mode;
       delete options.wordlist;
+      
       const extraArgs = extractExtraArgs(options, 'gobuster');
       const { args: optionArgs, sanitizedOptions } = processOptions('gobuster', gobusterOptionSchema, options);
       const normalizedOptions = { mode, wordlist, ...sanitizedOptions };
@@ -338,9 +382,22 @@ const TOOL_DEFINITIONS = {
   },
 };
 
+// ============================================================================
+// COMMAND EXECUTION
+// ============================================================================
+
+/**
+ * Run a command with spawn and capture output
+ * Returns a promise that resolves with execution result
+ */
 const runCommand = (command, args = []) =>
   new Promise((resolve) => {
-    const child = spawn(command, args, { shell: false });
+    console.log(`[SCAN] Executing: ${command} ${args.join(' ')}`);
+    
+    const child = spawn(command, args, { 
+      shell: false,
+      timeout: 600000, // 10 minutes max per tool
+    });
 
     let stdout = '';
     let stderr = '';
@@ -354,12 +411,23 @@ const runCommand = (command, args = []) =>
     });
 
     child.on('error', (error) => {
-      resolve({ status: 'failed', output: stdout, error: error.message });
+      console.error(`[SCAN ERROR] ${command}: ${error.message}`);
+      resolve({ 
+        status: 'failed', 
+        output: stdout, 
+        error: `Command execution failed: ${error.message}` 
+      });
     });
 
     child.on('close', (code) => {
+      console.log(`[SCAN] ${command} exited with code ${code}`);
+      
       if (code === 0) {
-        resolve({ status: 'completed', output: stdout, error: stderr });
+        resolve({ 
+          status: 'completed', 
+          output: stdout, 
+          error: stderr 
+        });
       } else {
         resolve({
           status: 'failed',
@@ -370,27 +438,41 @@ const runCommand = (command, args = []) =>
     });
   });
 
+/**
+ * Run a single tool against target URL
+ */
 const runTool = async (toolName, targetUrl, rawOptions = {}) => {
   if (!SUPPORTED_TOOLS.includes(toolName)) {
     throw new Error(`Unsupported tool '${toolName}'`);
   }
 
   const definition = TOOL_DEFINITIONS[toolName];
+  
+  try {
+    const { args, normalizedOptions } = definition.buildArgs(targetUrl, rawOptions);
+    const executionResult = await runCommand(definition.command, args);
 
-  const { args, normalizedOptions } = definition.buildArgs(targetUrl, rawOptions);
-  const executionResult = await runCommand(definition.command, args);
-
-  return {
-    ...executionResult,
-    options: normalizedOptions,
-    args,
-  };
+    return {
+      ...executionResult,
+      options: normalizedOptions,
+      args,
+    };
+  } catch (error) {
+    // Catch validation errors
+    console.error(`[SCAN ERROR] Tool ${toolName} validation failed:`, error.message);
+    throw error;
+  }
 };
 
+/**
+ * Run multiple tools in PARALLEL against target URL
+ * This is the main improvement - runs tools concurrently instead of sequentially
+ */
 const runScanBatch = async (targetUrl, toolRequests = []) => {
-  const results = [];
-
-  for (const request of toolRequests) {
+  console.log(`[SCAN BATCH] Starting scan for ${targetUrl} with ${toolRequests.length} tools`);
+  
+  // Create promises for all tool executions
+  const toolPromises = toolRequests.map(async (request) => {
     const toolName = typeof request.tool === 'string' ? request.tool.toLowerCase() : '';
     const options = request.options || {};
 
@@ -398,7 +480,7 @@ const runScanBatch = async (targetUrl, toolRequests = []) => {
 
     try {
       const execution = await runTool(toolName, targetUrl, options);
-      results.push({
+      return {
         tool: toolName,
         status: execution.status,
         options: execution.options,
@@ -406,9 +488,10 @@ const runScanBatch = async (targetUrl, toolRequests = []) => {
         error: execution.error,
         startedAt: startTime,
         finishedAt: new Date(),
-      });
+      };
     } catch (error) {
-      results.push({
+      console.error(`[SCAN BATCH ERROR] Tool ${toolName}:`, error.message);
+      return {
         tool: toolName,
         status: 'failed',
         options,
@@ -416,14 +499,25 @@ const runScanBatch = async (targetUrl, toolRequests = []) => {
         error: error.message,
         startedAt: startTime,
         finishedAt: new Date(),
-      });
+      };
     }
-  }
+  });
 
+  // Wait for ALL tools to complete (parallel execution)
+  const results = await Promise.all(toolPromises);
+  
+  console.log(`[SCAN BATCH] Completed scan for ${targetUrl}`);
   return results;
 };
 
+/**
+ * Get list of supported tools
+ */
 const getSupportedTools = () => [...SUPPORTED_TOOLS];
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
 
 module.exports = {
   runTool,
