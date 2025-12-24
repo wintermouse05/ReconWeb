@@ -1,6 +1,7 @@
-import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaShieldAlt, FaHistory, FaTachometerAlt, FaCode, FaCrown } from 'react-icons/fa';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -16,21 +17,32 @@ const Layout = () => {
       <Navbar bg="dark" variant="dark" expand="lg" className="shadow-sm">
         <Container>
           <Navbar.Brand as={Link} to="/">
+            <FaShieldAlt className="me-2" />
             ReconWeb
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">
-                Dashboard
+                <FaTachometerAlt className="me-1" /> Dashboard
               </Nav.Link>
               <Nav.Link as={Link} to="/history">
-                History
+                <FaHistory className="me-1" /> History
+              </Nav.Link>
+              <Nav.Link as={Link} to="/code-review">
+                <FaCode className="me-1" /> Code Review
               </Nav.Link>
             </Nav>
             <Nav className="ms-auto">
+              <Nav.Link as={Link} to="/subscription" className="me-2">
+                <FaCrown className="text-warning me-1" /> Plans
+              </Nav.Link>
               <NavDropdown title={user?.name || 'Account'} align="end">
                 <NavDropdown.Item disabled>Email: {user?.email}</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/subscription">
+                  <FaCrown className="me-2 text-warning" /> Subscription
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
               </NavDropdown>

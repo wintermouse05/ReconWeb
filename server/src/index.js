@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const scanRoutes = require('./routes/scanRoutes');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const codeReviewRoutes = require('./routes/codeReviewRoutes');
+const remediationRoutes = require('./routes/remediationRoutes');
 
 const app = express();
 
@@ -27,6 +30,9 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/scans', scanRoutes);
+app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/code-review', codeReviewRoutes);
+app.use('/api/remediation', remediationRoutes);
 
 app.use((err, _req, res, _next) => {
   // Fallback error handler to avoid leaking implementation details

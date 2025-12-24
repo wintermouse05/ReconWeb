@@ -26,7 +26,14 @@ const LoginPage = () => {
       const redirectTo = location.state?.from?.pathname || '/';
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      setError(err.message || 'Login failed');
+      console.error('Login error:', err);
+      // Handle validation errors from express-validator
+      if (err.payload?.errors && Array.isArray(err.payload.errors)) {
+        const messages = err.payload.errors.map(e => e.msg).join(', ');
+        setError(messages);
+      } else {
+        setError(err.message || 'Login failed');
+      }
     } finally {
       setSubmitting(false);
     }

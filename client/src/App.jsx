@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ScanHistoryPage from './pages/ScanHistoryPage';
 import ScanDetailsPage from './pages/ScanDetailsPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import CodeReviewPage from './pages/CodeReviewPage';
 
 const App = () => (
   <AuthProvider>
@@ -24,6 +26,8 @@ const App = () => (
           <Route index element={<DashboardPage />} />
           <Route path="history" element={<ScanHistoryPage />} />
           <Route path="scans/:id" element={<ScanDetailsPage />} />
+          <Route path="subscription" element={<SubscriptionPage />} />
+          <Route path="code-review" element={<CodeReviewPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

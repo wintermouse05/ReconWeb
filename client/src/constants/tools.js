@@ -445,6 +445,145 @@ export const TOOL_DEFINITIONS = {
       },
     ],
   },
+  wpscan: {
+    label: 'WPScan',
+    description: 'WordPress vulnerability scanner for security assessments.',
+    defaultEnabled: true,
+    options: [
+      {
+        name: 'apiToken',
+        label: 'WPScan API Token',
+        type: 'text',
+        placeholder: 'Your WPScan API token for vulnerability data',
+      },
+      {
+        name: 'enumeratePlugins',
+        label: 'Enumerate Plugins',
+        type: 'select',
+        options: [
+          { value: '', label: 'None' },
+          { value: 'p', label: 'Popular plugins' },
+          { value: 'vp', label: 'Vulnerable plugins' },
+          { value: 'ap', label: 'All plugins' },
+        ],
+        defaultValue: '',
+      },
+      {
+        name: 'enumerateThemes',
+        label: 'Enumerate Themes',
+        type: 'select',
+        options: [
+          { value: '', label: 'None' },
+          { value: 't', label: 'Popular themes' },
+          { value: 'vt', label: 'Vulnerable themes' },
+          { value: 'at', label: 'All themes' },
+        ],
+        defaultValue: '',
+      },
+      {
+        name: 'enumerateUsers',
+        label: 'Enumerate Users',
+        type: 'select',
+        options: [
+          { value: '', label: 'None' },
+          { value: 'u', label: 'User IDs 1-10' },
+          { value: 'u[1-100]', label: 'User IDs 1-100' },
+        ],
+        defaultValue: '',
+      },
+      {
+        name: 'randomUserAgent',
+        label: 'Random User-Agent',
+        type: 'checkbox',
+        serialize: (value) => Boolean(value),
+      },
+      {
+        name: 'disableTlsChecks',
+        label: 'Disable TLS Checks',
+        type: 'checkbox',
+        serialize: (value) => Boolean(value),
+      },
+      {
+        name: 'ignoreMainRedirect',
+        label: 'Ignore Main Redirect',
+        type: 'checkbox',
+        serialize: (value) => Boolean(value),
+      },
+      {
+        name: 'userAgent',
+        label: 'Custom User-Agent',
+        type: 'text',
+        placeholder: 'Mozilla/5.0 (compatible; WPScan)',
+      },
+      {
+        name: 'proxy',
+        label: 'Proxy URL',
+        type: 'text',
+        placeholder: 'http://127.0.0.1:8080',
+      },
+      {
+        name: 'cookieString',
+        label: 'Cookie String',
+        type: 'text',
+        placeholder: 'wordpress_logged_in=xxx; wp-settings=xxx',
+      },
+      {
+        name: 'maxThreads',
+        label: 'Max Threads',
+        type: 'number',
+        placeholder: '5',
+        min: 1,
+        max: 50,
+        serialize: (value) => (value ? Number(value) : undefined),
+      },
+      {
+        name: 'throttle',
+        label: 'Throttle (ms)',
+        type: 'number',
+        placeholder: '0',
+        min: 0,
+        max: 5000,
+        serialize: (value) => (value ? Number(value) : undefined),
+      },
+      {
+        name: 'requestTimeout',
+        label: 'Request Timeout (seconds)',
+        type: 'number',
+        placeholder: '60',
+        min: 1,
+        max: 600,
+        serialize: (value) => (value ? Number(value) : undefined),
+      },
+      {
+        name: 'connectTimeout',
+        label: 'Connect Timeout (seconds)',
+        type: 'number',
+        placeholder: '30',
+        min: 1,
+        max: 300,
+        serialize: (value) => (value ? Number(value) : undefined),
+      },
+      {
+        name: 'stealthy',
+        label: 'Stealthy Mode',
+        type: 'checkbox',
+        serialize: (value) => Boolean(value),
+      },
+      {
+        name: 'extraArgs',
+        label: 'Extra Arguments',
+        type: 'textarea',
+        placeholder: '--force\n--verbose',
+        serialize: (value) =>
+          value
+            ? value
+                .split('\n')
+                .map((line) => line.trim())
+                .filter((line) => line.length > 0)
+            : undefined,
+      },
+    ],
+  },
 };
 
 export const SUPPORTED_TOOLS = Object.keys(TOOL_DEFINITIONS);

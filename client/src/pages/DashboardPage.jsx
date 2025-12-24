@@ -1,12 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Form, Row, Stack } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ToolOptionForm from '../components/ToolOptionForm';
+import ScanProgress from '../components/ScanProgress';
 import { SUPPORTED_TOOLS, TOOL_DEFINITIONS } from '../constants/tools';
+import { apiRequest } from '../services/apiClient';
 
-const buildInitialSelection = () =>
-  SUPPORTED_TOOLS.filter((tool) => TOOL_DEFINITIONS[tool].defaultEnabled);
+const buildInitialSelection = (installedTools = []) =>
+  SUPPORTED_TOOLS.filter((tool) => 
+    TOOL_DEFINITIONS[tool].defaultEnabled && installedTools.includes(tool)
+  );
 
 const buildInitialOptions = () => {
   const initial = {};
@@ -23,22 +27,48 @@ const buildInitialOptions = () => {
 
 const DashboardPage = () => {
   const { request } = useAuth();
+  const navigate = useNavigate();
   const [targetUrl, setTargetUrl] = useState('');
   const [notes, setNotes] = useState('');
-  const [selectedTools, setSelectedTools] = useState(buildInitialSelection);
+  const [selectedTools, setSelectedTools] = useState([]);
   const [toolOptions, setToolOptions] = useState(buildInitialOptions);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState({ type: null, message: null });
-  const [latestScan, setLatestScan] = useState(null);
+  const [activeScanId, setActiveScanId] = useState(null);
+  const [installedTools, setInstalledTools] = useState([]);
+  const [notInstalledTools, setNotInstalledTools] = useState([]);
+  const [loadingTools, setLoadingTools] = useState(true);
+
+  // Load danh sách tool đã cài đặt
+  useEffect(() => {
+    const fetchInstalledTools = async () => {
+      try {
+        const data = await apiRequest('/scans/tools/installed');
+        setInstalledTools(data.installed || []);
+        setNotInstalledTools(data.notInstalled || []);
+        setSelectedTools(buildInitialSelection(data.installed || []));
+      } catch (error) {
+        console.error('Failed to fetch installed tools:', error);
+        // Fallback to all tools if API fails
+        setInstalledTools(SUPPORTED_TOOLS);
+        setSelectedTools(buildInitialSelection(SUPPORTED_TOOLS));
+      } finally {
+        setLoadingTools(false);
+      }
+    };
+    fetchInstalledTools();
+  }, []);
 
   const availableTools = useMemo(
     () =>
-      SUPPORTED_TOOLS.map((toolKey) => ({
-        key: toolKey,
-        label: TOOL_DEFINITIONS[toolKey].label,
-        description: TOOL_DEFINITIONS[toolKey].description,
-      })),
-    []
+      SUPPORTED_TOOLS
+        .filter((toolKey) => installedTools.includes(toolKey))
+        .map((toolKey) => ({
+          key: toolKey,
+          label: TOOL_DEFINITIONS[toolKey].label,
+          description: TOOL_DEFINITIONS[toolKey].description,
+        })),
+    [installedTools]
   );
 
   const handleToolToggle = (toolKey) => {
@@ -94,6 +124,7 @@ const DashboardPage = () => {
 
     setSubmitting(true);
     setFeedback({ type: null, message: null });
+    setActiveScanId(null);
 
     try {
       const tools = selectedTools.map(prepareToolPayload);
@@ -104,12 +135,24 @@ const DashboardPage = () => {
       };
 
       const response = await request('/scans', { method: 'POST', body: payload });
-      setLatestScan(response);
-      setFeedback({ type: 'success', message: 'Scan completed and saved successfully.' });
+      setActiveScanId(response._id);
+      setFeedback({ type: 'info', message: 'Scan started! Progress will update automatically.' });
     } catch (error) {
-      setFeedback({ type: 'danger', message: error.message || 'Scan failed. Please try again.' });
-    } finally {
+      setFeedback({ type: 'danger', message: error.message || 'Failed to start scan. Please try again.' });
       setSubmitting(false);
+    }
+  };
+
+  const handleScanComplete = (completedScan) => {
+    setSubmitting(false);
+    if (completedScan.status === 'completed') {
+      setFeedback({ type: 'success', message: 'Scan completed successfully!' });
+      // Redirect to scan details sau 2 giây
+      setTimeout(() => {
+        navigate(`/scans/${completedScan._id}`);
+      }, 2000);
+    } else {
+      setFeedback({ type: 'warning', message: 'Scan finished with some errors. Check the details.' });
     }
   };
 
@@ -157,29 +200,54 @@ const DashboardPage = () => {
 
           <div className="mt-4">
             <h4 className="mb-3">Select Tools</h4>
-            <Row className="g-3">
-              {availableTools.map((tool) => (
-                <Col xs={12} md={6} lg={4} key={tool.key}>
-                  <Card className={selectedTools.includes(tool.key) ? 'border-primary shadow-sm' : 'shadow-sm'}>
-                    <Card.Body>
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div>
-                          <Card.Title>{tool.label}</Card.Title>
-                          <Card.Text className="small text-muted">{tool.description}</Card.Text>
-                        </div>
-                        <Form.Check
-                          type="switch"
-                          id={`select-${tool.key}`}
-                          checked={selectedTools.includes(tool.key)}
-                          onChange={() => handleToolToggle(tool.key)}
-                          label=""
-                        />
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
+            {loadingTools ? (
+              <div className="text-center py-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2 text-muted">Checking installed tools...</p>
+              </div>
+            ) : (
+              <>
+                {notInstalledTools.length > 0 && (
+                  <Alert variant="warning" className="mb-3">
+                    <strong>Some tools are not installed:</strong>{' '}
+                    {notInstalledTools.map(t => TOOL_DEFINITIONS[t]?.label || t).join(', ')}.
+                    <br />
+                    <small>Please install them to use in scans.</small>
+                  </Alert>
+                )}
+                {availableTools.length === 0 ? (
+                  <Alert variant="danger">
+                    No scanning tools are installed on the server. Please install at least one tool (nikto, gobuster, nuclei, sqlmap, xsstrike, or wpscan).
+                  </Alert>
+                ) : (
+                  <Row className="g-3">
+                    {availableTools.map((tool) => (
+                      <Col xs={12} md={6} lg={4} key={tool.key}>
+                        <Card className={selectedTools.includes(tool.key) ? 'border-primary shadow-sm' : 'shadow-sm'}>
+                          <Card.Body>
+                            <div className="d-flex justify-content-between align-items-start">
+                              <div>
+                                <Card.Title>{tool.label}</Card.Title>
+                                <Card.Text className="small text-muted">{tool.description}</Card.Text>
+                              </div>
+                              <Form.Check
+                                type="switch"
+                                id={`select-${tool.key}`}
+                                checked={selectedTools.includes(tool.key)}
+                                onChange={() => handleToolToggle(tool.key)}
+                                label=""
+                              />
+                            </div>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    ))}
+                  </Row>
+                )}
+              </>
+            )}
           </div>
 
           {selectedTools.map((toolKey) => (
@@ -193,47 +261,19 @@ const DashboardPage = () => {
 
           <div className="d-flex justify-content-end">
             <Button type="submit" variant="primary" size="lg" disabled={submitting}>
-              {submitting ? 'Running scans…' : 'Start Scan'}
+              {submitting ? 'Scanning...' : 'Start Scan'}
             </Button>
           </div>
         </Form>
       </div>
 
-      {latestScan ? (
-        <Card className="shadow-sm">
-          <Card.Header className="d-flex justify-content-between align-items-center">
-            <div>
-              <strong>Latest Scan Result</strong>
-              <div className="small text-muted">Target: {latestScan.targetUrl}</div>
-            </div>
-            <Badge bg="secondary">{new Date(latestScan.createdAt).toLocaleString()}</Badge>
-          </Card.Header>
-          <Card.Body>
-            {latestScan.results.map((result) => (
-              <div key={result.tool} className="mb-4">
-                <h5 className="d-flex align-items-center gap-2">
-                  {TOOL_DEFINITIONS[result.tool]?.label || result.tool}
-                  <Badge bg={result.status === 'completed' ? 'success' : 'danger'}>{result.status}</Badge>
-                </h5>
-                <pre className="bg-dark text-light p-3 rounded-3 overflow-auto" style={{ maxHeight: '240px' }}>
-                  {result.output || 'No output captured.'}
-                </pre>
-                {result.error ? (
-                  <Alert variant="warning">
-                    <strong>Error:</strong>
-                    <div className="small mt-2" style={{ whiteSpace: 'pre-wrap' }}>
-                      {result.error}
-                    </div>
-                  </Alert>
-                ) : null}
-              </div>
-            ))}
-          </Card.Body>
-          <Card.Footer className="text-muted">
-            <Link to={`/scans/${latestScan._id}`}>View full report</Link>
-          </Card.Footer>
-        </Card>
-      ) : null}
+      {activeScanId && (
+        <ScanProgress 
+          scanId={activeScanId} 
+          onComplete={handleScanComplete}
+          request={request}
+        />
+      )}
     </Stack>
   );
 };

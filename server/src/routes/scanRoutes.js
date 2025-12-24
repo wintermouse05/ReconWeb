@@ -8,6 +8,17 @@ const router = Router();
 
 const supportedTools = scanService.getSupportedTools();
 
+// API để lấy danh sách tool đã cài đặt (không cần auth)
+router.get('/tools/installed', (req, res) => {
+  const installed = scanService.getInstalledTools();
+  const all = scanService.getSupportedTools();
+  res.json({
+    installed,
+    all,
+    notInstalled: all.filter(t => !installed.includes(t))
+  });
+});
+
 router.use(authMiddleware);
 
 router.post(

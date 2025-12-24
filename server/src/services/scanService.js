@@ -1,6 +1,17 @@
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
+const path = require('path');
+const os = require('os');
+const resultParser = require('./resultParser');
 
-const SUPPORTED_TOOLS = ['nikto', 'gobuster', 'nuclei', 'sqlmap', 'xsstrike'];
+const SUPPORTED_TOOLS = ['nikto', 'gobuster', 'nuclei', 'sqlmap', 'xsstrike', 'wpscan'];
+
+// Extended PATH để tìm tools trong các thư mục phổ biến
+const EXTENDED_PATH = [
+  process.env.PATH,
+  path.join(os.homedir(), 'go', 'bin'),  // Go binaries (nuclei)
+  '/usr/local/bin',
+  '/usr/bin',
+].filter(Boolean).join(':');
 
 const sanitizeString = (value, { maxLength = 300, allowEmpty = false, name } = {}) => {
   if (value === undefined || value === null) {
@@ -248,6 +259,24 @@ const xsstrikeOptionSchema = {
   threads: { flag: '--threads', type: 'number', min: 1, max: 20, integer: true },
 };
 
+const wpscanOptionSchema = {
+  apiToken: { flag: '--api-token', type: 'string', maxLength: 100 },
+  enumeratePlugins: { flag: '--enumerate', type: 'string', maxLength: 20 },
+  enumerateThemes: { flag: '--enumerate', type: 'string', maxLength: 20 },
+  enumerateUsers: { flag: '--enumerate', type: 'string', maxLength: 20 },
+  randomUserAgent: { flag: '--random-user-agent', type: 'boolean' },
+  disableTlsChecks: { flag: '--disable-tls-checks', type: 'boolean' },
+  ignoreMainRedirect: { flag: '--ignore-main-redirect', type: 'boolean' },
+  userAgent: { flag: '--user-agent', type: 'string', maxLength: 200 },
+  proxy: { flag: '--proxy', type: 'string', maxLength: 200 },
+  cookieString: { flag: '--cookie-string', type: 'string', maxLength: 500 },
+  maxThreads: { flag: '--max-threads', type: 'number', min: 1, max: 50, integer: true },
+  throttle: { flag: '--throttle', type: 'number', min: 0, max: 5000, integer: true },
+  requestTimeout: { flag: '--request-timeout', type: 'number', min: 1, max: 600, integer: true },
+  connectTimeout: { flag: '--connect-timeout', type: 'number', min: 1, max: 300, integer: true },
+  stealthy: { flag: '--stealthy', type: 'boolean' },
+};
+
 const TOOL_DEFINITIONS = {
   nikto: {
     command: 'nikto',
@@ -336,14 +365,67 @@ const TOOL_DEFINITIONS = {
       };
     },
   },
+  wpscan: {
+    command: 'wpscan',
+    buildArgs: (targetUrl, rawOptions = {}) => {
+      const options = { ...rawOptions };
+      const extraArgs = extractExtraArgs(options, 'wpscan');
+      const { args: optionArgs, sanitizedOptions } = processOptions('wpscan', wpscanOptionSchema, options);
+      const normalizedOptions = { ...sanitizedOptions };
+      if (extraArgs.length) {
+        normalizedOptions.extraArgs = extraArgs;
+      }
+      return {
+        // --no-update: skip database update check (tránh timeout)
+        // --no-banner: giảm output
+        // --format cli-no-color: output dễ parse
+        args: ['--url', targetUrl, '--no-update', '--no-banner', '--format', 'cli-no-color', ...optionArgs, ...extraArgs],
+        normalizedOptions,
+      };
+    },
+  },
 };
 
-const runCommand = (command, args = []) =>
+// Default timeout: 5 minutes (300 seconds)
+// Tool-specific timeouts (in milliseconds)
+const TOOL_TIMEOUTS = {
+  nikto: 10 * 60 * 1000,    // 10 minutes
+  gobuster: 10 * 60 * 1000, // 10 minutes
+  nuclei: 15 * 60 * 1000,   // 15 minutes
+  sqlmap: 10 * 60 * 1000,   // 10 minutes
+  xsstrike: 5 * 60 * 1000,  // 5 minutes
+  wpscan: 2 * 60 * 1000,    // 2 minutes (WPScan thường chạy lâu, giảm timeout)
+};
+
+const DEFAULT_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+
+const runCommand = (command, args = [], timeout = DEFAULT_TIMEOUT) =>
   new Promise((resolve) => {
-    const child = spawn(command, args, { shell: false });
+    console.log(`[ScanService] Starting ${command} with args:`, args.join(' '));
+    console.log(`[ScanService] Timeout set to ${timeout / 1000} seconds`);
+    
+    // Sử dụng EXTENDED_PATH để tìm command
+    const child = spawn(command, args, { 
+      shell: false,
+      env: { ...process.env, PATH: EXTENDED_PATH }
+    });
+    let killed = false;
 
     let stdout = '';
     let stderr = '';
+
+    // Set timeout để tự động kill process nếu chạy quá lâu
+    const timeoutId = setTimeout(() => {
+      killed = true;
+      child.kill('SIGTERM');
+      
+      // Nếu SIGTERM không work, dùng SIGKILL sau 5 giây
+      setTimeout(() => {
+        if (!child.killed) {
+          child.kill('SIGKILL');
+        }
+      }, 5000);
+    }, timeout);
 
     child.stdout.on('data', (data) => {
       stdout += data.toString();
@@ -354,13 +436,27 @@ const runCommand = (command, args = []) =>
     });
 
     child.on('error', (error) => {
+      clearTimeout(timeoutId);
+      console.log(`[ScanService] ${command} error:`, error.message);
       resolve({ status: 'failed', output: stdout, error: error.message });
     });
 
     child.on('close', (code) => {
-      if (code === 0) {
-        resolve({ status: 'completed', output: stdout, error: stderr });
+      clearTimeout(timeoutId);
+      
+      if (killed) {
+        console.log(`[ScanService] ${command} TIMEOUT after ${timeout / 1000}s`);
+        resolve({
+          status: 'timeout',
+          output: stdout,
+          error: `Process timed out after ${timeout / 1000} seconds. Partial output included.`,
+        });
+      } else if (code === 0) {
+        console.log(`[ScanService] ${command} completed successfully`);
+        // Nếu exit code = 0, không coi stderr là error (nhiều tool in info ra stderr)
+        resolve({ status: 'completed', output: stdout, error: null });
       } else {
+        console.log(`[ScanService] ${command} failed with code ${code}`);
         resolve({
           status: 'failed',
           output: stdout,
@@ -376,9 +472,10 @@ const runTool = async (toolName, targetUrl, rawOptions = {}) => {
   }
 
   const definition = TOOL_DEFINITIONS[toolName];
+  const timeout = TOOL_TIMEOUTS[toolName] || DEFAULT_TIMEOUT;
 
   const { args, normalizedOptions } = definition.buildArgs(targetUrl, rawOptions);
-  const executionResult = await runCommand(definition.command, args);
+  const executionResult = await runCommand(definition.command, args, timeout);
 
   return {
     ...executionResult,
@@ -389,6 +486,7 @@ const runTool = async (toolName, targetUrl, rawOptions = {}) => {
 
 const runScanBatch = async (targetUrl, toolRequests = []) => {
   const results = [];
+  const allFindings = [];
 
   for (const request of toolRequests) {
     const toolName = typeof request.tool === 'string' ? request.tool.toLowerCase() : '';
@@ -398,12 +496,18 @@ const runScanBatch = async (targetUrl, toolRequests = []) => {
 
     try {
       const execution = await runTool(toolName, targetUrl, options);
+      
+      // Parse output để trích xuất findings
+      const findings = resultParser.parseToolOutput(toolName, execution.output);
+      allFindings.push(...findings);
+      
       results.push({
         tool: toolName,
         status: execution.status,
         options: execution.options,
         output: execution.output,
         error: execution.error,
+        findings,
         startedAt: startTime,
         finishedAt: new Date(),
       });
@@ -414,19 +518,146 @@ const runScanBatch = async (targetUrl, toolRequests = []) => {
         options,
         output: '',
         error: error.message,
+        findings: [],
         startedAt: startTime,
         finishedAt: new Date(),
       });
     }
   }
 
-  return results;
+  // Tạo summary tổng quan
+  const summary = resultParser.generateSummary(allFindings);
+
+  return { results, summary };
+};
+
+/**
+ * Chạy scan batch trong background với update progress
+ */
+const runScanBatchAsync = async (scanId, targetUrl, toolRequests = []) => {
+  const Scan = require('../models/Scan');
+  
+  try {
+    // Update status sang running
+    await Scan.findByIdAndUpdate(scanId, { 
+      status: 'running',
+      progress: 0
+    });
+
+    const allFindings = [];
+    const totalTools = toolRequests.length;
+
+    for (let i = 0; i < toolRequests.length; i++) {
+      const request = toolRequests[i];
+      const toolName = typeof request.tool === 'string' ? request.tool.toLowerCase() : '';
+      const options = request.options || {};
+
+      const startTime = new Date();
+
+      // Update tool status to running
+      await Scan.findOneAndUpdate(
+        { _id: scanId, 'results.tool': toolName },
+        { 
+          $set: { 
+            'results.$.status': 'running',
+            'results.$.startedAt': startTime
+          }
+        }
+      );
+
+      try {
+        const execution = await runTool(toolName, targetUrl, options);
+        
+        // Parse output để trích xuất findings
+        const findings = resultParser.parseToolOutput(toolName, execution.output);
+        allFindings.push(...findings);
+        
+        // Update tool result
+        await Scan.findOneAndUpdate(
+          { _id: scanId, 'results.tool': toolName },
+          { 
+            $set: { 
+              'results.$.status': execution.status,
+              'results.$.output': execution.output,
+              'results.$.error': execution.error,
+              'results.$.findings': findings,
+              'results.$.finishedAt': new Date()
+            }
+          }
+        );
+      } catch (error) {
+        // Update tool with error
+        await Scan.findOneAndUpdate(
+          { _id: scanId, 'results.tool': toolName },
+          { 
+            $set: { 
+              'results.$.status': 'failed',
+              'results.$.error': error.message,
+              'results.$.finishedAt': new Date()
+            }
+          }
+        );
+      }
+
+      // Update overall progress
+      const progress = Math.round(((i + 1) / totalTools) * 100);
+      await Scan.findByIdAndUpdate(scanId, { progress });
+    }
+
+    // Tạo summary và update scan status
+    const summary = resultParser.generateSummary(allFindings);
+    await Scan.findByIdAndUpdate(scanId, { 
+      status: 'completed',
+      progress: 100,
+      summary
+    });
+
+  } catch (error) {
+    console.error('Scan batch error:', error);
+    await Scan.findByIdAndUpdate(scanId, { 
+      status: 'failed',
+      progress: 100
+    });
+  }
 };
 
 const getSupportedTools = () => [...SUPPORTED_TOOLS];
 
+/**
+ * Kiểm tra tool có được cài đặt trên hệ thống không
+ */
+const isToolInstalled = (toolName) => {
+  try {
+    // Sử dụng EXTENDED_PATH để tìm tool
+    execSync(`which ${toolName}`, { 
+      stdio: 'ignore',
+      env: { ...process.env, PATH: EXTENDED_PATH }
+    });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Lấy danh sách các tool đã được cài đặt
+ */
+const getInstalledTools = () => {
+  const installed = [];
+  for (const tool of SUPPORTED_TOOLS) {
+    if (isToolInstalled(tool)) {
+      installed.push(tool);
+    }
+  }
+  console.log('[ScanService] Installed tools:', installed);
+  return installed;
+};
+
 module.exports = {
   runTool,
   runScanBatch,
+  runScanBatchAsync,
   getSupportedTools,
+  getInstalledTools,
+  isToolInstalled,
 };

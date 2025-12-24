@@ -79,48 +79,100 @@ const ScanHistoryPage = () => {
         </Card>
       ) : (
         <Row className="g-3">
-          {scans.map((scan) => (
-            <Col xs={12} key={scan._id}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <div className="d-flex flex-column flex-lg-row justify-content-between gap-3">
-                    <div>
-                      <Card.Title className="mb-1">{scan.targetUrl}</Card.Title>
-                      <div className="text-muted small">{formatDate(scan.createdAt)}</div>
-                      <div className="mt-2 d-flex flex-wrap gap-2">
-                        {scan.results.map((result) => (
-                          <Badge
-                            bg={result.status === 'completed' ? 'success' : 'warning'}
-                            key={`${scan._id}-${result.tool}`}
-                          >
-                            {TOOL_DEFINITIONS[result.tool]?.label || result.tool}
-                          </Badge>
-                        ))}
+          {scans.map((scan) => {
+            const summary = scan.summary || {};
+            const riskLevel = summary.riskLevel || 'info';
+            
+            const getRiskColor = (level) => {
+              switch (level) {
+                case 'critical': return 'danger';
+                case 'high': return 'warning';
+                case 'medium': return 'info';
+                case 'low': return 'primary';
+                default: return 'success';
+              }
+            };
+
+            return (
+              <Col xs={12} key={scan._id}>
+                <Card className="shadow-sm">
+                  <Card.Body>
+                    <div className="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                      <div className="flex-grow-1">
+                        <div className="d-flex align-items-center gap-2 mb-1">
+                          <Card.Title className="mb-0">{scan.targetUrl}</Card.Title>
+                          {summary.riskLevel && (
+                            <Badge bg={getRiskColor(riskLevel)} className="text-uppercase">
+                              {riskLevel}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-muted small mb-2">{formatDate(scan.createdAt)}</div>
+                        
+                        {summary.counts && (
+                          <div className="mb-2 small">
+                            <span className="me-3">
+                              📊 Tổng: <strong>{summary.counts.total || 0}</strong>
+                            </span>
+                            {summary.counts.critical > 0 && (
+                              <span className="me-3 text-danger">
+                                🔴 Critical: <strong>{summary.counts.critical}</strong>
+                              </span>
+                            )}
+                            {summary.counts.high > 0 && (
+                              <span className="me-3 text-warning">
+                                🟡 High: <strong>{summary.counts.high}</strong>
+                              </span>
+                            )}
+                            {summary.counts.medium > 0 && (
+                              <span className="me-3 text-info">
+                                🔵 Medium: <strong>{summary.counts.medium}</strong>
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        
+                        <div className="mt-2 d-flex flex-wrap gap-2">
+                          {scan.results.map((result) => (
+                            <Badge
+                              bg={result.status === 'completed' ? 'success' : 'warning'}
+                              key={`${scan._id}-${result.tool}`}
+                            >
+                              {TOOL_DEFINITIONS[result.tool]?.label || result.tool}
+                              {result.findings && result.findings.length > 0 && (
+                                <span className="ms-1">({result.findings.length})</span>
+                              )}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <Button as={Link} to={`/scans/${scan._id}`} variant="primary">
+                          View Details
+                        </Button>
+                        <Dropdown>
+                          <Dropdown.Toggle variant="outline-secondary" id={`export-${scan._id}`}>
+                            Export
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => handleExport(scan._id, 'json')}>
+                              JSON
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleExport(scan._id, 'txt')}>
+                              Text
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => handleExport(scan._id, 'pdf')}>
+                              PDF Report
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                       </div>
                     </div>
-                    <div className="d-flex align-items-center gap-2">
-                      <Button as={Link} to={`/scans/${scan._id}`} variant="primary">
-                        View Details
-                      </Button>
-                      <Dropdown>
-                        <Dropdown.Toggle variant="outline-secondary" id={`export-${scan._id}`}>
-                          Export
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => handleExport(scan._id, 'json')}>
-                            JSON
-                          </Dropdown.Item>
-                          <Dropdown.Item onClick={() => handleExport(scan._id, 'txt')}>
-                            Text
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })}
         </Row>
       )}
     </Stack>

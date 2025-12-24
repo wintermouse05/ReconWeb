@@ -5,7 +5,7 @@ const scanResultSchema = new mongoose.Schema(
     tool: {
       type: String,
       required: true,
-      enum: ['nikto', 'gobuster', 'nuclei', 'sqlmap', 'xsstrike'],
+      enum: ['nikto', 'gobuster', 'nuclei', 'sqlmap', 'xsstrike', 'wpscan'],
     },
     status: {
       type: String,
@@ -23,6 +23,10 @@ const scanResultSchema = new mongoose.Schema(
     error: {
       type: String,
       default: '',
+    },
+    findings: {
+      type: Array,
+      default: [],
     },
     startedAt: Date,
     finishedAt: Date,
@@ -49,7 +53,22 @@ const scanSchema = new mongoose.Schema(
       default: '',
       maxlength: 500,
     },
+    status: {
+      type: String,
+      enum: ['pending', 'running', 'completed', 'failed'],
+      default: 'pending',
+    },
+    progress: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
     results: [scanResultSchema],
+    summary: {
+      type: Object,
+      default: null,
+    },
   },
   {
     timestamps: true,

@@ -3,6 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { Alert, Badge, Button, Card, Col, Dropdown, Row, Spinner, Stack } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { TOOL_DEFINITIONS } from '../constants/tools';
+import ScanSummary from '../components/ScanSummary';
+import ScanResultAccordion from '../components/ScanResultAccordion';
+import RemediationPanel from '../components/RemediationPanel';
 
 const formatDateTime = (value) => new Date(value).toLocaleString();
 
@@ -88,10 +91,15 @@ const ScanDetailsPage = () => {
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => handleExport('json')}>JSON</Dropdown.Item>
               <Dropdown.Item onClick={() => handleExport('txt')}>Text</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleExport('pdf')}>PDF Report</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
       </div>
+
+      {/* Hiển thị summary */}
+      {scan.summary && <ScanSummary summary={scan.summary} />}
+
       <Card className="shadow-sm">
         <Card.Body>
           <Row className="g-3">
@@ -114,57 +122,21 @@ const ScanDetailsPage = () => {
           </Row>
         </Card.Body>
       </Card>
-      {scan.results.map((result) => (
-        <Card className="shadow-sm" key={result.tool}>
-          <Card.Header>
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h5 className="mb-0">{TOOL_DEFINITIONS[result.tool]?.label || result.tool}</h5>
-                <div className="small text-muted">Status: {result.status}</div>
-              </div>
-              <Badge bg={result.status === 'completed' ? 'success' : 'warning'}>{result.status}</Badge>
-            </div>
-          </Card.Header>
-          <Card.Body>
-            <Row className="g-3">
-              <Col xs={12} md={6}>
-                <div className="fw-semibold">Started</div>
-                <div>{result.startedAt ? formatDateTime(result.startedAt) : 'N/A'}</div>
-              </Col>
-              <Col xs={12} md={6}>
-                <div className="fw-semibold">Finished</div>
-                <div>{result.finishedAt ? formatDateTime(result.finishedAt) : 'N/A'}</div>
-              </Col>
-              <Col xs={12}>
-                <div className="fw-semibold">Options</div>
-                <Card className="bg-body-tertiary">
-                  <Card.Body>
-                    <pre className="mb-0" style={{ whiteSpace: 'pre-wrap' }}>
-                      {JSON.stringify(result.options || {}, null, 2)}
-                    </pre>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col xs={12}>
-                <div className="fw-semibold">Output</div>
-                <pre className="bg-dark text-white p-3 rounded-3 overflow-auto" style={{ maxHeight: '320px' }}>
-                  {result.output || 'No output recorded.'}
-                </pre>
-              </Col>
-              {result.error ? (
-                <Col xs={12}>
-                  <Alert variant="warning">
-                    <strong>Error:</strong>
-                    <div className="small mt-2" style={{ whiteSpace: 'pre-wrap' }}>
-                      {result.error}
-                    </div>
-                  </Alert>
-                </Col>
-              ) : null}
-            </Row>
-          </Card.Body>
-        </Card>
-      ))}
+
+      {/* Hiển thị kết quả chi tiết với findings */}
+      <div>
+        <h4 className="mb-3">Chi tiết từng công cụ</h4>
+        <ScanResultAccordion results={scan.results} />
+      </div>
+
+      {/* Remediation Panel */}
+      {scan.findings && scan.findings.length > 0 && (
+        <RemediationPanel 
+          scanId={scan._id} 
+          findings={scan.findings} 
+          targetUrl={scan.targetUrl} 
+        />
+      )}
     </Stack>
   );
 };

@@ -24,7 +24,14 @@ const RegisterPage = () => {
       await register(form);
       navigate('/', { replace: true });
     } catch (err) {
-      setError(err.message || 'Registration failed');
+      console.error('Registration error:', err);
+      // Handle validation errors from express-validator
+      if (err.payload?.errors && Array.isArray(err.payload.errors)) {
+        const messages = err.payload.errors.map(e => e.msg).join(', ');
+        setError(messages);
+      } else {
+        setError(err.message || 'Registration failed');
+      }
     } finally {
       setSubmitting(false);
     }
