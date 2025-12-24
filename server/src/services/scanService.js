@@ -393,8 +393,8 @@ const TOOL_TIMEOUTS = {
   gobuster: 10 * 60 * 1000, // 10 minutes
   nuclei: 15 * 60 * 1000,   // 15 minutes
   sqlmap: 10 * 60 * 1000,   // 10 minutes
-  xsstrike: 5 * 60 * 1000,  // 5 minutes
-  wpscan: 2 * 60 * 1000,    // 2 minutes (WPScan thường chạy lâu, giảm timeout)
+  xsstrike: 10 * 60 * 1000, // 10 minutes (XSStrike cần thời gian để test payloads)
+  wpscan: 5 * 60 * 1000,    // 5 minutes
 };
 
 const DEFAULT_TIMEOUT = 5 * 60 * 1000; // 5 minutes

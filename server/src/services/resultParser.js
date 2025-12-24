@@ -4,13 +4,23 @@
  */
 
 /**
+ * Remove ANSI color codes from text
+ */
+const stripAnsiCodes = (text) => {
+  if (!text) return '';
+  // Match all ANSI escape sequences
+  return text.replace(/\x1b\[[0-9;]*m|\[\[?[0-9;]*m|\[0m/g, '');
+};
+
+/**
  * Parse Nikto output để tìm các lỗ hổng
  */
 const parseNiktoOutput = (output) => {
   if (!output) return [];
   
+  const cleanOutput = stripAnsiCodes(output);
   const findings = [];
-  const lines = output.split('\n');
+  const lines = cleanOutput.split('\n');
   
   for (const line of lines) {
     // Nikto findings thường bắt đầu với + hoặc -
@@ -229,32 +239,96 @@ const parseSQLMapOutput = (output) => {
 const parseXSStrikeOutput = (output) => {
   if (!output) return [];
   
+  const cleanOutput = stripAnsiCodes(output);
   const findings = [];
-  const lowerOutput = output.toLowerCase();
+  const lines = cleanOutput.split('\n');
   
-  if (lowerOutput.includes('xss') || lowerOutput.includes('payload')) {
-    const lines = output.split('\n');
-    for (const line of lines) {
-      const lowerLine = line.toLowerCase();
-      if (lowerLine.includes('xss') || lowerLine.includes('payload')) {
-        const severity = lowerLine.includes('confirmed') ? 'critical' : 'medium';
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const lowerLine = trimmed.toLowerCase();
+    
+    // XSStrike findings patterns
+    // Reflections found
+    if (lowerLine.includes('reflections found:')) {
+      const match = trimmed.match(/reflections found:\s*(\d+)/i);
+      if (match && parseInt(match[1]) > 0) {
         findings.push({
-          type: 'vulnerability',
-          severity,
-          description: line.trim(),
+          type: 'information',
+          severity: 'medium',
+          description: `Reflections found: ${match[1]} - potential XSS vectors detected`,
           tool: 'xsstrike'
         });
       }
     }
+    
+    // Payloads generated
+    if (lowerLine.includes('payloads generated:')) {
+      const match = trimmed.match(/payloads generated:\s*(\d+)/i);
+      if (match && parseInt(match[1]) > 0) {
+        findings.push({
+          type: 'information',
+          severity: 'medium',
+          description: `XSS Payloads generated: ${match[1]}`,
+          tool: 'xsstrike'
+        });
+      }
+    }
+    
+    // WAF detection
+    if (lowerLine.includes('waf status:')) {
+      const wafStatus = trimmed.replace(/.*waf status:\s*/i, '').trim();
+      findings.push({
+        type: 'information',
+        severity: wafStatus.toLowerCase() === 'offline' ? 'medium' : 'info',
+        description: `WAF Status: ${wafStatus}`,
+        tool: 'xsstrike'
+      });
+    }
+    
+    // Testing parameter
+    if (lowerLine.includes('testing parameter:')) {
+      const param = trimmed.replace(/.*testing parameter:\s*/i, '').trim();
+      findings.push({
+        type: 'information',
+        severity: 'info',
+        description: `Testing parameter: ${param}`,
+        tool: 'xsstrike'
+      });
+    }
+    
+    // Confirmed XSS
+    if (lowerLine.includes('confirmed') || lowerLine.includes('vulnerable')) {
+      findings.push({
+        type: 'vulnerability',
+        severity: 'critical',
+        description: trimmed,
+        tool: 'xsstrike'
+      });
+    }
+    
+    // Payload found/working
+    if ((lowerLine.includes('payload') && lowerLine.includes('work')) ||
+        lowerLine.includes('[vuln]')) {
+      findings.push({
+        type: 'vulnerability',
+        severity: 'high',
+        description: trimmed,
+        tool: 'xsstrike'
+      });
+    }
   }
   
-  if (findings.length === 0 && lowerOutput.includes('no xss')) {
-    findings.push({
-      type: 'information',
-      severity: 'info',
-      description: 'No XSS vulnerabilities found',
-      tool: 'xsstrike'
-    });
+  // If no findings but had some output, add summary
+  if (findings.length === 0 && cleanOutput.length > 100) {
+    if (cleanOutput.toLowerCase().includes('no xss') || 
+        cleanOutput.toLowerCase().includes('not vulnerable')) {
+      findings.push({
+        type: 'information',
+        severity: 'info',
+        description: 'No XSS vulnerabilities found',
+        tool: 'xsstrike'
+      });
+    }
   }
   
   return findings;
