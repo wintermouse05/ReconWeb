@@ -1,139 +1,385 @@
-# ReconWeb Automation Platform
+# ReconWeb - Web Vulnerability Scanning Platform
 
-ReconWeb is a full-stack web application that automates running open-source vulnerability scanners (Nikto, Gobuster, Nuclei, SQLMap, XSStrike, WPScan) against user-provided targets. The project includes a Node.js + Express API, MongoDB persistence, and a React (Vite) front-end styled with Bootstrap and Tailwind CSS.
+<div align="center">
 
-## Features
+![ReconWeb Logo](https://img.shields.io/badge/ReconWeb-Security%20Scanner-blue?style=for-the-badge&logo=security)
+
+[![Node.js](https://img.shields.io/badge/Node.js-20+-green?style=flat-square&logo=node.js)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-18+-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7+-green?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=flat-square&logo=docker)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+
+**ReconWeb** is a full-stack web application that automates running open-source vulnerability scanners against user-provided targets. It provides a modern UI for configuring scans, tracking progress in real-time, and generating professional reports.
+
+[Features](#features) • [Quick Start](#quick-start) • [Installation](#installation) • [API Docs](#api-endpoints) • [Contributing](#contributing)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Features](#features)
+- [Supported Security Tools](#supported-security-tools)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+  - [Docker (Recommended)](#docker-deployment-recommended)
+  - [Local Development](#local-development)
+- [Configuration](#configuration)
+- [API Endpoints](#api-endpoints)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## ✨ Features
 
 ### Core Features
-- **Automated Security Scanning**: Run multiple security tools against web targets
-- **Real-time Progress Tracking**: Monitor scan progress with live updates
-- **Scan History**: View and manage all past scans
-- **PDF Export**: Generate professional PDF reports of scan results
-- **Finding Extraction**: Automatic parsing and categorization of vulnerabilities
+- 🔍 **Automated Security Scanning** - Run multiple security tools against web targets
+- 📊 **Real-time Progress Tracking** - Monitor scan progress with live updates
+- 📜 **Scan History** - View and manage all past scans with filtering
+- 📄 **Export Reports** - Generate PDF, JSON, and TXT reports
+- 🎯 **Finding Extraction** - Automatic parsing and categorization of vulnerabilities
+- 🔐 **User Authentication** - Secure JWT-based authentication
 
-### New Features (v2.0)
+### Subscription Plans
+| Feature | Free | Pro ($9.99/mo) | VIP ($29.99/mo) |
+|---------|------|----------------|-----------------|
+| Scans/Month | 10 | 100 | Unlimited |
+| Code Reviews/Day | 3 | 20 | Unlimited |
+| Basic Tools | ✅ | ✅ | ✅ |
+| Advanced Tools | ❌ | ✅ | ✅ |
+| AI Code Review | ❌ | ✅ | ✅ |
+| Auto Remediation | ❌ | ❌ | ✅ |
 
-#### 1. VIP Plan Subscription
-Three-tiered subscription system with different capabilities:
-- **Free Plan**: 10 scans/month, 3 code reviews/day, basic tools (Nikto, Gobuster)
-- **Pro Plan ($9.99/mo)**: 100 scans/month, 20 code reviews/day, advanced tools + AI Code Review
-- **VIP Plan ($29.99/mo)**: Unlimited scans & reviews, all tools, auto-remediation suggestions
+### Advanced Features
+- 🤖 **Secure Code Review** - Pattern-based security analysis for 10+ languages
+- 🔧 **Remediation Suggestions** - Rule-based fix recommendations with code examples
+- 📈 **Risk Scoring** - Automatic severity classification and risk assessment
 
-#### 2. AI-Powered Secure Code Review
-- Submit code snippets for security analysis
-- Supports JavaScript, TypeScript, Python, Java, PHP, C#, Go, Ruby, SQL, HTML
-- Powered by Google Gemini AI
-- Identifies vulnerabilities like SQL injection, XSS, authentication issues
-- Provides fix recommendations with code examples
+---
 
-#### 3. Automated Remediation Suggestions
-- Basic remediation guidance for all plans
-- AI-powered detailed remediation for VIP subscribers
-- Step-by-step fix instructions
-- Code examples for common vulnerabilities
-- Compliance notes (OWASP, PCI-DSS, GDPR)
+## 🛠 Supported Security Tools
 
-## Project Structure
+| Tool | Description | Category |
+|------|-------------|----------|
+| **Nikto** | Web server scanner | Web Security |
+| **Gobuster** | Directory/DNS brute-forcer | Enumeration |
+| **Nuclei** | Template-based vulnerability scanner | Vulnerability |
+| **SQLMap** | SQL injection detection | Database |
+| **XSStrike** | XSS detection suite | Web Security |
+| **WPScan** | WordPress vulnerability scanner | CMS Security |
 
-- `server/`: Express API, authentication, scan orchestration, MongoDB models.
-- `client/`: React front-end with auth flows, scan configuration UI, history and export views.
-- `docker-compose.yml`: Container orchestration for MongoDB, API, and web UI services.
+---
 
-## Environment Variables
+## 🏗 Tech Stack
 
-### Server
+### Backend
+- **Runtime**: Node.js 20+
+- **Framework**: Express.js 5
+- **Database**: MongoDB 7+
+- **Authentication**: JWT + bcrypt
+
+### Frontend
+- **Framework**: React 18 + Vite
+- **UI Library**: React Bootstrap
+- **Styling**: Tailwind CSS
+- **HTTP Client**: Fetch API
+
+### DevOps
+- **Containerization**: Docker + Docker Compose
+- **Web Server**: Nginx (production)
+- **Process Manager**: Node.js native
+
+---
+
+## 🚀 Quick Start
+
+### Using Docker (Fastest)
+
 ```bash
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/reconweb
-JWT_SECRET=your-secret-key
-CLIENT_ORIGIN=http://localhost:5173
-GEMINI_API_KEY=your-gemini-api-key  # Required for AI features
+# Clone the repository
+git clone https://github.com/wintermouse05/ReconWeb.git
+cd ReconWeb
+
+# Start all services
+docker compose up --build
+
+# Access the application
+# Frontend: http://localhost:3000
+# API: http://localhost:5000/api
 ```
 
-### Client
-```bash
-VITE_API_URL=http://localhost:5000
-```
-
-## Local Development
+### Using npm
 
 ```bash
-# install dependencies
+# Clone and install
+git clone https://github.com/wintermouse05/ReconWeb.git
+cd ReconWeb
 npm install
 npm install --prefix server
 npm install --prefix client
 
-# run backend and frontend together
+# Setup environment
+cp server/.env.example server/.env
+# Edit server/.env with your settings
+
+# Start development servers
 npm run dev
 ```
 
-Copy `.env.example` files to `.env` and fill in secrets before launching:
+---
 
-```bash
-cp server/.env.example server/.env
-cp client/.env.example client/.env
-```
+## 📦 Installation
 
-## Docker Deployment
+### Prerequisites
 
-1. Ensure Docker Engine and Docker Compose plugin are installed.
-2. Build and start the stack:
+- **Node.js** 20.x or higher
+- **MongoDB** 7.x or higher
+- **Docker** & **Docker Compose** (for containerized deployment)
+- **Security Tools** (for local development):
+  - Nikto, Gobuster, SQLMap, WPScan, XSStrike, Nuclei
 
+### Docker Deployment (Recommended)
+
+1. **Clone the repository**
    ```bash
-   docker compose up --build
+   git clone https://github.com/wintermouse05/ReconWeb.git
+   cd ReconWeb
    ```
 
-   - API reachable at `http://localhost:5000/api`
-   - Web UI served at `http://localhost:4173`
-   - MongoDB exposed on `mongodb://localhost:27017`
+2. **Configure environment** (optional)
+   ```bash
+   # Create .env file for docker-compose
+   echo "JWT_SECRET=$(openssl rand -base64 32)" > .env
+   ```
 
-3. Override defaults by editing environment values in `docker-compose.yml` or by supplying a `.env` file consumed by Compose.
+3. **Build and start containers**
+   ```bash
+   docker compose up --build -d
+   ```
 
-### Scanner Binaries Inside the API Container
+4. **Verify deployment**
+   ```bash
+   # Check container status
+   docker compose ps
+   
+   # View logs
+   docker compose logs -f
+   ```
 
-The API executes external scanners. Extend `server/Dockerfile` to install the required binaries (e.g., Nikto, Gobuster, Nuclei, SQLMap, XSStrike, WPScan) for your environment. Uncomment and modify the `apt-get`/`pip` commands in that file or add additional steps to fetch the latest releases.
+5. **Access the application**
+   - **Frontend**: http://localhost:3000
+   - **API**: http://localhost:5000/api
+   - **MongoDB**: mongodb://localhost:27017
 
-## API Endpoints
+### Local Development
+
+1. **Install system dependencies** (Ubuntu/Debian)
+   ```bash
+   # Security tools
+   sudo apt update
+   sudo apt install -y nikto gobuster sqlmap wpscan
+   
+   # Install Go for Nuclei
+   sudo apt install -y golang-go
+   go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+   echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc
+   source ~/.bashrc
+   
+   # Install XSStrike
+   sudo pip3 install xsstrike --break-system-packages
+   # Or from source:
+   git clone https://github.com/s0md3v/XSStrike.git /opt/XSStrike
+   sudo ln -sf /opt/XSStrike/xsstrike.py /usr/local/bin/xsstrike
+   ```
+
+2. **Install Node.js dependencies**
+   ```bash
+   npm install
+   npm install --prefix server
+   npm install --prefix client
+   ```
+
+3. **Configure environment**
+   ```bash
+   cp server/.env.example server/.env
+   ```
+   
+   Edit `server/.env`:
+   ```env
+   PORT=5000
+   MONGODB_URI=mongodb://localhost:27017/reconweb
+   JWT_SECRET=your-super-secret-key-min-32-characters
+   CLIENT_ORIGIN=http://localhost:5173
+   ```
+
+4. **Start MongoDB**
+   ```bash
+   # Using Docker
+   docker run -d --name mongodb -p 27017:27017 mongo:7
+   
+   # Or using system service
+   sudo systemctl start mongod
+   ```
+
+5. **Start development servers**
+   ```bash
+   npm run dev
+   ```
+
+6. **Access the application**
+   - **Frontend**: http://localhost:5173
+   - **API**: http://localhost:5000/api
+
+---
+
+## ⚙️ Configuration
+
+### Server Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Server port | `5000` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/reconweb` |
+| `JWT_SECRET` | Secret key for JWT tokens | Required |
+| `CLIENT_ORIGIN` | Allowed CORS origins (comma-separated) | `http://localhost:5173` |
+| `NODE_ENV` | Environment mode | `development` |
+
+### Client Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Backend API URL | `http://localhost:5000/api` |
+
+---
+
+## 📡 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/me` - Get current user
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login user |
+| GET | `/api/auth/me` | Get current user info |
 
 ### Scans
-- `POST /api/scans` - Create new scan
-- `GET /api/scans` - List all scans
-- `GET /api/scans/:id` - Get scan details
-- `GET /api/scans/:id/export` - Export scan (json, txt, pdf)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/scans/tools/installed` | Get installed tools |
+| POST | `/api/scans` | Create new scan |
+| GET | `/api/scans` | List all scans |
+| GET | `/api/scans/:id` | Get scan details |
+| GET | `/api/scans/:id/export` | Export scan (json/txt/pdf) |
 
 ### Subscription
-- `GET /api/subscription/plans` - Get all plans
-- `GET /api/subscription/status` - Get user's subscription status
-- `POST /api/subscription/upgrade` - Upgrade plan
-- `POST /api/subscription/cancel` - Cancel subscription
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/subscription/plans` | Get all plans |
+| GET | `/api/subscription/status` | Get subscription status |
+| POST | `/api/subscription/upgrade` | Upgrade plan |
 
 ### Code Review
-- `POST /api/code-review/review` - Submit code for review
-- `GET /api/code-review/history` - Get review history
-- `GET /api/code-review/:id` - Get specific review
-- `GET /api/code-review/stats` - Get review statistics
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/code-review/review` | Submit code for review |
+| GET | `/api/code-review/history` | Get review history |
+| GET | `/api/code-review/:id` | Get specific review |
+| DELETE | `/api/code-review/:id` | Delete review |
 
 ### Remediation
-- `GET /api/remediation/scan/:id` - Get AI remediation (VIP only)
-- `GET /api/remediation/basic/:id` - Get basic remediation
-- `GET /api/remediation/tips/:severity` - Get quick tips
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/remediation/scan/:id` | Get AI remediation (VIP) |
+| GET | `/api/remediation/basic/:id` | Get basic remediation |
+| GET | `/api/remediation/tips/:severity` | Get quick tips |
 
-## Production Build
+---
 
-- API: `npm run start --prefix server`
-- Client: `npm run build --prefix client` followed by hosting the `client/dist` directory using a static web server.
+## 📁 Project Structure
 
-## Scripts
+```
+ReconWeb/
+├── client/                    # React Frontend
+│   ├── src/
+│   │   ├── components/        # Reusable UI components
+│   │   ├── pages/             # Page components
+│   │   ├── context/           # React context providers
+│   │   ├── services/          # API client
+│   │   ├── constants/         # Tool definitions
+│   │   └── App.jsx            # Root component
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+│
+├── server/                    # Express Backend
+│   ├── src/
+│   │   ├── config/            # Database config
+│   │   ├── controllers/       # Request handlers
+│   │   ├── middleware/        # Auth middleware
+│   │   ├── models/            # Mongoose schemas
+│   │   ├── routes/            # API routes
+│   │   ├── services/          # Business logic
+│   │   └── index.js           # Entry point
+│   ├── Dockerfile
+│   ├── .env.example
+│   └── package.json
+│
+├── docker-compose.yml         # Container orchestration
+├── package.json               # Root package (scripts)
+└── README.md
+```
 
-- `npm run dev` – concurrently starts API (`server`) and client (`client`) with hot reloads.
-- `npm run dev:server` – API only.
-- `npm run dev:client` – front-end only.
+---
 
-## License
+## 🤝 Contributing
 
-This project is provided as-is. Replace `JWT_SECRET` and review security posture prior to production deployment.
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow existing code style
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ⚠️ Disclaimer
+
+This tool is intended for **authorized security testing only**. Always obtain proper authorization before scanning any systems you do not own. The developers are not responsible for any misuse of this software.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Nikto](https://github.com/sullo/nikto) - Web server scanner
+- [Gobuster](https://github.com/OJ/gobuster) - Directory brute-forcer
+- [Nuclei](https://github.com/projectdiscovery/nuclei) - Vulnerability scanner
+- [SQLMap](https://github.com/sqlmapproject/sqlmap) - SQL injection tool
+- [XSStrike](https://github.com/s0md3v/XSStrike) - XSS detection
+- [WPScan](https://github.com/wpscanteam/wpscan) - WordPress scanner
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the security community**
+
+[⬆ Back to Top](#reconweb---web-vulnerability-scanning-platform)
+
+</div>

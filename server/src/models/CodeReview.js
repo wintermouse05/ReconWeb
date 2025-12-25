@@ -11,9 +11,29 @@ const vulnerabilitySchema = new mongoose.Schema({
     required: true
   },
   line: Number,
+  cwe: String, // CWE reference (e.g., "CWE-89")
+  owasp: String, // OWASP Top 10 reference (e.g., "A03:2021")
   description: String,
   recommendation: String,
+  matchedCode: String, // The code pattern that matched
+  codeContext: String, // The line of code for context
+  example: { // Secure coding example
+    vulnerable: String,
+    secure: String
+  },
   fixedCode: String
+}, { _id: false });
+
+const owaspIssueSchema = new mongoose.Schema({
+  code: String, // e.g., "A03:2021"
+  name: String, // e.g., "Injection"
+  issueCount: Number,
+  issues: [{
+    type: String,
+    severity: String,
+    line: Number,
+    cwe: String
+  }]
 }, { _id: false });
 
 const codeReviewSchema = new mongoose.Schema({
@@ -48,6 +68,13 @@ const codeReviewSchema = new mongoose.Schema({
     default: 'secure'
   },
   summary: String,
+  owaspCompliance: [owaspIssueSchema], // OWASP Top 10 compliance report
+  analysisMetadata: {
+    patternsChecked: Number,
+    languagePatternsChecked: Number,
+    linesAnalyzed: Number,
+    analysisVersion: String
+  },
   aiResponse: {
     type: Object,
     default: null
@@ -60,5 +87,7 @@ const codeReviewSchema = new mongoose.Schema({
 
 // Index for user queries
 codeReviewSchema.index({ user: 1, createdAt: -1 });
+codeReviewSchema.index({ 'vulnerabilities.severity': 1 });
+codeReviewSchema.index({ overallRisk: 1 });
 
 module.exports = mongoose.model('CodeReview', codeReviewSchema);
