@@ -1409,23 +1409,6 @@ const generateOwaspReport = (vulns) => {
       issues: data.issues
     }));
 };
-  if (vulns.some(v => v.severity === 'medium')) return 'medium';
-  return 'low';
-};
-
-const generateSummary = (vulns) => {
-  if (vulns.length === 0) {
-    return 'No security vulnerabilities detected. Code appears secure.';
-  }
-  const counts = { critical: 0, high: 0, medium: 0, low: 0 };
-  vulns.forEach(v => counts[v.severity]++);
-  const parts = [];
-  if (counts.critical) parts.push(counts.critical + ' critical');
-  if (counts.high) parts.push(counts.high + ' high');
-  if (counts.medium) parts.push(counts.medium + ' medium');
-  if (counts.low) parts.push(counts.low + ' low');
-  return 'Found ' + vulns.length + ' issue(s): ' + parts.join(', ') + '. Address critical/high issues first.';
-};
 
 const reviewCode = async (userId, codeSnippet, language, title) => {
   const canReview = await subscriptionService.canPerformCodeReview(userId);
