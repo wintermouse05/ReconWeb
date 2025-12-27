@@ -47,7 +47,7 @@ router.get(
   '/:id/export',
   [
     param('id').isMongoId().withMessage('Invalid scan id'),
-    query('format').optional().isIn(['json', 'txt']).withMessage('Format must be json or txt'),
+    query('format').optional().isIn(['json', 'txt', 'pdf']).withMessage('Format must be json, txt, or pdf'),
   ],
   scanController.exportScan
 );

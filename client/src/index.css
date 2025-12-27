@@ -149,26 +149,27 @@ main h1 {
   border-color: #667eea;
 }
 
-/* ============================================
-   BOOTSTRAP OVERRIDES FOR BETTER CONTRAST
-   ============================================ */
-/* Card headers on gradient backgrounds */
-.card-header {
-  background: rgba(102, 126, 234, 0.1) !important;
-  color: #1a202c !important;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.2) !important;
+
+
+/* Prevent card overlap */
+.card {
+  position: relative;
+  isolation: auto;
 }
 
-/* Alert boxes */
-.alert {
-  backdrop-filter: blur(10px);
+/* Container for buttons should allow dropdown to overflow */
+.card .d-flex:has(.dropdown) {
+  position: relative;
+  z-index: 2;
 }
 
-/* Badges */
-.badge {
-  font-weight: 600;
-  padding: 0.5em 0.75em;
+/* Ensure row doesn't create stacking context */
+.row {
+  position: relative;
+}
+
+.row > .col-12 {
+  isolation: auto;
 }
 
 /* ============================================
@@ -381,4 +382,23 @@ footer {
 
 .skip-to-main:focus {
   top: 0;
+}
+/* Fix Bootstrap Dropdown z-index */
+.dropdown-menu {
+  z-index: 1050 !important;
+}
+
+/* Ensure dropdown shows above cards */
+.card {
+  position: relative;
+  z-index: 1;
+}
+
+.dropdown {
+  position: relative;
+  z-index: 10;
+}
+
+.dropdown-menu.show {
+  z-index: 1050 !important;
 }

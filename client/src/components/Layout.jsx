@@ -121,11 +121,17 @@ const Layout = () => {
       </Navbar>
 
       {/* Main Content */}
-      <main className="flex-grow-1 py-4 position-relative" style={{ zIndex: 1 }}>
-        <Container>
-          <Outlet />
-        </Container>
-      </main>
+      <main 
+  className="flex-grow-1 py-4"
+  style={{
+    background: 'linear-gradient(180deg, rgba(102, 126, 234, 0.1) 0%, rgba(246, 248, 250, 1) 100%)',
+    minHeight: '100vh'
+  }}
+>
+  <Container>
+    <Outlet />
+  </Container>
+</main>
 
       {/* Gradient Footer */}
       <footer 

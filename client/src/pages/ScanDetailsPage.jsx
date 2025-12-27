@@ -1,28 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Alert, Badge, Button, Card, Col, Dropdown, Row, Spinner, Stack } from 'react-bootstrap';
+import { Alert, Badge, Button, ButtonGroup, Card, Col, Row, Spinner, Stack } from 'react-bootstrap';
+import { FaFilePdf, FaFileCode, FaFileAlt } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { TOOL_DEFINITIONS } from '../constants/tools';
 import ScanSummary from '../components/ScanSummary';
 import ScanResultAccordion from '../components/ScanResultAccordion';
 import RemediationPanel from '../components/RemediationPanel';
+import { API_BASE_URL } from '../config';
 
 const formatDateTime = (value) => new Date(value).toLocaleString();
 
-const downloadBlob = (blob, filename) => {
-  const url = window.URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.URL.revokeObjectURL(url);
-};
-
 const ScanDetailsPage = () => {
   const { id } = useParams();
-  const { request } = useAuth();
+  const { request, token } = useAuth();
   const [scan, setScan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,10 +35,45 @@ const ScanDetailsPage = () => {
 
   const handleExport = async (format) => {
     try {
-      const blob = await request(`/scans/${id}/export?format=${format}`, { responseType: 'blob' });
-      downloadBlob(blob, `scan-${id}.${format}`);
+      setError(''); // Clear previous errors
+      
+      const response = await fetch(`${API_BASE_URL}/scans/${id}/export?format=${format}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Export failed with status ${response.status}`);
+      }
+
+      // Get filename from header or use default
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let filename = `scan-${id}.${format}`;
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      // Download file
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
     } catch (err) {
-      setError(err.message || 'Export failed');
+      console.error('Export error:', err);
+      setError(`Failed to export: ${err.message}`);
     }
   };
 
@@ -60,7 +86,7 @@ const ScanDetailsPage = () => {
     );
   }
 
-  if (error) {
+  if (error && !scan) {
     return <Alert variant="danger">{error}</Alert>;
   }
 
@@ -82,20 +108,41 @@ const ScanDetailsPage = () => {
           <h1 className="mb-1">Scan Details</h1>
           <p className="mb-0 text-muted">Target: {scan.targetUrl}</p>
         </div>
-        <div className="d-flex gap-2">
-          <Button as={Link} to="/history" variant="outline-secondary">
-            Back to History
-          </Button>
-          <Dropdown>
-            <Dropdown.Toggle variant="primary">Export</Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => handleExport('json')}>JSON</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleExport('txt')}>Text</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleExport('pdf')}>PDF Report</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
+        <div className="d-flex gap-2 flex-wrap">
+  <Button as={Link} to="/history" variant="outline-secondary">
+    Back to History
+  </Button>
+  
+  <ButtonGroup size="sm">
+    <Button 
+      variant="outline-success"
+      onClick={() => handleExport('json')}
+      title="Export as JSON"
+    >
+      <FaFileCode className="me-1" />
+      JSON
+    </Button>
+    <Button 
+      variant="outline-info"
+      onClick={() => handleExport('txt')}
+      title="Export as Text"
+    >
+      <FaFileAlt className="me-1" />
+      TXT
+    </Button>
+    <Button 
+      variant="outline-danger"
+      onClick={() => handleExport('pdf')}
+      title="Export as PDF"
+    >
+      <FaFilePdf className="me-1" />
+      PDF
+    </Button>
+  </ButtonGroup>
+</div>
       </div>
+
+      {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
 
       {/* Hiển thị summary */}
       {scan.summary && <ScanSummary summary={scan.summary} />}

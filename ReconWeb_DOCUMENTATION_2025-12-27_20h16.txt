@@ -911,7 +911,8 @@ const Layout = () => {
         style={{
           background: 'rgba(26, 32, 44, 0.95)',
           backdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          zIndex: 1000
         }}
       >
         <Container>
@@ -949,7 +950,7 @@ const Layout = () => {
               </Nav.Link>
             </Nav>
             
-            <Nav className="ms-auto">
+            <Nav className="ms-auto align-items-center">
               <Nav.Link as={Link} to="/subscription" className="me-2">
                 <div className="btn btn-sm btn-gradient-primary">
                   <FaCrown className="me-1" /> Upgrade
@@ -958,27 +959,27 @@ const Layout = () => {
               
               <NavDropdown 
                 title={
-                  <span className="text-white">
-                    <div className="d-inline-flex align-items-center">
-                      <div 
-                        className="rounded-circle me-2"
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <FaUser size={14} className="text-white" />
-                      </div>
-                      {user?.name || 'Account'}
+                  <span className="text-white d-flex align-items-center">
+                    <div 
+                      className="rounded-circle me-2"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <FaUser size={14} className="text-white" />
                     </div>
+                    <span className="d-none d-md-inline">{user?.name || 'Account'}</span>
                   </span>
                 }
                 align="end"
-                className="text-white"
+                className="user-dropdown"
+                id="user-dropdown"
+                style={{ position: 'relative' }}
               >
                 <NavDropdown.Item disabled className="text-muted small">
                   {user?.email}
@@ -1005,7 +1006,7 @@ const Layout = () => {
       </Navbar>
 
       {/* Main Content */}
-      <main className="flex-grow-1 py-4 position-relative">
+      <main className="flex-grow-1 py-4 position-relative" style={{ zIndex: 1 }}>
         <Container>
           <Outlet />
         </Container>
@@ -1015,7 +1016,8 @@ const Layout = () => {
       <footer 
         className="glass-card-dark py-3 text-center mt-auto"
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          zIndex: 1
         }}
       >
         <small className="text-white-50">
@@ -1024,6 +1026,17 @@ const Layout = () => {
           <span className="gradient-text">Powered by Libra Team</span>
         </small>
       </footer>
+
+      {/* Additional CSS for dropdown fix */}
+      <style jsx>{`
+        .user-dropdown .dropdown-menu {
+          position: absolute !important;
+          top: 100% !important;
+          right: 0 !important;
+          left: auto !important;
+          transform: none !important;
+        }
+      `}</style>
     </div>
   );
 };
@@ -2563,17 +2576,375 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth hover effects */
+/* ============================================
+   TEXT CONTRAST UTILITIES
+   ============================================ */
+/* White text with shadow for gradient backgrounds */
+.text-on-gradient,
+.text-white {
+  color: white !important;
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark text for cards and light backgrounds */
+.card-body,
+.glass-card .card-body {
+  color: #2d3748 !important;
+}
+
+/* Page titles and headers on gradient backgrounds */
+.container > h1,
+.container > div > h1,
+main h1 {
+  color: white !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+}
+
+/* ============================================
+   TABS AND NAVIGATION
+   ============================================ */
+/* React Bootstrap Tabs on gradient background */
+.nav-tabs {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3) !important;
+  margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-bottom: none !important;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nav-tabs .nav-link:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nav-tabs .nav-link.active {
+  color: white !important;
+  background: rgba(102, 126, 234, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.8) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Bootstrap nav pills */
+.nav-pills .nav-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nav-pills .nav-link:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nav-pills .nav-link.active {
+  color: white !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* ============================================
+   DROPDOWN FIXES
+   ============================================ */
+/* Ensure dropdown appears above all content */
+.dropdown-menu.show {
+  display: block;
+  position: absolute !important;
+  z-index: 9999 !important;
+  inset: 0px auto auto 0px !important;
+  transform: translate(0px, 42px) !important;
+}
+
+/* Navbar dropdown specific */
+.navbar .dropdown-menu {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  border-radius: 12px !important;
+}
+
+.navbar .dropdown-item {
+  color: #2d3748 !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.navbar .dropdown-item:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
 .hover-text-white:hover {
   color: white !important;
   transition: color 0.3s ease;
 }
 
-/* Glass input focus effect */
+/* ============================================
+   GLASS INPUT EFFECTS
+   ============================================ */
 .glass-input:focus {
   outline: none;
   box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
   border-color: #667eea;
+}
+
+/* ============================================
+   BOOTSTRAP OVERRIDES FOR BETTER CONTRAST
+   ============================================ */
+/* Card headers on gradient backgrounds */
+.card-header {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: #1a202c !important;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.2) !important;
+}
+
+/* Alert boxes */
+.alert {
+  backdrop-filter: blur(10px);
+}
+
+/* Badges */
+.badge {
+  font-weight: 600;
+  padding: 0.5em 0.75em;
+}
+
+/* ============================================
+   LAYOUT SPECIFIC FIXES
+   ============================================ */
+/* Main content area should have proper z-index */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Footer should not cover dropdown */
+footer {
+  position: relative;
+  z-index: 0;
+}
+
+/* Navbar should be above content but below dropdown */
+.navbar {
+  position: relative;
+  z-index: 1000;
+}
+
+/* ============================================
+   ABOUT PAGE SPECIFIC
+   ============================================ */
+.about-page .glass-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3,
+.about-page h4,
+.about-page h5 {
+  color: #1a202c !important;
+}
+
+.about-page .text-white {
+  color: white !important;
+}
+
+/* ============================================
+   PAGE SPECIFIC IMPROVEMENTS  
+   ============================================ */
+/* Code Review Page */
+.code-review-page h1,
+.scan-history-page h1 {
+  color: white !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Subscription Page specific */
+.subscription-page h1,
+.settings-page h1 {
+  color: white !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Plan cards */
+.plan-card {
+  transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+}
+
+/* Price display */
+.display-4 {
+  font-weight: 700;
+  color: #1a202c;
+}
+
+/* List items in history should be readable */
+.list-group-item {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #2d3748 !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  margin-bottom: 0.5rem;
+  border-radius: 8px !important;
+}
+
+.list-group-item:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Accordion items */
+.accordion-item {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  margin-bottom: 0.5rem;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.accordion-button {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: #1a202c !important;
+  font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #1a202c !important;
+}
+
+.accordion-body {
+  background: white !important;
+  color: #2d3748 !important;
+}
+
+/* ============================================
+   TEXT ON CARDS
+   ============================================ */
+/* Ensure all text inside cards is dark */
+.card p,
+.card span,
+.card div,
+.card small {
+  color: #2d3748;
+}
+
+.card .text-muted {
+  color: #718096 !important;
+}
+
+.card strong {
+  color: #1a202c;
+}
+
+/* List items inside cards */
+.card ul li {
+  color: #2d3748;
+}
+
+/* Feature lists in pricing */
+.feature-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================
+   RESPONSIVE FIXES
+   ============================================ */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: absolute !important;
+    min-width: 200px !important;
+  }
+  
+  .navbar-collapse {
+    background: rgba(26, 32, 44, 0.98);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.z-top {
+  z-index: 9999 !important;
+}
+
+.z-high {
+  z-index: 1000 !important;
+}
+
+.z-normal {
+  z-index: 1 !important;
+}
+
+.backdrop-blur-strong {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #667eea;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 10000;
+}
+
+.skip-to-main:focus {
+  top: 0;
 }
 
 
@@ -2633,7 +3004,6 @@ const AboutPage = () => {
       id: 'MSSV: 23127509',
       github: 'https://github.com/wintermouse05'
     },
-    // Thêm thành viên khác ở đây
   ];
 
   const references = [
@@ -2646,17 +3016,24 @@ const AboutPage = () => {
   ];
 
   return (
-    <Container className="py-5">
+    <Container className="py-5 about-page">
       <div className="text-center mb-5">
-        <FaShieldAlt size={64} className="text-primary mb-3" />
-        <h1 className="mb-3">About ReconWeb</h1>
-        <p className="lead text-muted">
+        <FaShieldAlt 
+          size={64} 
+          className="mb-3" 
+          style={{ 
+            color: 'white',
+            filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))'
+          }} 
+        />
+        <h1 className="mb-3 text-white text-shadow">About ReconWeb</h1>
+        <p className="lead text-white text-shadow">
           Web Vulnerability Scanning Platform for Educational Purposes
         </p>
       </div>
 
       {/* University Information */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <div className="d-flex align-items-center mb-3">
             <FaUniversity size={32} className="text-primary me-3" />
@@ -2691,7 +3068,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Team Members */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <div className="d-flex align-items-center mb-4">
             <FaUsers size={32} className="text-primary me-3" />
@@ -2700,7 +3077,7 @@ const AboutPage = () => {
           <Row>
             {teamMembers.map((member, index) => (
               <Col md={6} lg={4} key={index} className="mb-3">
-                <Card className="h-100 border">
+                <Card className="h-100 border shadow-sm" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
                   <Card.Body>
                     <h5 className="mb-2">{member.name}</h5>
                     <p className="text-muted mb-2">{member.role}</p>
@@ -2725,7 +3102,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Project Information */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <h3 className="mb-3">Về dự án</h3>
           <p>
@@ -2746,7 +3123,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Technologies */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <h3 className="mb-3">Công nghệ sử dụng</h3>
           <Row>
@@ -2773,7 +3150,7 @@ const AboutPage = () => {
       </Card>
 
       {/* References */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <div className="d-flex align-items-center mb-4">
             <FaGithub size={32} className="text-primary me-3" />
@@ -2785,7 +3162,7 @@ const AboutPage = () => {
           <Row>
             {references.map((ref, index) => (
               <Col md={6} lg={4} key={index} className="mb-3">
-                <Card className="border h-100">
+                <Card className="border h-100 shadow-sm" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
                   <Card.Body className="d-flex align-items-center justify-content-between">
                     <span><strong>{ref.name}</strong></span>
                     <a 
@@ -2805,7 +3182,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Contact */}
-      <Card className="shadow-sm bg-light">
+      <Card className="shadow-lg bg-light glass-card">
         <Card.Body className="text-center">
           <FaEnvelope size={32} className="text-primary mb-3" />
           <h5>Liên hệ</h5>
@@ -2826,12 +3203,18 @@ const AboutPage = () => {
       </Card>
 
       {/* Disclaimer */}
-      <div className="text-center mt-5 text-muted small">
-        <p>
-          <strong>Disclaimer:</strong> Công cụ này chỉ dành cho mục đích giáo dục và nghiên cứu. 
-          Chỉ sử dụng trên các hệ thống bạn có quyền kiểm tra.
-        </p>
-        <p>&copy; {new Date().getFullYear()} ReconWeb - HCMUS Software Engineering Project</p>
+      <div className="text-center mt-5">
+        <Card className="glass-card shadow-sm">
+          <Card.Body>
+            <p className="mb-2">
+              <strong>Disclaimer:</strong> Công cụ này chỉ dành cho mục đích giáo dục và nghiên cứu. 
+              Chỉ sử dụng trên các hệ thống bạn có quyền kiểm tra.
+            </p>
+            <p className="mb-0 text-muted">
+              &copy; {new Date().getFullYear()} ReconWeb - HCMUS Software Engineering Project
+            </p>
+          </Card.Body>
+        </Card>
       </div>
     </Container>
   );
@@ -2987,7 +3370,7 @@ const CodeReviewPage = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">
+      <h1 className="mb-4 text-white text-shadow">
         <FaCode className="me-2" />
         AI Code Security Review
       </h1>
@@ -3003,11 +3386,22 @@ const CodeReviewPage = () => {
         </Alert>
       )}
 
-      <Tabs activeKey={activeTab} onSelect={setActiveTab} className="mb-4">
-        <Tab eventKey="review" title={<><FaShieldAlt className="me-1" /> New Review</>}>
+      <Tabs 
+        activeKey={activeTab} 
+        onSelect={setActiveTab} 
+        className="mb-4"
+      >
+        <Tab 
+          eventKey="review" 
+          title={
+            <span className="d-flex align-items-center">
+              <FaShieldAlt className="me-1" /> New Review
+            </span>
+          }
+        >
           <Row>
             <Col lg={6}>
-              <Card className="mb-4">
+              <Card className="mb-4 glass-card shadow-lg">
                 <Card.Header>
                   <h5 className="mb-0">Submit Code for Review</h5>
                 </Card.Header>
@@ -3051,7 +3445,7 @@ const CodeReviewPage = () => {
                       type="submit" 
                       variant="primary" 
                       size="lg" 
-                      className="w-100"
+                      className="w-100 btn-gradient-primary"
                       disabled={reviewing || !canReview.allowed}
                     >
                       {reviewing ? (
@@ -3073,7 +3467,7 @@ const CodeReviewPage = () => {
 
             <Col lg={6}>
               {result && (
-                <Card className="mb-4">
+                <Card className="mb-4 glass-card shadow-lg">
                   <Card.Header className="d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Security Review Results</h5>
                     {getRiskBadge(result.overallRisk)}
@@ -3131,7 +3525,7 @@ const CodeReviewPage = () => {
               )}
 
               {!result && !reviewing && (
-                <Card className="text-center py-5">
+                <Card className="text-center py-5 glass-card shadow-lg">
                   <Card.Body>
                     <FaBug size={48} className="text-muted mb-3" />
                     <h5>Ready to Review</h5>
@@ -3145,10 +3539,17 @@ const CodeReviewPage = () => {
           </Row>
         </Tab>
 
-        <Tab eventKey="history" title={<><FaHistory className="me-1" /> History</>}>
+        <Tab 
+          eventKey="history" 
+          title={
+            <span className="d-flex align-items-center">
+              <FaHistory className="me-1" /> History
+            </span>
+          }
+        >
           {loading ? (
             <div className="text-center py-5">
-              <Spinner animation="border" />
+              <Spinner animation="border" style={{ color: 'white' }} />
             </div>
           ) : history.length === 0 ? (
             <Alert variant="info">No code reviews yet. Submit your first code review above!</Alert>
@@ -3184,15 +3585,22 @@ const CodeReviewPage = () => {
           )}
         </Tab>
 
-        <Tab eventKey="stats" title={<><FaChartBar className="me-1" /> Statistics</>}>
+        <Tab 
+          eventKey="stats" 
+          title={
+            <span className="d-flex align-items-center">
+              <FaChartBar className="me-1" /> Statistics
+            </span>
+          }
+        >
           {loading ? (
             <div className="text-center py-5">
-              <Spinner animation="border" />
+              <Spinner animation="border" style={{ color: 'white' }} />
             </div>
           ) : stats ? (
             <Row>
               <Col md={3}>
-                <Card className="text-center mb-3">
+                <Card className="text-center mb-3 glass-card shadow">
                   <Card.Body>
                     <h2>{stats.totalReviews}</h2>
                     <p className="text-muted mb-0">Total Reviews</p>
@@ -3200,7 +3608,7 @@ const CodeReviewPage = () => {
                 </Card>
               </Col>
               <Col md={3}>
-                <Card className="text-center mb-3">
+                <Card className="text-center mb-3 glass-card shadow">
                   <Card.Body>
                     <h2>{stats.completedReviews}</h2>
                     <p className="text-muted mb-0">Completed</p>
@@ -3208,7 +3616,7 @@ const CodeReviewPage = () => {
                 </Card>
               </Col>
               <Col md={3}>
-                <Card className="text-center mb-3 border-danger">
+                <Card className="text-center mb-3 glass-card shadow border-danger">
                   <Card.Body>
                     <h2 className="text-danger">{stats.criticalVulns}</h2>
                     <p className="text-muted mb-0">Critical Issues</p>
@@ -3216,7 +3624,7 @@ const CodeReviewPage = () => {
                 </Card>
               </Col>
               <Col md={3}>
-                <Card className="text-center mb-3 border-warning">
+                <Card className="text-center mb-3 glass-card shadow border-warning">
                   <Card.Body>
                     <h2 className="text-warning">{stats.highVulns}</h2>
                     <p className="text-muted mb-0">High Issues</p>
@@ -3234,7 +3642,6 @@ const CodeReviewPage = () => {
 };
 
 export default CodeReviewPage;
-
 
 
 
@@ -3900,7 +4307,6 @@ const ProfilePage = () => {
       
       // Refresh user data
       const updatedUser = await request('/auth/me');
-      // Update context if needed
     } catch (err) {
       setErrorMsg(err.message || 'Failed to update profile');
     } finally {
@@ -3910,7 +4316,7 @@ const ProfilePage = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">
+      <h1 className="mb-4 text-white text-shadow">
         <FaUser className="me-2" />
         My Profile
       </h1>
@@ -3920,14 +4326,20 @@ const ProfilePage = () => {
 
       <Row>
         <Col lg={8}>
-          <Card className="shadow-sm">
-            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+          <Card className="shadow-lg glass-card">
+            <Card.Header className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Profile Information</h5>
               {!editing && (
                 <Button 
-                  variant="light" 
+                  variant="outline-primary"
                   size="sm"
                   onClick={() => setEditing(true)}
+                  style={{
+                    background: 'rgba(102, 126, 234, 0.1)',
+                    borderColor: '#667eea',
+                    color: '#667eea',
+                    fontWeight: 600
+                  }}
                 >
                   <FaUserEdit className="me-1" />
                   Edit Profile
@@ -3948,6 +4360,12 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     disabled={!editing}
                     required
+                    style={{
+                      background: editing ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)',
+                      border: '1px solid rgba(102, 126, 234, 0.3)',
+                      color: '#2d3748',
+                      fontWeight: 500
+                    }}
                   />
                 </Form.Group>
 
@@ -3963,6 +4381,12 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     disabled={!editing}
                     required
+                    style={{
+                      background: editing ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)',
+                      border: '1px solid rgba(102, 126, 234, 0.3)',
+                      color: '#2d3748',
+                      fontWeight: 500
+                    }}
                   />
                   <Form.Text className="text-muted">
                     Email changes may require verification
@@ -3974,6 +4398,7 @@ const ProfilePage = () => {
                     <Button 
                       type="submit" 
                       variant="primary"
+                      className="btn-gradient-primary"
                       disabled={loading}
                     >
                       {loading ? (
@@ -4008,8 +4433,8 @@ const ProfilePage = () => {
         </Col>
 
         <Col lg={4}>
-          <Card className="shadow-sm mb-3">
-            <Card.Header className="bg-light">
+          <Card className="shadow-lg glass-card mb-3">
+            <Card.Header>
               <h6 className="mb-0">Account Details</h6>
             </Card.Header>
             <Card.Body>
@@ -4033,14 +4458,34 @@ const ProfilePage = () => {
             </Card.Body>
           </Card>
 
-          <Card className="shadow-sm">
+          <Card className="shadow-lg glass-card">
             <Card.Body>
               <h6 className="mb-3">Quick Actions</h6>
               <div className="d-grid gap-2">
-                <Button variant="outline-primary" href="/settings" size="sm">
+                <Button 
+                  variant="outline-primary" 
+                  href="/settings" 
+                  size="sm"
+                  style={{
+                    background: 'rgba(102, 126, 234, 0.1)',
+                    borderColor: '#667eea',
+                    color: '#667eea',
+                    fontWeight: 600
+                  }}
+                >
                   Change Password
                 </Button>
-                <Button variant="outline-secondary" href="/subscription" size="sm">
+                <Button 
+                  variant="outline-secondary" 
+                  href="/subscription" 
+                  size="sm"
+                  style={{
+                    background: 'rgba(108, 117, 125, 0.1)',
+                    borderColor: '#6c757d',
+                    color: '#6c757d',
+                    fontWeight: 600
+                  }}
+                >
                   Manage Subscription
                 </Button>
               </div>
@@ -4062,32 +4507,70 @@ export default ProfilePage;
 ################################################################################
 
 import { useState } from 'react';
-import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Container, Form, Row, Modal } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaUserPlus, FaEnvelope, FaLock, FaUser, FaShieldAlt, FaKey, FaUserShield } from 'react-icons/fa';
+import { FaUserPlus, FaEnvelope, FaLock, FaUser, FaShieldAlt, FaKey, FaUserShield, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import '../styles/auth.css';
 
 const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ 
+    name: '', 
+    email: '', 
+    password: '',
+    confirmPassword: '',
+    agreedToPolicy: false
+  });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [showCurtain, setShowCurtain] = useState(false);
+  const [showPolicyModal, setShowPolicyModal] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = event.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    
+    setForm((prev) => ({ ...prev, [name]: fieldValue }));
+
+    // Kiểm tra khớp mật khẩu real-time
+    if (name === 'confirmPassword' || name === 'password') {
+      if (name === 'confirmPassword') {
+        setPasswordMatch(form.password === value);
+      } else {
+        setPasswordMatch(value === form.confirmPassword);
+      }
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitting(true);
     setError(null);
 
+    // Validate confirm password
+    if (form.password !== form.confirmPassword) {
+      setError('Mật khẩu xác nhận không khớp!');
+      setPasswordMatch(false);
+      return;
+    }
+
+    // Validate policy agreement
+    if (!form.agreedToPolicy) {
+      setError('Bạn phải đồng ý với Chính sách bảo mật để tiếp tục đăng ký!');
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
-      await register(form);
+      // Chỉ gửi name, email, password lên server
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password
+      });
       
       setShowCurtain(true);
       
@@ -4115,6 +4598,136 @@ const RegisterPage = () => {
         </div>
       )}
 
+      {/* Privacy Policy Modal */}
+      <Modal 
+        show={showPolicyModal} 
+        onHide={() => setShowPolicyModal(false)}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="fw-bold d-flex align-items-center">
+            <FaShieldAlt className="me-2 text-primary" />
+            Chính Sách Bảo Mật
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="px-4 py-4">
+          <div className="privacy-policy-content" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+            
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">1. Thu Thập Thông Tin</h5>
+              <p className="text-muted">
+                ReconWeb thu thập các thông tin cá nhân sau khi bạn đăng ký tài khoản:
+              </p>
+              <ul className="text-muted">
+                <li>Họ và tên đầy đủ</li>
+                <li>Địa chỉ email</li>
+                <li>Mật khẩu đã được mã hóa (bcrypt)</li>
+                <li>Lịch sử quét bảo mật và phân tích mã nguồn</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">2. Sử Dụng Thông Tin</h5>
+              <p className="text-muted">Thông tin của bạn được sử dụng để:</p>
+              <ul className="text-muted">
+                <li>Xác thực và quản lý tài khoản người dùng</li>
+                <li>Cung cấp dịch vụ quét bảo mật và phân tích code</li>
+                <li>Gửi thông báo về kết quả quét và cập nhật hệ thống</li>
+                <li>Cải thiện chất lượng dịch vụ</li>
+                <li>Hỗ trợ kỹ thuật khi cần thiết</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">3. Bảo Mật Dữ Liệu</h5>
+              <p className="text-muted">
+                Chúng tôi cam kết bảo vệ thông tin của bạn:
+              </p>
+              <ul className="text-muted">
+                <li><strong>Không chia sẻ:</strong> Thông tin không được bán hoặc chia sẻ với bên thứ ba</li>
+                <li><strong>Lưu trữ an toàn:</strong> Database được bảo vệ và backup định kỳ</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">4. Quyền Của Người Dùng</h5>
+              <p className="text-muted">Bạn có quyền:</p>
+              <ul className="text-muted">
+                <li>Truy cập và xem thông tin cá nhân</li>
+                <li>Cập nhật hoặc sửa đổi thông tin</li>
+                <li>Xóa tài khoản và dữ liệu liên quan</li>
+                <li>Xuất dữ liệu quét và phân tích</li>
+                <li>Từ chối nhận email marketing (nếu có)</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">5. Cookie và Tracking</h5>
+              <p className="text-muted">
+                ReconWeb sử dụng cookie để:
+              </p>
+              <ul className="text-muted">
+                <li>Duy trì phiên đăng nhập</li>
+                <li>Lưu trữ token xác thực (localStorage)</li>
+                <li>Cải thiện trải nghiệm người dùng</li>
+              </ul>
+              <p className="text-muted">
+                <em>Lưu ý: Cookie chỉ được sử dụng cho mục đích kỹ thuật, không theo dõi hành vi người dùng.</em>
+              </p>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">6. Dữ Liệu Quét Bảo Mật</h5>
+              <p className="text-muted">
+                Các kết quả quét và phân tích code:
+              </p>
+              <ul className="text-muted">
+                <li>Được lưu trữ riêng cho từng người dùng</li>
+                <li>Chỉ người dùng mới có quyền truy cập</li>
+                <li>Có thể xóa bất cứ lúc nào</li>
+                <li>Không được chia sẻ hoặc công khai</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">7. Thay Đổi Chính Sách</h5>
+              <p className="text-muted">
+                ReconWeb có quyền cập nhật chính sách bảo mật. Các thay đổi quan trọng sẽ được thông báo qua email.
+              </p>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">8. Liên Hệ</h5>
+              <p className="text-muted">
+                Nếu có thắc mắc về chính sách bảo mật, vui lòng liên hệ:
+              </p>
+              <ul className="text-muted">
+                <li><strong>Email:</strong> nghuy231@clc.fitus.edu.vn</li>
+                <li><strong>Hotline:</strong> 0349876124</li>
+              </ul>
+            </section>
+
+            <Alert variant="info" className="mt-4 border-0">
+              <FaCheckCircle className="me-2" />
+              <small>
+                <strong>Ngày cập nhật:</strong> 27/12/2024<br/>
+                <strong>Phiên bản:</strong> 1.0
+              </small>
+            </Alert>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 pt-0">
+          <Button 
+            variant="primary" 
+            onClick={() => setShowPolicyModal(false)}
+            className="px-4 rounded-3"
+          >
+            Đã hiểu
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <div className="auth-background">
         <div className="floating-locks">
           <FaLock className="lock-icon text-white" size={60} style={{ top: '10%' }} />
@@ -4132,7 +4745,7 @@ const RegisterPage = () => {
         </div>
 
         <Container className="position-relative" style={{ zIndex: 1 }}>
-          <Row className="min-vh-100 align-items-center justify-content-center">
+          <Row className="min-vh-100 align-items-center justify-content-center py-5">
             <Col xs={12} md={6} lg={5} xl={4}>
               <Card className="auth-card glass-card shadow-lg border-0 rounded-4">
                 <Card.Body className="p-5">
@@ -4161,7 +4774,7 @@ const RegisterPage = () => {
                   {error && (
                     <Alert variant="danger" className="rounded-3 border-0">
                       <div className="d-flex align-items-center">
-                        <FaLock className="me-2" />
+                        <FaExclamationTriangle className="me-2" />
                         {error}
                       </div>
                     </Alert>
@@ -4176,12 +4789,13 @@ const RegisterPage = () => {
                       <Form.Control
                         type="text"
                         name="name"
-                        placeholder="Nguyễn Văn A"
+                        placeholder="Nhập họ và tên đầy đủ"
                         value={form.name}
                         onChange={handleChange}
                         required
                         className="auth-input py-3 rounded-3"
                       />
+                      
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -4192,15 +4806,18 @@ const RegisterPage = () => {
                       <Form.Control
                         type="email"
                         name="email"
-                        placeholder="example@email.com"
+                        placeholder="Nhập địa chỉ email"
                         value={form.email}
                         onChange={handleChange}
                         required
                         className="auth-input py-3 rounded-3"
                       />
+                      <Form.Text className="text-muted">
+                        <small>Email dùng để đăng nhập và nhận thông báo</small>
+                      </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-4">
+                    <Form.Group className="mb-3">
                       <Form.Label className="fw-semibold text-dark">
                         <FaLock className="me-2 text-primary" />
                         Mật khẩu
@@ -4208,14 +4825,86 @@ const RegisterPage = () => {
                       <Form.Control
                         type="password"
                         name="password"
-                        placeholder="Ít nhất 8 ký tự"
+                        placeholder="Tạo mật khẩu mạnh"
                         value={form.password}
                         onChange={handleChange}
                         required
                         className="auth-input py-3 rounded-3"
                       />
                       <Form.Text className="text-muted">
-                        <small>Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ và số</small>
+                        <small>Ít nhất 8 ký tự, bao gồm chữ và số</small>
+                      </Form.Text>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaKey className="me-2 text-primary" />
+                        Xác nhận mật khẩu
+                      </Form.Label>
+                      <Form.Control
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Nhập lại mật khẩu"
+                        value={form.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        className={`auth-input py-3 rounded-3 ${
+                          form.confirmPassword && !passwordMatch ? 'is-invalid' : ''
+                        } ${
+                          form.confirmPassword && passwordMatch ? 'is-valid' : ''
+                        }`}
+                      />
+                      {form.confirmPassword && !passwordMatch && (
+                        <Form.Text className="text-danger d-flex align-items-center mt-2">
+                          <FaExclamationTriangle className="me-1" />
+                          <small>Mật khẩu không khớp!</small>
+                        </Form.Text>
+                      )}
+                      {form.confirmPassword && passwordMatch && (
+                        <Form.Text className="text-success d-flex align-items-center mt-2">
+                          <FaCheckCircle className="me-1" />
+                          <small>Mật khẩu khớp</small>
+                        </Form.Text>
+                      )}
+                      {!form.confirmPassword && (
+                        <Form.Text className="text-muted">
+                          <small>Nhập lại mật khẩu để xác nhận</small>
+                        </Form.Text>
+                      )}
+                    </Form.Group>
+
+                    <Form.Group className="mb-4">
+                      <Form.Check
+                        type="checkbox"
+                        id="agreedToPolicy"
+                        name="agreedToPolicy"
+                        checked={form.agreedToPolicy}
+                        onChange={handleChange}
+                        required
+                        label={
+                          <span className="text-dark">
+                            Tôi đồng ý với{' '}
+                            <Button
+                              variant="link"
+                              className="p-0 text-decoration-none fw-bold"
+                              style={{ 
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                border: 'none'
+                              }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setShowPolicyModal(true);
+                              }}
+                            >
+                              Chính sách bảo mật
+                            </Button>
+                          </span>
+                        }
+                      />
+                      <Form.Text className="text-muted ms-4">
+                        <small>Bạn phải đồng ý để tiếp tục đăng ký</small>
                       </Form.Text>
                     </Form.Group>
 
@@ -4226,7 +4915,7 @@ const RegisterPage = () => {
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         fontSize: '16px'
                       }}
-                      disabled={submitting}
+                      disabled={submitting || !passwordMatch || !form.agreedToPolicy}
                     >
                       {submitting ? (
                         <>
@@ -4487,8 +5176,8 @@ const ScanHistoryPage = () => {
   if (loading) {
     return (
       <div className="text-center py-5">
-        <Spinner animation="border" role="status" />
-        <p className="mt-3">Loading scan history…</p>
+        <Spinner animation="border" role="status" style={{ color: 'white' }} />
+        <p className="mt-3 text-white text-shadow">Loading scan history…</p>
       </div>
     );
   }
@@ -4497,19 +5186,35 @@ const ScanHistoryPage = () => {
     <Stack gap={4}>
       <div className="d-flex justify-content-between align-items-center">
         <div>
-          <h1 className="mb-1">Scan History</h1>
-          <p className="text-muted mb-0">Review and export results from previous scans.</p>
+          <h1 className="mb-1 text-white text-shadow">Scan History</h1>
+          <p className="text-white text-shadow mb-0" style={{ opacity: 0.9 }}>
+            Review and export results from previous scans.
+          </p>
         </div>
-        <Button as={Link} to="/" variant="outline-primary">
+        <Button 
+          as={Link} 
+          to="/" 
+          variant="outline-light"
+          className="btn-gradient-primary"
+          style={{
+            background: 'rgba(255, 255, 255, 0.2)',
+            border: '2px solid white',
+            color: 'white',
+            fontWeight: 600,
+            backdropFilter: 'blur(10px)'
+          }}
+        >
           New Scan
         </Button>
       </div>
+      
       {error ? <Alert variant="danger">{error}</Alert> : null}
+      
       {scans.length === 0 ? (
-        <Card className="shadow-sm">
+        <Card className="shadow-lg glass-card">
           <Card.Body className="text-center py-5">
             <p className="mb-2">No scans found.</p>
-            <Button as={Link} to="/" variant="primary">
+            <Button as={Link} to="/" variant="primary" className="btn-gradient-primary">
               Run your first scan
             </Button>
           </Card.Body>
@@ -4532,14 +5237,20 @@ const ScanHistoryPage = () => {
 
             return (
               <Col xs={12} key={scan._id}>
-                <Card className="shadow-sm">
+                <Card className="shadow-lg glass-card">
                   <Card.Body>
                     <div className="d-flex flex-column flex-lg-row justify-content-between gap-3">
                       <div className="flex-grow-1">
                         <div className="d-flex align-items-center gap-2 mb-1">
-                          <Card.Title className="mb-0">{scan.targetUrl}</Card.Title>
+                          <Card.Title className="mb-0" style={{ fontSize: '1.25rem' }}>
+                            {scan.targetUrl}
+                          </Card.Title>
                           {summary.riskLevel && (
-                            <Badge bg={getRiskColor(riskLevel)} className="text-uppercase">
+                            <Badge 
+                              bg={getRiskColor(riskLevel)} 
+                              className="text-uppercase"
+                              style={{ fontSize: '0.85rem', padding: '0.5em 1em' }}
+                            >
                               {riskLevel}
                             </Badge>
                           )}
@@ -4574,6 +5285,11 @@ const ScanHistoryPage = () => {
                             <Badge
                               bg={result.status === 'completed' ? 'success' : 'warning'}
                               key={`${scan._id}-${result.tool}`}
+                              style={{ 
+                                fontSize: '0.85rem',
+                                padding: '0.5em 0.75em',
+                                fontWeight: 600
+                              }}
                             >
                               {TOOL_DEFINITIONS[result.tool]?.label || result.tool}
                               {result.findings && result.findings.length > 0 && (
@@ -4583,12 +5299,28 @@ const ScanHistoryPage = () => {
                           ))}
                         </div>
                       </div>
+                      
                       <div className="d-flex align-items-center gap-2">
-                        <Button as={Link} to={`/scans/${scan._id}`} variant="primary">
+                        <Button 
+                          as={Link} 
+                          to={`/scans/${scan._id}`} 
+                          variant="primary"
+                          className="btn-gradient-primary"
+                          style={{ whiteSpace: 'nowrap' }}
+                        >
                           View Details
                         </Button>
                         <Dropdown>
-                          <Dropdown.Toggle variant="outline-secondary" id={`export-${scan._id}`}>
+                          <Dropdown.Toggle 
+                            variant="outline-secondary" 
+                            id={`export-${scan._id}`}
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.1)',
+                              borderColor: 'rgba(255, 255, 255, 0.3)',
+                              color: '#2d3748',
+                              fontWeight: 600
+                            }}
+                          >
                             Export
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
@@ -4617,7 +5349,6 @@ const ScanHistoryPage = () => {
 };
 
 export default ScanHistoryPage;
-
 
 
 
@@ -4715,7 +5446,7 @@ const SettingsPage = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">
+      <h1 className="mb-4 text-white text-shadow">
         <FaCog className="me-2" />
         Settings
       </h1>
@@ -4725,7 +5456,7 @@ const SettingsPage = () => {
 
       <Row>
         <Col lg={12}>
-          <Card className="shadow-sm">
+          <Card className="shadow-lg glass-card">
             <Card.Body>
               <Tabs
                 activeKey={activeTab}
@@ -4736,9 +5467,9 @@ const SettingsPage = () => {
                 <Tab 
                   eventKey="security" 
                   title={
-                    <>
+                    <span className="d-flex align-items-center">
                       <FaLock className="me-1" /> Security
-                    </>
+                    </span>
                   }
                 >
                   <h5 className="mb-3">Change Password</h5>
@@ -4755,6 +5486,11 @@ const SettingsPage = () => {
                               currentPassword: e.target.value
                             })}
                             required
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.95)',
+                              border: '1px solid rgba(102, 126, 234, 0.3)',
+                              color: '#2d3748'
+                            }}
                           />
                         </Form.Group>
 
@@ -4769,6 +5505,11 @@ const SettingsPage = () => {
                             })}
                             required
                             minLength={8}
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.95)',
+                              border: '1px solid rgba(102, 126, 234, 0.3)',
+                              color: '#2d3748'
+                            }}
                           />
                           <Form.Text className="text-muted">
                             At least 8 characters, including letters and numbers
@@ -4785,12 +5526,18 @@ const SettingsPage = () => {
                               confirmPassword: e.target.value
                             })}
                             required
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.95)',
+                              border: '1px solid rgba(102, 126, 234, 0.3)',
+                              color: '#2d3748'
+                            }}
                           />
                         </Form.Group>
 
                         <Button 
                           type="submit" 
                           variant="primary"
+                          className="btn-gradient-primary"
                           disabled={loading}
                         >
                           {loading ? (
@@ -4814,9 +5561,9 @@ const SettingsPage = () => {
                 <Tab 
                   eventKey="notifications" 
                   title={
-                    <>
+                    <span className="d-flex align-items-center">
                       <FaBell className="me-1" /> Notifications
-                    </>
+                    </span>
                   }
                 >
                   <h5 className="mb-3">Notification Preferences</h5>
@@ -4831,6 +5578,7 @@ const SettingsPage = () => {
                         emailNotifications: e.target.checked
                       })}
                       className="mb-3"
+                      style={{ fontSize: '1.1rem' }}
                     />
 
                     <Form.Check
@@ -4843,6 +5591,7 @@ const SettingsPage = () => {
                         scanComplete: e.target.checked
                       })}
                       className="mb-3"
+                      style={{ fontSize: '1.1rem' }}
                     />
 
                     <Form.Check
@@ -4855,6 +5604,7 @@ const SettingsPage = () => {
                         vulnerabilityAlerts: e.target.checked
                       })}
                       className="mb-3"
+                      style={{ fontSize: '1.1rem' }}
                     />
 
                     <Form.Check
@@ -4867,10 +5617,12 @@ const SettingsPage = () => {
                         weeklyReport: e.target.checked
                       })}
                       className="mb-3"
+                      style={{ fontSize: '1.1rem' }}
                     />
 
                     <Button 
                       variant="primary"
+                      className="btn-gradient-primary"
                       onClick={handleNotificationUpdate}
                       disabled={loading}
                     >
@@ -4944,7 +5696,6 @@ const SubscriptionPage = () => {
       setError('');
       setSuccess('');
 
-      // In production, integrate with Stripe or another payment provider
       await apiRequest('/subscription/upgrade', {
         method: 'POST',
         body: { plan: planId, autoRenew: true },
@@ -4996,7 +5747,7 @@ const SubscriptionPage = () => {
   if (loading) {
     return (
       <Container className="py-5 text-center">
-        <Spinner animation="border" role="status">
+        <Spinner animation="border" role="status" style={{ color: 'white' }}>
           <span className="visually-hidden">Loading...</span>
         </Spinner>
       </Container>
@@ -5005,15 +5756,21 @@ const SubscriptionPage = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">Subscription Plans</h1>
+      <h1 className="mb-4 text-white text-shadow">Subscription Plans</h1>
 
       {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
       {success && <Alert variant="success" dismissible onClose={() => setSuccess('')}>{success}</Alert>}
 
       {/* Current Status Card */}
       {status && (
-        <Card className="mb-4 border-primary">
-          <Card.Header className="bg-primary text-white">
+        <Card className="mb-4 border-primary glass-card shadow-lg">
+          <Card.Header 
+            className="text-white"
+            style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '16px 16px 0 0'
+            }}
+          >
             <h5 className="mb-0">Current Subscription</h5>
           </Card.Header>
           <Card.Body>
@@ -5080,13 +5837,26 @@ const SubscriptionPage = () => {
         {plans.map((plan) => (
           <Col md={4} key={plan.id} className="mb-4">
             <Card 
-              className={`h-100 ${plan.id === 'vip' ? 'border-warning' : plan.id === 'pro' ? 'border-primary' : ''}`}
-              style={{ borderWidth: plan.id !== 'free' ? '2px' : '1px' }}
+              className={`h-100 glass-card shadow-lg ${
+                plan.id === 'vip' ? 'border-warning' : 
+                plan.id === 'pro' ? 'border-primary' : ''
+              }`}
+              style={{ 
+                borderWidth: plan.id !== 'free' ? '3px' : '1px',
+                transition: 'all 0.3s ease'
+              }}
             >
-              <Card.Header className={`text-center py-3 ${
-                plan.id === 'vip' ? 'bg-warning text-dark' : 
-                plan.id === 'pro' ? 'bg-primary text-white' : 'bg-light'
-              }`}>
+              <Card.Header 
+                className={`text-center py-3 ${
+                  plan.id === 'vip' ? 'bg-warning text-dark' : 
+                  plan.id === 'pro' ? 'text-white' : ''
+                }`}
+                style={
+                  plan.id === 'pro' ? {
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                  } : {}
+                }
+              >
                 <div className="mb-2">{getPlanBadge(plan.id)}</div>
                 <h3 className="mb-0">{getPlanIcon(plan.id)} {plan.name}</h3>
               </Card.Header>
@@ -5119,15 +5889,29 @@ const SubscriptionPage = () => {
 
                 <div className="mt-auto">
                   {status?.plan?.id === plan.id ? (
-                    <Button variant="secondary" disabled className="w-100">
+                    <Button 
+                      variant="secondary" 
+                      disabled 
+                      className="w-100"
+                      style={{ fontWeight: 600 }}
+                    >
                       Current Plan
                     </Button>
                   ) : (
                     <Button
-                      variant={plan.id === 'vip' ? 'warning' : plan.id === 'pro' ? 'primary' : 'outline-secondary'}
-                      className="w-100"
+                      className={`w-100 ${
+                        plan.id === 'vip' || plan.id === 'pro' 
+                          ? 'btn-gradient-primary' 
+                          : ''
+                      }`}
+                      variant={
+                        plan.id === 'vip' ? 'warning' : 
+                        plan.id === 'pro' ? 'primary' : 
+                        'outline-secondary'
+                      }
                       onClick={() => handleUpgrade(plan.id)}
                       disabled={upgrading}
+                      style={{ fontWeight: 600 }}
                     >
                       {upgrading ? (
                         <Spinner animation="border" size="sm" />
@@ -5148,17 +5932,40 @@ const SubscriptionPage = () => {
       {/* Cancel Subscription */}
       {status?.plan?.id !== 'free' && status?.status === 'active' && (
         <div className="text-center mt-4">
-          <Button variant="outline-danger" onClick={handleCancel} disabled={upgrading}>
+          <Button 
+            variant="outline-danger" 
+            onClick={handleCancel} 
+            disabled={upgrading}
+            style={{
+              background: 'rgba(220, 53, 69, 0.1)',
+              borderColor: '#dc3545',
+              color: '#dc3545',
+              fontWeight: 600,
+              padding: '10px 30px',
+              fontSize: '16px',
+              transition: 'all 0.3s ease'
+            }}
+            className="cancel-subscription-btn"
+          >
             Cancel Subscription
           </Button>
         </div>
       )}
+
+      <style jsx>{`
+        .cancel-subscription-btn:hover {
+          background: #dc3545 !important;
+          color: white !important;
+          border-color: #dc3545 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+      `}</style>
     </Container>
   );
 };
 
 export default SubscriptionPage;
-
 
 
 
@@ -5516,14 +6323,15 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
   --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
   --gradient-warning: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%);
   
-  /* Glass Morphism */
-  --glass-bg: rgba(255, 255, 255, 0.95);
+  /* Glass Morphism - IMPROVED CONTRAST */
+  --glass-bg: rgba(255, 255, 255, 0.98);
+  --glass-bg-dark: rgba(26, 32, 44, 0.98);
   --glass-border: rgba(255, 255, 255, 0.3);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
   
-  /* Dark Glass */
-  --glass-dark-bg: rgba(26, 32, 44, 0.95);
-  --glass-dark-border: rgba(255, 255, 255, 0.1);
+  /* Dark Glass - IMPROVED */
+  --glass-dark-bg: rgba(26, 32, 44, 0.98);
+  --glass-dark-border: rgba(255, 255, 255, 0.15);
   
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -5630,7 +6438,7 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
 }
 
 /* ============================================
-   GLASS MORPHISM CARDS
+   GLASS MORPHISM CARDS - IMPROVED CONTRAST
    ============================================ */
 .glass-card {
   background: var(--glass-bg);
@@ -5640,6 +6448,7 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
   border-radius: 16px;
   box-shadow: var(--glass-shadow);
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  color: #1a202c; /* Dark text for better contrast */
 }
 
 .glass-card:hover {
@@ -5656,12 +6465,128 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
 }
 
 /* ============================================
+   TEXT CONTRAST IMPROVEMENTS
+   ============================================ */
+/* Ensure text is readable on gradient backgrounds */
+.text-on-gradient {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Page titles on gradient backgrounds */
+h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+}
+
+/* Headers directly on gradient background should be white with shadow */
+body > div > main > div > h1,
+body > div > main > div > div > h1,
+.container > h1 {
+  color: white !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+}
+
+/* Card text should be dark for contrast */
+.card-body, .card-text {
+  color: #2d3748 !important;
+}
+
+.card-header {
+  color: #1a202c !important;
+  font-weight: 600;
+}
+
+/* Muted text should still be readable */
+.text-muted {
+  color: #718096 !important;
+}
+
+/* Small text on gradient */
+body > div > main small,
+.container > small {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   DROPDOWN MENU FIXES
+   ============================================ */
+/* Fix dropdown z-index and appearance */
+.dropdown-menu {
+  z-index: 9999 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+  margin-top: 8px !important;
+  min-width: 250px !important;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #2d3748 !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  transform: translateX(4px);
+}
+
+.dropdown-menu .dropdown-item.disabled {
+  color: #a0aec0 !important;
+  background: transparent !important;
+}
+
+.dropdown-divider {
+  border-top: 1px solid rgba(102, 126, 234, 0.2) !important;
+  margin: 8px 0 !important;
+}
+
+/* Navbar dropdown toggle */
+.navbar .dropdown-toggle::after {
+  display: none;
+}
+
+.navbar .nav-link {
+  position: relative;
+}
+
+/* ============================================
+   NAVBAR IMPROVEMENTS
+   ============================================ */
+.navbar {
+  z-index: 1000 !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  transition: color 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: white !important;
+}
+
+/* User profile button in navbar */
+.navbar .btn-gradient-primary {
+  z-index: 1001;
+}
+
+/* ============================================
    GRADIENT BUTTONS
    ============================================ */
 .btn-gradient-primary {
   background: var(--gradient-primary);
   border: none;
-  color: white;
+  color: white !important;
   font-weight: 600;
   padding: 12px 32px;
   border-radius: 12px;
@@ -5692,7 +6617,13 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
 .btn-gradient-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  color: white;
+  color: white !important;
+}
+
+.btn-gradient-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 .btn-gradient-success {
@@ -5707,6 +6638,35 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
   border: none;
   color: white;
   font-weight: 600;
+}
+
+/* Outline buttons on gradient background */
+.btn-outline-light {
+  color: white !important;
+  border: 2px solid white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background: white !important;
+  color: #667eea !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   BADGES IMPROVEMENTS
+   ============================================ */
+.badge {
+  font-weight: 600 !important;
+  padding: 0.5em 0.85em !important;
+  border-radius: 6px !important;
+  font-size: 0.85em !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ============================================
@@ -5805,6 +6765,58 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
   .btn-gradient-primary {
     padding: 10px 24px;
   }
+  
+  .dropdown-menu {
+    min-width: 200px !important;
+  }
+}
+
+/* ============================================
+   ABOUT PAGE SPECIFIC FIXES
+   ============================================ */
+/* Make sure cards on About page have good contrast */
+.about-page .glass-card,
+#root > div > main > div > div > .card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #1a202c !important;
+}
+
+.about-page .glass-card .card-header,
+#root > div > main > div > div > .card .card-header {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: #1a202c !important;
+  font-weight: 600;
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+.hover-text-white:hover {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+/* Glass input focus effect */
+.glass-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.z-top {
+  z-index: 9999;
 }
 
 
