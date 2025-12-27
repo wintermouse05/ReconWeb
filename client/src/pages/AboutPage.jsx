@@ -79,7 +79,7 @@ const AboutPage = () => {
                 <strong>Học kỳ:</strong> HK1 2024-2025
               </p>
               <p className="mb-2">
-                <strong>Giảng viên hướng dẫn:</strong> [Nguyễn Văn Huy]
+                <strong>Giảng viên hướng dẫn:</strong> Nguyễn Minh Huy - Ngô Ngọc Đăng Khoa - Trương Phước Lộc
               </p>
               <p className="mb-2">
                 <FaMapMarkerAlt className="me-2" />
@@ -210,7 +210,7 @@ const AboutPage = () => {
           <FaEnvelope size={32} className="text-primary mb-3" />
           <h5>Liên hệ</h5>
           <p className="mb-2">
-            <strong>Email:</strong> [email của bạn]@clc.fitus.edu.vn
+            <strong>Email:</strong> nghuy231@clc.fitus.edu.vn
           </p>
           <p className="mb-2">
             <strong>GitHub:</strong>{' '}
