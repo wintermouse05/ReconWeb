@@ -628,8 +628,9 @@ const getSupportedTools = () => [...SUPPORTED_TOOLS];
  */
 const isToolInstalled = (toolName) => {
   try {
-    // Sử dụng EXTENDED_PATH để tìm tool
-    execSync(`which ${toolName}`, { 
+    // Windows dùng 'where', Linux/Mac dùng 'which'
+    const command = os.platform() === 'win32' ? 'where' : 'which';
+    execSync(`${command} ${toolName}`, { 
       stdio: 'ignore',
       env: { ...process.env, PATH: EXTENDED_PATH }
     });

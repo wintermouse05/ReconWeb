@@ -9,13 +9,14 @@ import ScanHistoryPage from './pages/ScanHistoryPage';
 import ScanDetailsPage from './pages/ScanDetailsPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import CodeReviewPage from './pages/CodeReviewPage';
-
+import AboutPage from './pages/AboutPage';
 const App = () => (
   <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+       
         <Route
           element={
             <ProtectedRoute>
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="scans/:id" element={<ScanDetailsPage />} />
           <Route path="subscription" element={<SubscriptionPage />} />
           <Route path="code-review" element={<CodeReviewPage />} />
+          <Route path="/about" element={<AboutPage />} /> {/* ← Thêm route public */}
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

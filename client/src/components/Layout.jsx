@@ -1,7 +1,7 @@
-import { Container, Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaShieldAlt, FaHistory, FaTachometerAlt, FaCode, FaCrown } from 'react-icons/fa';
+import { FaShieldAlt, FaHistory, FaTachometerAlt, FaCode, FaCrown, FaInfoCircle } from 'react-icons/fa';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -31,6 +31,9 @@ const Layout = () => {
               </Nav.Link>
               <Nav.Link as={Link} to="/code-review">
                 <FaCode className="me-1" /> Code Review
+              </Nav.Link>
+              <Nav.Link as={Link} to="/about">
+                <FaInfoCircle className="me-1" /> About
               </Nav.Link>
             </Nav>
             <Nav className="ms-auto">

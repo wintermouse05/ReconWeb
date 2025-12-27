@@ -1,0 +1,173 @@
+ReconWeb
+├── .dockerignore
+├── .git
+│   ├── COMMIT_EDITMSG
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── ORIG_HEAD
+│   ├── config
+│   ├── description
+│   ├── hooks
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── pre-merge-commit.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── push-to-checkout.sample
+│   │   ├── sendemail-validate.sample
+│   │   └── update.sample
+│   ├── index
+│   ├── info
+│   │   └── exclude
+│   ├── logs
+│   │   ├── HEAD
+│   │   └── refs
+│   │       ├── heads
+│   │       │   ├── congtuan
+│   │       │   ├── develop
+│   │       │   └── main
+│   │       └── remotes
+│   │           └── origin
+│   │               ├── HEAD
+│   │               ├── congtuan
+│   │               ├── develop
+│   │               ├── main
+│   │               └── staging
+│   ├── objects
+│   │   ├── 23
+│   │   │   └── 651a0b2b651feac39277acb9957a6ed83dcef7
+│   │   ├── 25
+│   │   │   └── 7aa7d589565ef4fcca2fa1751b37adf25fb25d
+│   │   ├── 2e
+│   │   │   └── 11d78fa0e72c78844cd76bd43148f1af133c8a
+│   │   ├── 6b
+│   │   │   └── bd72691eb6ec7115abb40a3d9b537b522a1f26
+│   │   ├── 83
+│   │   │   └── 42741bb635d8fe109de59f1a3091b494fb1cef
+│   │   ├── cc
+│   │   │   └── 4923925cd13742a21357e21c9041469114cf8d
+│   │   ├── dc
+│   │   │   └── 4025ab7f91fead4ef98cd17f36d5be268feb61
+│   │   ├── e9
+│   │   │   └── 7cf880c7a6f97a310e53562374971f9aa75f91
+│   │   ├── ee
+│   │   │   └── 352cee27b65e0539dbd5e1f625d8493b28febc
+│   │   ├── f9
+│   │   │   └── 657513aafb412acbe941f78e175dc3b1b33d8b
+│   │   ├── info
+│   │   └── pack
+│   │       ├── pack-05357efd887fd7a44c27c4fbe816c75ddfe0da10.idx
+│   │       ├── pack-05357efd887fd7a44c27c4fbe816c75ddfe0da10.pack
+│   │       ├── pack-05357efd887fd7a44c27c4fbe816c75ddfe0da10.rev
+│   │       ├── pack-f64246011161aa6abf7efa83eba8d0a4b1306d41.idx
+│   │       ├── pack-f64246011161aa6abf7efa83eba8d0a4b1306d41.pack
+│   │       └── pack-f64246011161aa6abf7efa83eba8d0a4b1306d41.rev
+│   ├── packed-refs
+│   └── refs
+│       ├── heads
+│       │   ├── congtuan
+│       │   ├── develop
+│       │   └── main
+│       ├── remotes
+│       │   └── origin
+│       │       ├── HEAD
+│       │       ├── congtuan
+│       │       ├── develop
+│       │       ├── main
+│       │       └── staging
+│       └── tags
+├── .github
+├── README.md
+├── client
+│   ├── .dockerignore
+│   ├── .env
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── nginx.conf
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── assets
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── FindingsList.jsx
+│   │   │   ├── Layout.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── RemediationPanel.jsx
+│   │   │   ├── ScanProgress.jsx
+│   │   │   ├── ScanResultAccordion.jsx
+│   │   │   ├── ScanSummary.jsx
+│   │   │   └── ToolOptionForm.jsx
+│   │   ├── config.js
+│   │   ├── constants
+│   │   │   └── tools.js
+│   │   ├── context
+│   │   │   └── AuthContext.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   ├── pages
+│   │   │   ├── CodeReviewPage.jsx
+│   │   │   ├── DashboardPage.jsx
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── RegisterPage.jsx
+│   │   │   ├── ScanDetailsPage.jsx
+│   │   │   ├── ScanHistoryPage.jsx
+│   │   │   └── SubscriptionPage.jsx
+│   │   └── services
+│   │       └── apiClient.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── docker-compose.yml
+├── node_modules
+├── package-lock.json
+├── package.json
+├── server
+│   ├── .dockerignore
+│   ├── .env
+│   ├── .env.example
+│   ├── Dockerfile
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   └── src
+│       ├── config
+│       │   └── db.js
+│       ├── controllers
+│       │   ├── authController.js
+│       │   └── scanController.js
+│       ├── index.js
+│       ├── middleware
+│       │   └── authMiddleware.js
+│       ├── models
+│       │   ├── CodeReview.js
+│       │   ├── Scan.js
+│       │   └── User.js
+│       ├── routes
+│       │   ├── authRoutes.js
+│       │   ├── codeReviewRoutes.js
+│       │   ├── remediationRoutes.js
+│       │   ├── scanRoutes.js
+│       │   └── subscriptionRoutes.js
+│       └── services
+│           ├── codeReviewService.js
+│           ├── pdfGenerator.js
+│           ├── remediationService.js
+│           ├── resultParser.js
+│           ├── scanService.js
+│           └── subscriptionService.js
