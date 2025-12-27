@@ -40,26 +40,102 @@ ReconWeb
 │   │               ├── main
 │   │               └── staging
 │   ├── objects
+│   │   ├── 16
+│   │   │   └── f9b37ed56508c8b35a8f07b64be75c6a94994f
+│   │   ├── 1d
+│   │   │   └── 3f518c904b34133c9fafbaf60b357e6407122d
 │   │   ├── 23
 │   │   │   └── 651a0b2b651feac39277acb9957a6ed83dcef7
 │   │   ├── 25
 │   │   │   └── 7aa7d589565ef4fcca2fa1751b37adf25fb25d
+│   │   ├── 2a
+│   │   │   └── e0c32c94785e174f7dc6f2ee819e55309775a3
 │   │   ├── 2e
 │   │   │   └── 11d78fa0e72c78844cd76bd43148f1af133c8a
+│   │   ├── 31
+│   │   │   └── 4717ad4828ba2866c75d51292fcd0254701070
+│   │   ├── 32
+│   │   │   └── bc183abff7907bbc857a66bb511cfe43c47656
+│   │   ├── 37
+│   │   │   └── 29d7f1cb4ed08293d72b7ea4cd73a857434978
+│   │   ├── 3e
+│   │   │   ├── 146b4134b05d0581d57f0907ae876f6e4f1f4d
+│   │   │   └── a65db670fdc3cc206e7b3ebae7baaca0da00dc
+│   │   ├── 42
+│   │   │   └── 2e1fce666fd4bd1a5f56b405e544a7c7386d7a
+│   │   ├── 4c
+│   │   │   └── df7dca342103c7c699e06472d0e8b9c8a03cfb
+│   │   ├── 55
+│   │   │   └── acf8a4e2c06865515d061897ebf4a0f302a51c
+│   │   ├── 56
+│   │   │   └── 708e4e06d021bdaeeac87a4cf87b4894fa2304
+│   │   ├── 5f
+│   │   │   └── 68b4cb3a4dc3a8b31bf5d9da12987fabc9a238
+│   │   ├── 66
+│   │   │   └── 5bc2ab6cfcab45543d546b48e025bd008dfa04
 │   │   ├── 6b
 │   │   │   └── bd72691eb6ec7115abb40a3d9b537b522a1f26
+│   │   ├── 76
+│   │   │   └── 2efef989540e5e6b152672bbee87edf82f1778
+│   │   ├── 7a
+│   │   │   └── f8c9218f5fbb6675fa6dbfa15d8c685bc2c219
+│   │   ├── 82
+│   │   │   └── 98b91832d2f70a6089e2a1cb57a2c7c14780ee
 │   │   ├── 83
 │   │   │   └── 42741bb635d8fe109de59f1a3091b494fb1cef
+│   │   ├── 85
+│   │   │   └── c793100db0926ce5aa7808cc64e96dbef09da6
+│   │   ├── 88
+│   │   │   └── dd8edcd1484c88d3fdc31a7aa40315ccee7a7c
+│   │   ├── 93
+│   │   │   └── 8b2039e51f2b97f144bb687abc545e62222013
+│   │   ├── 97
+│   │   │   ├── c53279f43c10400b9195b128164a5418d77659
+│   │   │   └── f78d67786858edefef7edd70bf5fcbc03e0a85
+│   │   ├── 99
+│   │   │   └── 13fa9d0812ac0bcdccc80d2805c013cf2237b7
+│   │   ├── a1
+│   │   │   └── 5d4549a239c55cc18d7c97975174e2dceee70a
+│   │   ├── a3
+│   │   │   └── 95ea38d1519de6861a242e3c6c1e13d5042f14
+│   │   ├── b1
+│   │   │   └── 9d22d0dde061fdef641155d108fa432bdecb04
+│   │   ├── b5
+│   │   │   └── a15c908468dc14d608c47d92c69a45f20ce040
+│   │   ├── bd
+│   │   │   └── a13e001da4d81f5319951d509f6c8d18b83ff3
+│   │   ├── c4
+│   │   │   └── 77a189899137f10792f38527c7adbe27d14bca
 │   │   ├── cc
 │   │   │   └── 4923925cd13742a21357e21c9041469114cf8d
+│   │   ├── d2
+│   │   │   └── 3fa0441c73f74159f9ca7396ec109aa866a106
+│   │   ├── d4
+│   │   │   └── e3f5d40b8a79c87033f11123c404ba3e441499
+│   │   ├── d7
+│   │   │   └── 33a83edf9663e9035a2a4b0a6b5ac704ad07e7
 │   │   ├── dc
 │   │   │   └── 4025ab7f91fead4ef98cd17f36d5be268feb61
 │   │   ├── e9
 │   │   │   └── 7cf880c7a6f97a310e53562374971f9aa75f91
+│   │   ├── ec
+│   │   │   └── a10466194291d65ca87c21937e75a881551a92
+│   │   ├── ed
+│   │   │   └── 0f4f9878132e2bee01493d343c14e338126c49
 │   │   ├── ee
 │   │   │   └── 352cee27b65e0539dbd5e1f625d8493b28febc
+│   │   ├── f4
+│   │   │   └── 4972f00bb607b175154404520d66b17d47c1c6
+│   │   ├── f8
+│   │   │   └── aab6762b7c1ef007b7e7102351e866f8986398
 │   │   ├── f9
 │   │   │   └── 657513aafb412acbe941f78e175dc3b1b33d8b
+│   │   ├── fb
+│   │   │   └── e0a3110aff1bba36c938de4dc75a6bbf645126
+│   │   ├── fc
+│   │   │   └── f5f0e96719da92e766abb3972d946c47e8a423
+│   │   ├── ff
+│   │   │   └── 047c43a01cb825f724e54f26c490bace6cccb5
 │   │   ├── info
 │   │   └── pack
 │   │       ├── pack-05357efd887fd7a44c27c4fbe816c75ddfe0da10.idx
@@ -106,6 +182,7 @@ ReconWeb
 │   │   ├── assets
 │   │   │   └── react.svg
 │   │   ├── components
+│   │   │   ├── AnimatedBackground.jsx
 │   │   │   ├── FindingsList.jsx
 │   │   │   ├── Layout.jsx
 │   │   │   ├── ProtectedRoute.jsx
@@ -122,15 +199,21 @@ ReconWeb
 │   │   ├── index.css
 │   │   ├── main.jsx
 │   │   ├── pages
+│   │   │   ├── AboutPage.jsx
 │   │   │   ├── CodeReviewPage.jsx
 │   │   │   ├── DashboardPage.jsx
 │   │   │   ├── LoginPage.jsx
+│   │   │   ├── ProfilePage.jsx
 │   │   │   ├── RegisterPage.jsx
 │   │   │   ├── ScanDetailsPage.jsx
 │   │   │   ├── ScanHistoryPage.jsx
+│   │   │   ├── SettingsPage.jsx
 │   │   │   └── SubscriptionPage.jsx
-│   │   └── services
-│   │       └── apiClient.js
+│   │   ├── services
+│   │   │   └── apiClient.js
+│   │   └── styles
+│   │       ├── auth.css
+│   │       └── theme.css
 │   ├── tailwind.config.js
 │   └── vite.config.js
 ├── docker-compose.yml

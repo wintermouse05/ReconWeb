@@ -1,3 +1,4 @@
+// client/src/App.jsx
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -10,6 +11,9 @@ import ScanDetailsPage from './pages/ScanDetailsPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import CodeReviewPage from './pages/CodeReviewPage';
 import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';  // ← New
+import SettingsPage from './pages/SettingsPage';  // ← New
+
 const App = () => (
   <AuthProvider>
     <BrowserRouter>
@@ -29,7 +33,9 @@ const App = () => (
           <Route path="scans/:id" element={<ScanDetailsPage />} />
           <Route path="subscription" element={<SubscriptionPage />} />
           <Route path="code-review" element={<CodeReviewPage />} />
-          <Route path="/about" element={<AboutPage />} /> {/* ← Thêm route public */}
+          <Route path="about" element={<AboutPage />} />
+          <Route path="profile" element={<ProfilePage />} />  {/* ← New */}
+          <Route path="settings" element={<SettingsPage />} />  {/* ← New */}
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

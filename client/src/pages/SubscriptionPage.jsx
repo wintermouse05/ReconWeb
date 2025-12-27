@@ -39,7 +39,6 @@ const SubscriptionPage = () => {
       setError('');
       setSuccess('');
 
-      // In production, integrate with Stripe or another payment provider
       await apiRequest('/subscription/upgrade', {
         method: 'POST',
         body: { plan: planId, autoRenew: true },
@@ -91,7 +90,7 @@ const SubscriptionPage = () => {
   if (loading) {
     return (
       <Container className="py-5 text-center">
-        <Spinner animation="border" role="status">
+        <Spinner animation="border" role="status" style={{ color: 'white' }}>
           <span className="visually-hidden">Loading...</span>
         </Spinner>
       </Container>
@@ -100,15 +99,21 @@ const SubscriptionPage = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">Subscription Plans</h1>
+      <h1 className="mb-4 text-white text-shadow">Subscription Plans</h1>
 
       {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
       {success && <Alert variant="success" dismissible onClose={() => setSuccess('')}>{success}</Alert>}
 
       {/* Current Status Card */}
       {status && (
-        <Card className="mb-4 border-primary">
-          <Card.Header className="bg-primary text-white">
+        <Card className="mb-4 border-primary glass-card shadow-lg">
+          <Card.Header 
+            className="text-white"
+            style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '16px 16px 0 0'
+            }}
+          >
             <h5 className="mb-0">Current Subscription</h5>
           </Card.Header>
           <Card.Body>
@@ -175,13 +180,26 @@ const SubscriptionPage = () => {
         {plans.map((plan) => (
           <Col md={4} key={plan.id} className="mb-4">
             <Card 
-              className={`h-100 ${plan.id === 'vip' ? 'border-warning' : plan.id === 'pro' ? 'border-primary' : ''}`}
-              style={{ borderWidth: plan.id !== 'free' ? '2px' : '1px' }}
+              className={`h-100 glass-card shadow-lg ${
+                plan.id === 'vip' ? 'border-warning' : 
+                plan.id === 'pro' ? 'border-primary' : ''
+              }`}
+              style={{ 
+                borderWidth: plan.id !== 'free' ? '3px' : '1px',
+                transition: 'all 0.3s ease'
+              }}
             >
-              <Card.Header className={`text-center py-3 ${
-                plan.id === 'vip' ? 'bg-warning text-dark' : 
-                plan.id === 'pro' ? 'bg-primary text-white' : 'bg-light'
-              }`}>
+              <Card.Header 
+                className={`text-center py-3 ${
+                  plan.id === 'vip' ? 'bg-warning text-dark' : 
+                  plan.id === 'pro' ? 'text-white' : ''
+                }`}
+                style={
+                  plan.id === 'pro' ? {
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                  } : {}
+                }
+              >
                 <div className="mb-2">{getPlanBadge(plan.id)}</div>
                 <h3 className="mb-0">{getPlanIcon(plan.id)} {plan.name}</h3>
               </Card.Header>
@@ -214,15 +232,29 @@ const SubscriptionPage = () => {
 
                 <div className="mt-auto">
                   {status?.plan?.id === plan.id ? (
-                    <Button variant="secondary" disabled className="w-100">
+                    <Button 
+                      variant="secondary" 
+                      disabled 
+                      className="w-100"
+                      style={{ fontWeight: 600 }}
+                    >
                       Current Plan
                     </Button>
                   ) : (
                     <Button
-                      variant={plan.id === 'vip' ? 'warning' : plan.id === 'pro' ? 'primary' : 'outline-secondary'}
-                      className="w-100"
+                      className={`w-100 ${
+                        plan.id === 'vip' || plan.id === 'pro' 
+                          ? 'btn-gradient-primary' 
+                          : ''
+                      }`}
+                      variant={
+                        plan.id === 'vip' ? 'warning' : 
+                        plan.id === 'pro' ? 'primary' : 
+                        'outline-secondary'
+                      }
                       onClick={() => handleUpgrade(plan.id)}
                       disabled={upgrading}
+                      style={{ fontWeight: 600 }}
                     >
                       {upgrading ? (
                         <Spinner animation="border" size="sm" />
@@ -243,11 +275,35 @@ const SubscriptionPage = () => {
       {/* Cancel Subscription */}
       {status?.plan?.id !== 'free' && status?.status === 'active' && (
         <div className="text-center mt-4">
-          <Button variant="outline-danger" onClick={handleCancel} disabled={upgrading}>
+          <Button 
+            variant="outline-danger" 
+            onClick={handleCancel} 
+            disabled={upgrading}
+            style={{
+              background: 'rgba(220, 53, 69, 0.1)',
+              borderColor: '#dc3545',
+              color: '#dc3545',
+              fontWeight: 600,
+              padding: '10px 30px',
+              fontSize: '16px',
+              transition: 'all 0.3s ease'
+            }}
+            className="cancel-subscription-btn"
+          >
             Cancel Subscription
           </Button>
         </div>
       )}
+
+      <style jsx>{`
+        .cancel-subscription-btn:hover {
+          background: #dc3545 !important;
+          color: white !important;
+          border-color: #dc3545 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+      `}</style>
     </Container>
   );
 };

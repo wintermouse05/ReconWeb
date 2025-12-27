@@ -1,30 +1,68 @@
 import { useState } from 'react';
-import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Container, Form, Row, Modal } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaUserPlus, FaEnvelope, FaLock, FaUser, FaShieldAlt, FaKey, FaUserShield } from 'react-icons/fa';
+import { FaUserPlus, FaEnvelope, FaLock, FaUser, FaShieldAlt, FaKey, FaUserShield, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import '../styles/auth.css';
 
 const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ 
+    name: '', 
+    email: '', 
+    password: '',
+    confirmPassword: '',
+    agreedToPolicy: false
+  });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [showCurtain, setShowCurtain] = useState(false);
+  const [showPolicyModal, setShowPolicyModal] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = event.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    
+    setForm((prev) => ({ ...prev, [name]: fieldValue }));
+
+    // Kiểm tra khớp mật khẩu real-time
+    if (name === 'confirmPassword' || name === 'password') {
+      if (name === 'confirmPassword') {
+        setPasswordMatch(form.password === value);
+      } else {
+        setPasswordMatch(value === form.confirmPassword);
+      }
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitting(true);
     setError(null);
 
+    // Validate confirm password
+    if (form.password !== form.confirmPassword) {
+      setError('Mật khẩu xác nhận không khớp!');
+      setPasswordMatch(false);
+      return;
+    }
+
+    // Validate policy agreement
+    if (!form.agreedToPolicy) {
+      setError('Bạn phải đồng ý với Chính sách bảo mật để tiếp tục đăng ký!');
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
-      await register(form);
+      // Chỉ gửi name, email, password lên server
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password
+      });
       
       setShowCurtain(true);
       
@@ -52,6 +90,136 @@ const RegisterPage = () => {
         </div>
       )}
 
+      {/* Privacy Policy Modal */}
+      <Modal 
+        show={showPolicyModal} 
+        onHide={() => setShowPolicyModal(false)}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="fw-bold d-flex align-items-center">
+            <FaShieldAlt className="me-2 text-primary" />
+            Chính Sách Bảo Mật
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="px-4 py-4">
+          <div className="privacy-policy-content" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+            
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">1. Thu Thập Thông Tin</h5>
+              <p className="text-muted">
+                ReconWeb thu thập các thông tin cá nhân sau khi bạn đăng ký tài khoản:
+              </p>
+              <ul className="text-muted">
+                <li>Họ và tên đầy đủ</li>
+                <li>Địa chỉ email</li>
+                <li>Mật khẩu đã được mã hóa (bcrypt)</li>
+                <li>Lịch sử quét bảo mật và phân tích mã nguồn</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">2. Sử Dụng Thông Tin</h5>
+              <p className="text-muted">Thông tin của bạn được sử dụng để:</p>
+              <ul className="text-muted">
+                <li>Xác thực và quản lý tài khoản người dùng</li>
+                <li>Cung cấp dịch vụ quét bảo mật và phân tích code</li>
+                <li>Gửi thông báo về kết quả quét và cập nhật hệ thống</li>
+                <li>Cải thiện chất lượng dịch vụ</li>
+                <li>Hỗ trợ kỹ thuật khi cần thiết</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">3. Bảo Mật Dữ Liệu</h5>
+              <p className="text-muted">
+                Chúng tôi cam kết bảo vệ thông tin của bạn:
+              </p>
+              <ul className="text-muted">
+                <li><strong>Không chia sẻ:</strong> Thông tin không được bán hoặc chia sẻ với bên thứ ba</li>
+                <li><strong>Lưu trữ an toàn:</strong> Database được bảo vệ và backup định kỳ</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">4. Quyền Của Người Dùng</h5>
+              <p className="text-muted">Bạn có quyền:</p>
+              <ul className="text-muted">
+                <li>Truy cập và xem thông tin cá nhân</li>
+                <li>Cập nhật hoặc sửa đổi thông tin</li>
+                <li>Xóa tài khoản và dữ liệu liên quan</li>
+                <li>Xuất dữ liệu quét và phân tích</li>
+                <li>Từ chối nhận email marketing (nếu có)</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">5. Cookie và Tracking</h5>
+              <p className="text-muted">
+                ReconWeb sử dụng cookie để:
+              </p>
+              <ul className="text-muted">
+                <li>Duy trì phiên đăng nhập</li>
+                <li>Lưu trữ token xác thực (localStorage)</li>
+                <li>Cải thiện trải nghiệm người dùng</li>
+              </ul>
+              <p className="text-muted">
+                <em>Lưu ý: Cookie chỉ được sử dụng cho mục đích kỹ thuật, không theo dõi hành vi người dùng.</em>
+              </p>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">6. Dữ Liệu Quét Bảo Mật</h5>
+              <p className="text-muted">
+                Các kết quả quét và phân tích code:
+              </p>
+              <ul className="text-muted">
+                <li>Được lưu trữ riêng cho từng người dùng</li>
+                <li>Chỉ người dùng mới có quyền truy cập</li>
+                <li>Có thể xóa bất cứ lúc nào</li>
+                <li>Không được chia sẻ hoặc công khai</li>
+              </ul>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">7. Thay Đổi Chính Sách</h5>
+              <p className="text-muted">
+                ReconWeb có quyền cập nhật chính sách bảo mật. Các thay đổi quan trọng sẽ được thông báo qua email.
+              </p>
+            </section>
+
+            <section className="mb-4">
+              <h5 className="fw-bold text-primary mb-3">8. Liên Hệ</h5>
+              <p className="text-muted">
+                Nếu có thắc mắc về chính sách bảo mật, vui lòng liên hệ:
+              </p>
+              <ul className="text-muted">
+                <li><strong>Email:</strong> nghuy231@clc.fitus.edu.vn</li>
+                <li><strong>Hotline:</strong> 0349876124</li>
+              </ul>
+            </section>
+
+            <Alert variant="info" className="mt-4 border-0">
+              <FaCheckCircle className="me-2" />
+              <small>
+                <strong>Ngày cập nhật:</strong> 27/12/2024<br/>
+                <strong>Phiên bản:</strong> 1.0
+              </small>
+            </Alert>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 pt-0">
+          <Button 
+            variant="primary" 
+            onClick={() => setShowPolicyModal(false)}
+            className="px-4 rounded-3"
+          >
+            Đã hiểu
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <div className="auth-background">
         <div className="floating-locks">
           <FaLock className="lock-icon text-white" size={60} style={{ top: '10%' }} />
@@ -69,7 +237,7 @@ const RegisterPage = () => {
         </div>
 
         <Container className="position-relative" style={{ zIndex: 1 }}>
-          <Row className="min-vh-100 align-items-center justify-content-center">
+          <Row className="min-vh-100 align-items-center justify-content-center py-5">
             <Col xs={12} md={6} lg={5} xl={4}>
               <Card className="auth-card glass-card shadow-lg border-0 rounded-4">
                 <Card.Body className="p-5">
@@ -98,7 +266,7 @@ const RegisterPage = () => {
                   {error && (
                     <Alert variant="danger" className="rounded-3 border-0">
                       <div className="d-flex align-items-center">
-                        <FaLock className="me-2" />
+                        <FaExclamationTriangle className="me-2" />
                         {error}
                       </div>
                     </Alert>
@@ -113,12 +281,13 @@ const RegisterPage = () => {
                       <Form.Control
                         type="text"
                         name="name"
-                        placeholder="Nguyễn Văn A"
+                        placeholder="Nhập họ và tên đầy đủ"
                         value={form.name}
                         onChange={handleChange}
                         required
                         className="auth-input py-3 rounded-3"
                       />
+                      
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -129,15 +298,18 @@ const RegisterPage = () => {
                       <Form.Control
                         type="email"
                         name="email"
-                        placeholder="example@email.com"
+                        placeholder="Nhập địa chỉ email"
                         value={form.email}
                         onChange={handleChange}
                         required
                         className="auth-input py-3 rounded-3"
                       />
+                      <Form.Text className="text-muted">
+                        <small>Email dùng để đăng nhập và nhận thông báo</small>
+                      </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-4">
+                    <Form.Group className="mb-3">
                       <Form.Label className="fw-semibold text-dark">
                         <FaLock className="me-2 text-primary" />
                         Mật khẩu
@@ -145,14 +317,86 @@ const RegisterPage = () => {
                       <Form.Control
                         type="password"
                         name="password"
-                        placeholder="Ít nhất 8 ký tự"
+                        placeholder="Tạo mật khẩu mạnh"
                         value={form.password}
                         onChange={handleChange}
                         required
                         className="auth-input py-3 rounded-3"
                       />
                       <Form.Text className="text-muted">
-                        <small>Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ và số</small>
+                        <small>Ít nhất 8 ký tự, bao gồm chữ và số</small>
+                      </Form.Text>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaKey className="me-2 text-primary" />
+                        Xác nhận mật khẩu
+                      </Form.Label>
+                      <Form.Control
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Nhập lại mật khẩu"
+                        value={form.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        className={`auth-input py-3 rounded-3 ${
+                          form.confirmPassword && !passwordMatch ? 'is-invalid' : ''
+                        } ${
+                          form.confirmPassword && passwordMatch ? 'is-valid' : ''
+                        }`}
+                      />
+                      {form.confirmPassword && !passwordMatch && (
+                        <Form.Text className="text-danger d-flex align-items-center mt-2">
+                          <FaExclamationTriangle className="me-1" />
+                          <small>Mật khẩu không khớp!</small>
+                        </Form.Text>
+                      )}
+                      {form.confirmPassword && passwordMatch && (
+                        <Form.Text className="text-success d-flex align-items-center mt-2">
+                          <FaCheckCircle className="me-1" />
+                          <small>Mật khẩu khớp</small>
+                        </Form.Text>
+                      )}
+                      {!form.confirmPassword && (
+                        <Form.Text className="text-muted">
+                          <small>Nhập lại mật khẩu để xác nhận</small>
+                        </Form.Text>
+                      )}
+                    </Form.Group>
+
+                    <Form.Group className="mb-4">
+                      <Form.Check
+                        type="checkbox"
+                        id="agreedToPolicy"
+                        name="agreedToPolicy"
+                        checked={form.agreedToPolicy}
+                        onChange={handleChange}
+                        required
+                        label={
+                          <span className="text-dark">
+                            Tôi đồng ý với{' '}
+                            <Button
+                              variant="link"
+                              className="p-0 text-decoration-none fw-bold"
+                              style={{ 
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                border: 'none'
+                              }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setShowPolicyModal(true);
+                              }}
+                            >
+                              Chính sách bảo mật
+                            </Button>
+                          </span>
+                        }
+                      />
+                      <Form.Text className="text-muted ms-4">
+                        <small>Bạn phải đồng ý để tiếp tục đăng ký</small>
                       </Form.Text>
                     </Form.Group>
 
@@ -163,7 +407,7 @@ const RegisterPage = () => {
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         fontSize: '16px'
                       }}
-                      disabled={submitting}
+                      disabled={submitting || !passwordMatch || !form.agreedToPolicy}
                     >
                       {submitting ? (
                         <>

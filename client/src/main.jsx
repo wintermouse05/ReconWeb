@@ -1,6 +1,8 @@
+// client/src/main.jsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/theme.css';  // ← Import theme CSS
 import './index.css';
 import App from './App.jsx';
 

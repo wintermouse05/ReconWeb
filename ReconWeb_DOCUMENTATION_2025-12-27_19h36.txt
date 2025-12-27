@@ -6,7 +6,7 @@
 ################################################################################
 
 ================================================================================
-                        DANH SÁCH FILE - 64 FILES
+                        DANH SÁCH FILE - 70 FILES
 ================================================================================
 
   1. .dockerignore
@@ -24,55 +24,61 @@
  13. client/src/App.css
  14. client/src/App.jsx
  15. client/src/assets/react.svg
- 16. client/src/components/FindingsList.jsx
- 17. client/src/components/Layout.jsx
- 18. client/src/components/ProtectedRoute.jsx
- 19. client/src/components/RemediationPanel.jsx
- 20. client/src/components/ScanProgress.jsx
- 21. client/src/components/ScanResultAccordion.jsx
- 22. client/src/components/ScanSummary.jsx
- 23. client/src/components/ToolOptionForm.jsx
- 24. client/src/config.js
- 25. client/src/constants/tools.js
- 26. client/src/context/AuthContext.jsx
- 27. client/src/index.css
- 28. client/src/main.jsx
- 29. client/src/pages/CodeReviewPage.jsx
- 30. client/src/pages/DashboardPage.jsx
- 31. client/src/pages/LoginPage.jsx
- 32. client/src/pages/RegisterPage.jsx
- 33. client/src/pages/ScanDetailsPage.jsx
- 34. client/src/pages/ScanHistoryPage.jsx
- 35. client/src/pages/SubscriptionPage.jsx
- 36. client/src/services/apiClient.js
- 37. client/tailwind.config.js
- 38. client/vite.config.js
- 39. package-lock.json
- 40. package.json
- 41. server/.dockerignore
- 42. server/.env
- 43. server/.env.example
- 44. server/package-lock.json
- 45. server/package.json
- 46. server/src/config/db.js
- 47. server/src/controllers/authController.js
- 48. server/src/controllers/scanController.js
- 49. server/src/index.js
- 50. server/src/middleware/authMiddleware.js
- 51. server/src/models/CodeReview.js
- 52. server/src/models/Scan.js
- 53. server/src/models/User.js
- 54. server/src/routes/authRoutes.js
- 55. server/src/routes/codeReviewRoutes.js
- 56. server/src/routes/remediationRoutes.js
- 57. server/src/routes/scanRoutes.js
- 58. server/src/routes/subscriptionRoutes.js
- 59. server/src/services/codeReviewService.js
- 60. server/src/services/pdfGenerator.js
- 61. server/src/services/remediationService.js
- 62. server/src/services/resultParser.js
- 63. server/src/services/scanService.js
- 64. server/src/services/subscriptionService.js
+ 16. client/src/components/AnimatedBackground.jsx
+ 17. client/src/components/FindingsList.jsx
+ 18. client/src/components/Layout.jsx
+ 19. client/src/components/ProtectedRoute.jsx
+ 20. client/src/components/RemediationPanel.jsx
+ 21. client/src/components/ScanProgress.jsx
+ 22. client/src/components/ScanResultAccordion.jsx
+ 23. client/src/components/ScanSummary.jsx
+ 24. client/src/components/ToolOptionForm.jsx
+ 25. client/src/config.js
+ 26. client/src/constants/tools.js
+ 27. client/src/context/AuthContext.jsx
+ 28. client/src/index.css
+ 29. client/src/main.jsx
+ 30. client/src/pages/AboutPage.jsx
+ 31. client/src/pages/CodeReviewPage.jsx
+ 32. client/src/pages/DashboardPage.jsx
+ 33. client/src/pages/LoginPage.jsx
+ 34. client/src/pages/ProfilePage.jsx
+ 35. client/src/pages/RegisterPage.jsx
+ 36. client/src/pages/ScanDetailsPage.jsx
+ 37. client/src/pages/ScanHistoryPage.jsx
+ 38. client/src/pages/SettingsPage.jsx
+ 39. client/src/pages/SubscriptionPage.jsx
+ 40. client/src/services/apiClient.js
+ 41. client/src/styles/auth.css
+ 42. client/src/styles/theme.css
+ 43. client/tailwind.config.js
+ 44. client/vite.config.js
+ 45. package-lock.json
+ 46. package.json
+ 47. server/.dockerignore
+ 48. server/.env
+ 49. server/.env.example
+ 50. server/package-lock.json
+ 51. server/package.json
+ 52. server/src/config/db.js
+ 53. server/src/controllers/authController.js
+ 54. server/src/controllers/scanController.js
+ 55. server/src/index.js
+ 56. server/src/middleware/authMiddleware.js
+ 57. server/src/models/CodeReview.js
+ 58. server/src/models/Scan.js
+ 59. server/src/models/User.js
+ 60. server/src/routes/authRoutes.js
+ 61. server/src/routes/codeReviewRoutes.js
+ 62. server/src/routes/remediationRoutes.js
+ 63. server/src/routes/scanRoutes.js
+ 64. server/src/routes/subscriptionRoutes.js
+ 65. server/src/services/codeReviewService.js
+ 66. server/src/services/pdfGenerator.js
+ 67. server/src/services/remediationService.js
+ 68. server/src/services/resultParser.js
+ 69. server/src/services/scanService.js
+ 70. server/src/services/subscriptionService.js
 
 
 ================================================================================
@@ -681,6 +687,7 @@ export default {
 ## Path: client/src/App.jsx
 ################################################################################
 
+// client/src/App.jsx
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -692,6 +699,9 @@ import ScanHistoryPage from './pages/ScanHistoryPage';
 import ScanDetailsPage from './pages/ScanDetailsPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import CodeReviewPage from './pages/CodeReviewPage';
+import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';  // ← New
+import SettingsPage from './pages/SettingsPage';  // ← New
 
 const App = () => (
   <AuthProvider>
@@ -699,6 +709,7 @@ const App = () => (
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+       
         <Route
           element={
             <ProtectedRoute>
@@ -711,6 +722,9 @@ const App = () => (
           <Route path="scans/:id" element={<ScanDetailsPage />} />
           <Route path="subscription" element={<SubscriptionPage />} />
           <Route path="code-review" element={<CodeReviewPage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="profile" element={<ProfilePage />} />  {/* ← New */}
+          <Route path="settings" element={<SettingsPage />} />  {/* ← New */}
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -719,7 +733,6 @@ const App = () => (
 );
 
 export default App;
-
 
 
 
@@ -733,7 +746,62 @@ export default App;
 
 
 ################################################################################
-## FILE 16: FindingsList.jsx
+## FILE 16: AnimatedBackground.jsx
+## Path: client/src/components/AnimatedBackground.jsx
+################################################################################
+
+// client/src/components/AnimatedBackground.jsx
+import { useEffect, useState } from 'react';
+
+const AnimatedBackground = ({ variant = 'primary' }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getGradient = () => {
+    switch (variant) {
+      case 'success':
+        return 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)';
+      case 'danger':
+        return 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
+      case 'secondary':
+        return 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+      default:
+        return 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)';
+    }
+  };
+
+  return (
+    <>
+      {/* Gradient Background */}
+      <div 
+        className="gradient-background"
+        style={{
+          background: getGradient(),
+          backgroundSize: '400% 400%',
+          opacity: mounted ? 1 : 0,
+          transition: 'opacity 0.5s ease'
+        }}
+      />
+
+      {/* Floating Particles */}
+      <div className="particles-container">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="particle" />
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default AnimatedBackground;
+
+
+
+################################################################################
+## FILE 17: FindingsList.jsx
 ## Path: client/src/components/FindingsList.jsx
 ################################################################################
 
@@ -811,14 +879,16 @@ export default FindingsList;
 
 
 ################################################################################
-## FILE 17: Layout.jsx
+## FILE 18: Layout.jsx
 ## Path: client/src/components/Layout.jsx
 ################################################################################
 
-import { Container, Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
+// client/src/components/Layout.jsx
+import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaShieldAlt, FaHistory, FaTachometerAlt, FaCode, FaCrown } from 'react-icons/fa';
+import { FaShieldAlt, FaHistory, FaTachometerAlt, FaCode, FaCrown, FaInfoCircle, FaUser, FaCog } from 'react-icons/fa';
+import AnimatedBackground from './AnimatedBackground';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -830,50 +900,129 @@ const Layout = () => {
   };
 
   return (
-    <div className="min-vh-100 d-flex flex-column bg-body-tertiary">
-      <Navbar bg="dark" variant="dark" expand="lg" className="shadow-sm">
+    <div className="min-vh-100 d-flex flex-column position-relative">
+      {/* Animated Background */}
+      <AnimatedBackground />
+
+      {/* Gradient Navbar */}
+      <Navbar 
+        expand="lg" 
+        className="shadow-lg glass-card-dark"
+        style={{
+          background: 'rgba(26, 32, 44, 0.95)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        }}
+      >
         <Container>
-          <Navbar.Brand as={Link} to="/">
-            <FaShieldAlt className="me-2" />
-            ReconWeb
+          <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+            <div 
+              className="d-inline-flex align-items-center justify-content-center rounded-circle me-2"
+              style={{
+                width: '40px',
+                height: '40px',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)'
+              }}
+            >
+              <FaShieldAlt size={20} className="text-white" />
+            </div>
+            <span className="fw-bold gradient-text" style={{ fontSize: '1.3rem' }}>
+              ReconWeb
+            </span>
           </Navbar.Brand>
+          
           <Navbar.Toggle aria-controls="main-navbar" />
           <Navbar.Collapse id="main-navbar">
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/">
+              <Nav.Link as={Link} to="/" className="text-white-50 hover-text-white">
                 <FaTachometerAlt className="me-1" /> Dashboard
               </Nav.Link>
-              <Nav.Link as={Link} to="/history">
+              <Nav.Link as={Link} to="/history" className="text-white-50 hover-text-white">
                 <FaHistory className="me-1" /> History
               </Nav.Link>
-              <Nav.Link as={Link} to="/code-review">
+              <Nav.Link as={Link} to="/code-review" className="text-white-50 hover-text-white">
                 <FaCode className="me-1" /> Code Review
               </Nav.Link>
+              <Nav.Link as={Link} to="/about" className="text-white-50 hover-text-white">
+                <FaInfoCircle className="me-1" /> About
+              </Nav.Link>
             </Nav>
+            
             <Nav className="ms-auto">
               <Nav.Link as={Link} to="/subscription" className="me-2">
-                <FaCrown className="text-warning me-1" /> Plans
+                <div className="btn btn-sm btn-gradient-primary">
+                  <FaCrown className="me-1" /> Upgrade
+                </div>
               </Nav.Link>
-              <NavDropdown title={user?.name || 'Account'} align="end">
-                <NavDropdown.Item disabled>Email: {user?.email}</NavDropdown.Item>
+              
+              <NavDropdown 
+                title={
+                  <span className="text-white">
+                    <div className="d-inline-flex align-items-center">
+                      <div 
+                        className="rounded-circle me-2"
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <FaUser size={14} className="text-white" />
+                      </div>
+                      {user?.name || 'Account'}
+                    </div>
+                  </span>
+                }
+                align="end"
+                className="text-white"
+              >
+                <NavDropdown.Item disabled className="text-muted small">
+                  {user?.email}
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/profile">
+                  <FaUser className="me-2" /> My Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/settings">
+                  <FaCog className="me-2" /> Settings
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item as={Link} to="/subscription">
                   <FaCrown className="me-2 text-warning" /> Subscription
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
+                <NavDropdown.Item onClick={handleLogout}>
+                  Log out
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <main className="flex-grow-1 py-4">
+
+      {/* Main Content */}
+      <main className="flex-grow-1 py-4 position-relative">
         <Container>
           <Outlet />
         </Container>
       </main>
-      <footer className="bg-dark text-white py-3 text-center">
-        <small>&copy; {new Date().getFullYear()} ReconWeb Security Automation</small>
+
+      {/* Gradient Footer */}
+      <footer 
+        className="glass-card-dark py-3 text-center mt-auto"
+        style={{
+          borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+        }}
+      >
+        <small className="text-white-50">
+          &copy; {new Date().getFullYear()} ReconWeb Security Automation
+          <span className="mx-2">•</span>
+          <span className="gradient-text">Powered by Libra Team</span>
+        </small>
       </footer>
     </div>
   );
@@ -883,9 +1032,8 @@ export default Layout;
 
 
 
-
 ################################################################################
-## FILE 18: ProtectedRoute.jsx
+## FILE 19: ProtectedRoute.jsx
 ## Path: client/src/components/ProtectedRoute.jsx
 ################################################################################
 
@@ -921,7 +1069,7 @@ export default ProtectedRoute;
 
 
 ################################################################################
-## FILE 19: RemediationPanel.jsx
+## FILE 20: RemediationPanel.jsx
 ## Path: client/src/components/RemediationPanel.jsx
 ################################################################################
 
@@ -1221,7 +1369,7 @@ export default RemediationPanel;
 
 
 ################################################################################
-## FILE 20: ScanProgress.jsx
+## FILE 21: ScanProgress.jsx
 ## Path: client/src/components/ScanProgress.jsx
 ################################################################################
 
@@ -1299,63 +1447,42 @@ const ScanProgress = ({ scanId, onComplete, request }) => {
   };
 
   return (
-    <Card className="shadow-sm">
-      <Card.Header className="bg-light">
-        <div className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">Scan Progress</h5>
-          <Badge bg={getStatusVariant(scan.status)}>
-            {scan.status.toUpperCase()}
-          </Badge>
-        </div>
+    <Card className="glass-card border-0 shadow-lg fade-in">
+      <Card.Header 
+        className="d-flex justify-content-between align-items-center"
+        style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          borderRadius: '16px 16px 0 0'
+        }}
+      >
+        <h5 className="mb-0">
+          <Spinner animation="border" size="sm" className="me-2" />
+          Scan Progress
+        </h5>
+        <Badge bg="light" text="dark" className="px-3 py-2">
+          {scan.status.toUpperCase()}
+        </Badge>
       </Card.Header>
-      <Card.Body>
-        <div className="mb-3">
+      
+      <Card.Body className="p-4">
+        {/* ... rest of component with existing logic ... */}
+        <div className="mb-4">
           <div className="d-flex justify-content-between mb-2">
-            <span>Overall Progress</span>
-            <strong>{scan.progress || 0}%</strong>
+            <span className="fw-semibold">Overall Progress</span>
+            <strong className="gradient-text">{scan.progress || 0}%</strong>
           </div>
           <ProgressBar 
             now={scan.progress || 0} 
-            variant={getStatusVariant(scan.status)}
-            striped={scan.status === 'running'}
-            animated={scan.status === 'running'}
+            style={{
+              height: '12px',
+              borderRadius: '6px',
+              background: 'rgba(102, 126, 234, 0.1)'
+            }}
+            className="shadow-sm"
           />
         </div>
-
-        <div className="mb-2">
-          <strong>Target:</strong> {scan.targetUrl}
-        </div>
-
-        <div>
-          <strong>Tools Status:</strong>
-          <ListGroup variant="flush" className="mt-2">
-            {scan.results && scan.results.map((result, index) => (
-              <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center px-0">
-                <div className="d-flex align-items-center">
-                  <span className="me-2" style={{ fontSize: '1.2em' }}>
-                    {getStatusIcon(result.status)}
-                  </span>
-                  <span>
-                    {TOOL_DEFINITIONS[result.tool]?.label || result.tool}
-                  </span>
-                </div>
-                <div className="d-flex align-items-center gap-2">
-                  {result.findings && result.findings.length > 0 && (
-                    <Badge bg="danger" pill>
-                      {result.findings.length} findings
-                    </Badge>
-                  )}
-                  <Badge bg={getStatusVariant(result.status)}>
-                    {result.status}
-                  </Badge>
-                  {result.status === 'running' && (
-                    <Spinner animation="border" size="sm" />
-                  )}
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </div>
+        {/* ... rest of existing code ... */}
       </Card.Body>
     </Card>
   );
@@ -1367,7 +1494,7 @@ export default ScanProgress;
 
 
 ################################################################################
-## FILE 21: ScanResultAccordion.jsx
+## FILE 22: ScanResultAccordion.jsx
 ## Path: client/src/components/ScanResultAccordion.jsx
 ################################################################################
 
@@ -1441,7 +1568,7 @@ export default ScanResultAccordion;
 
 
 ################################################################################
-## FILE 22: ScanSummary.jsx
+## FILE 23: ScanSummary.jsx
 ## Path: client/src/components/ScanSummary.jsx
 ################################################################################
 
@@ -1598,7 +1725,7 @@ export default ScanSummary;
 
 
 ################################################################################
-## FILE 23: ToolOptionForm.jsx
+## FILE 24: ToolOptionForm.jsx
 ## Path: client/src/components/ToolOptionForm.jsx
 ################################################################################
 
@@ -1699,7 +1826,7 @@ export default ToolOptionForm;
 
 
 ################################################################################
-## FILE 24: config.js
+## FILE 25: config.js
 ## Path: client/src/config.js
 ################################################################################
 
@@ -1709,7 +1836,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localho
 
 
 ################################################################################
-## FILE 25: tools.js
+## FILE 26: tools.js
 ## Path: client/src/constants/tools.js
 ################################################################################
 
@@ -2307,7 +2434,7 @@ export const SUPPORTED_TOOLS = Object.keys(TOOL_DEFINITIONS);
 
 
 ################################################################################
-## FILE 26: AuthContext.jsx
+## FILE 27: AuthContext.jsx
 ## Path: client/src/context/AuthContext.jsx
 ################################################################################
 
@@ -2418,30 +2545,49 @@ export const useAuth = () => {
 
 
 ################################################################################
-## FILE 27: index.css
+## FILE 28: index.css
 ## Path: client/src/index.css
 ################################################################################
 
+/* client/src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply bg-slate-100 text-slate-800;
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth hover effects */
+.hover-text-white:hover {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+/* Glass input focus effect */
+.glass-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
 }
 
 
 
-
 ################################################################################
-## FILE 28: main.jsx
+## FILE 29: main.jsx
 ## Path: client/src/main.jsx
 ################################################################################
 
+// client/src/main.jsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/theme.css';  // ← Import theme CSS
 import './index.css';
 import App from './App.jsx';
 
@@ -2453,9 +2599,250 @@ createRoot(document.getElementById('root')).render(
 
 
 
+################################################################################
+## FILE 30: AboutPage.jsx
+## Path: client/src/pages/AboutPage.jsx
+################################################################################
+
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { FaUniversity, FaUsers, FaGithub, FaShieldAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+
+const AboutPage = () => {
+  const teamMembers = [
+    {
+      name: 'Đỗ Duy Đông',
+      role: 'Developer',
+      id: 'MSSV: 23127171',
+      github: 'https://github.com/wintermouse05'
+    },
+    {
+      name: 'Nguyễn Gia Huy',
+      role: 'UX/UI Designer',
+      id: 'MSSV: 23127054',
+      github: 'https://github.com/wintermouse05'
+    },
+    {
+      name: 'Đinh Viết Hải',
+      role: 'Tester',
+      id: 'MSSV: 23127045',
+      github: 'https://github.com/wintermouse05'
+    },
+    {
+      name: 'Lê Công Tuấn',
+      role: 'Code deployer',
+      id: 'MSSV: 23127509',
+      github: 'https://github.com/wintermouse05'
+    },
+    // Thêm thành viên khác ở đây
+  ];
+
+  const references = [
+    { name: 'Nikto', url: 'https://github.com/sullo/nikto' },
+    { name: 'Gobuster', url: 'https://github.com/OJ/gobuster' },
+    { name: 'Nuclei', url: 'https://github.com/projectdiscovery/nuclei' },
+    { name: 'SQLMap', url: 'https://github.com/sqlmapproject/sqlmap' },
+    { name: 'XSStrike', url: 'https://github.com/s0md3v/XSStrike' },
+    { name: 'WPScan', url: 'https://github.com/wpscanteam/wpscan' },
+  ];
+
+  return (
+    <Container className="py-5">
+      <div className="text-center mb-5">
+        <FaShieldAlt size={64} className="text-primary mb-3" />
+        <h1 className="mb-3">About ReconWeb</h1>
+        <p className="lead text-muted">
+          Web Vulnerability Scanning Platform for Educational Purposes
+        </p>
+      </div>
+
+      {/* University Information */}
+      <Card className="shadow-sm mb-4">
+        <Card.Body>
+          <div className="d-flex align-items-center mb-3">
+            <FaUniversity size={32} className="text-primary me-3" />
+            <h3 className="mb-0">Thông tin trường</h3>
+          </div>
+          <Row>
+            <Col md={6}>
+              <p className="mb-2">
+                <strong>Trường:</strong> Trường Đại học Khoa học Tự nhiên - ĐHQG TP.HCM
+              </p>
+              <p className="mb-2">
+                <strong>Khoa:</strong> Khoa Công nghệ thông tin
+              </p>
+              <p className="mb-2">
+                <strong>Môn học:</strong> Nhập môn công nghệ Phần mềm
+              </p>
+            </Col>
+            <Col md={6}>
+              <p className="mb-2">
+                <strong>Học kỳ:</strong> HK1 2024-2025
+              </p>
+              <p className="mb-2">
+                <strong>Giảng viên hướng dẫn:</strong> [Nguyễn Văn Huy]
+              </p>
+              <p className="mb-2">
+                <FaMapMarkerAlt className="me-2" />
+                227 Nguyễn Văn Cừ, Phường Chợ Quán, TP. Hồ Chí Minh
+              </p>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* Team Members */}
+      <Card className="shadow-sm mb-4">
+        <Card.Body>
+          <div className="d-flex align-items-center mb-4">
+            <FaUsers size={32} className="text-primary me-3" />
+            <h3 className="mb-0">Thành viên nhóm</h3>
+          </div>
+          <Row>
+            {teamMembers.map((member, index) => (
+              <Col md={6} lg={4} key={index} className="mb-3">
+                <Card className="h-100 border">
+                  <Card.Body>
+                    <h5 className="mb-2">{member.name}</h5>
+                    <p className="text-muted mb-2">{member.role}</p>
+                    <p className="mb-2 small">{member.id}</p>
+                    {member.github && (
+                      <a 
+                        href={member.github} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="btn btn-sm btn-outline-dark"
+                      >
+                        <FaGithub className="me-2" />
+                        GitHub
+                      </a>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* Project Information */}
+      <Card className="shadow-sm mb-4">
+        <Card.Body>
+          <h3 className="mb-3">Về dự án</h3>
+          <p>
+            <strong>ReconWeb</strong> là một nền tảng quét lỗ hổng bảo mật web được phát triển 
+            như một đồ án môn học Nhập môn công nghệ phần mềm. Dự án tích hợp nhiều công cụ bảo mật 
+            mã nguồn mở để tự động hóa quá trình kiểm tra bảo mật website.
+          </p>
+          <h5 className="mt-4 mb-3">Tính năng chính:</h5>
+          <ul>
+            <li>Tích hợp 6 công cụ bảo mật mã nguồn mở</li>
+            <li>Quét lỗ hổng tự động với giao diện thân thiện</li>
+            <li>Phân tích code bảo mật với AI</li>
+            <li>Xuất báo cáo PDF chi tiết</li>
+            <li>Hệ thống đăng ký và quản lý người dùng</li>
+            <li>Hệ thống subscription với các gói dịch vụ</li>
+          </ul>
+        </Card.Body>
+      </Card>
+
+      {/* Technologies */}
+      <Card className="shadow-sm mb-4">
+        <Card.Body>
+          <h3 className="mb-3">Công nghệ sử dụng</h3>
+          <Row>
+            <Col md={6}>
+              <h5>Frontend</h5>
+              <ul>
+                <li>React 18 + Vite</li>
+                <li>React Bootstrap</li>
+                <li>Tailwind CSS</li>
+                <li>React Router</li>
+              </ul>
+            </Col>
+            <Col md={6}>
+              <h5>Backend</h5>
+              <ul>
+                <li>Node.js + Express.js</li>
+                <li>MongoDB + Mongoose</li>
+                <li>JWT Authentication</li>
+                <li>PDFKit</li>
+              </ul>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* References */}
+      <Card className="shadow-sm mb-4">
+        <Card.Body>
+          <div className="d-flex align-items-center mb-4">
+            <FaGithub size={32} className="text-primary me-3" />
+            <h3 className="mb-0">Nguồn trích dẫn</h3>
+          </div>
+          <p className="mb-3">
+            Dự án này sử dụng các công cụ bảo mật mã nguồn mở sau:
+          </p>
+          <Row>
+            {references.map((ref, index) => (
+              <Col md={6} lg={4} key={index} className="mb-3">
+                <Card className="border h-100">
+                  <Card.Body className="d-flex align-items-center justify-content-between">
+                    <span><strong>{ref.name}</strong></span>
+                    <a 
+                      href={ref.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn btn-sm btn-outline-primary"
+                    >
+                      GitHub
+                    </a>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* Contact */}
+      <Card className="shadow-sm bg-light">
+        <Card.Body className="text-center">
+          <FaEnvelope size={32} className="text-primary mb-3" />
+          <h5>Liên hệ</h5>
+          <p className="mb-2">
+            <strong>Email:</strong> [email của bạn]@clc.fitus.edu.vn
+          </p>
+          <p className="mb-2">
+            <strong>GitHub:</strong>{' '}
+            <a 
+              href="https://github.com/wintermouse05/ReconWeb" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              github.com/wintermouse05/ReconWeb
+            </a>
+          </p>
+        </Card.Body>
+      </Card>
+
+      {/* Disclaimer */}
+      <div className="text-center mt-5 text-muted small">
+        <p>
+          <strong>Disclaimer:</strong> Công cụ này chỉ dành cho mục đích giáo dục và nghiên cứu. 
+          Chỉ sử dụng trên các hệ thống bạn có quyền kiểm tra.
+        </p>
+        <p>&copy; {new Date().getFullYear()} ReconWeb - HCMUS Software Engineering Project</p>
+      </div>
+    </Container>
+  );
+};
+
+export default AboutPage;
+
+
 
 ################################################################################
-## FILE 29: CodeReviewPage.jsx
+## FILE 31: CodeReviewPage.jsx
 ## Path: client/src/pages/CodeReviewPage.jsx
 ################################################################################
 
@@ -2852,10 +3239,11 @@ export default CodeReviewPage;
 
 
 ################################################################################
-## FILE 30: DashboardPage.jsx
+## FILE 32: DashboardPage.jsx
 ## Path: client/src/pages/DashboardPage.jsx
 ################################################################################
 
+// client/src/pages/DashboardPage.jsx - Chỉ thêm styling, logic giữ nguyên
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Form, Row, Stack } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -2864,6 +3252,7 @@ import ToolOptionForm from '../components/ToolOptionForm';
 import ScanProgress from '../components/ScanProgress';
 import { SUPPORTED_TOOLS, TOOL_DEFINITIONS } from '../constants/tools';
 import { apiRequest } from '../services/apiClient';
+import { FaRocket, FaHistory, FaCheckCircle } from 'react-icons/fa';
 
 const buildInitialSelection = (installedTools = []) =>
   SUPPORTED_TOOLS.filter((tool) => 
@@ -3014,88 +3403,138 @@ const DashboardPage = () => {
     }
   };
 
-  return (
-    <Stack gap={4}>
-      <div className="bg-white shadow-sm p-4 rounded-3">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-          <div>
-            <h1 className="mb-1">Automation Dashboard</h1>
-            <p className="mb-0 text-muted">Configure and run vulnerability scans using open-source tools.</p>
-          </div>
-          <Button as={Link} to="/history" variant="outline-primary">
-            View Scan History
-          </Button>
-        </div>
-        {feedback.message ? <Alert variant={feedback.type}>{feedback.message}</Alert> : null}
-        <Form onSubmit={handleSubmit}>
-          <Row className="g-4">
-            <Col xs={12}>
-              <Form.Group controlId="targetUrl">
-                <Form.Label>Target URL</Form.Label>
-                <Form.Control
-                  type="url"
-                  placeholder="https://example.com"
-                  value={targetUrl}
-                  onChange={(event) => setTargetUrl(event.target.value)}
-                  required
-                />
-                <Form.Text>Include the protocol (http or https) for the target website.</Form.Text>
-              </Form.Group>
+   return (
+    <Stack gap={4} className="fade-in">
+      {/* Header Card */}
+      <Card className="glass-card border-0 shadow-lg">
+        <Card.Body className="p-4">
+          <Row className="align-items-center">
+            <Col md={8}>
+              <h1 className="mb-1 gradient-text">
+                <FaRocket className="me-2" />
+                Security Scanner
+              </h1>
+              <p className="text-muted mb-0">
+                Configure and run vulnerability scans using open-source tools
+              </p>
             </Col>
-            <Col xs={12}>
-              <Form.Group controlId="scanNotes">
-                <Form.Label>Notes (optional)</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  placeholder="Describe the goal of this scan or additional context."
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                />
-              </Form.Group>
+            <Col md={4} className="text-md-end">
+              <Button 
+                as={Link} 
+                to="/history" 
+                variant="outline-primary"
+                className="btn-gradient-primary"
+              >
+                <FaHistory className="me-2" />
+                View Scan History
+              </Button>
             </Col>
           </Row>
+        </Card.Body>
+      </Card>
 
-          <div className="mt-4">
-            <h4 className="mb-3">Select Tools</h4>
-            {loadingTools ? (
-              <div className="text-center py-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
+      {/* Feedback Messages */}
+      {feedback.message && (
+        <Alert variant={feedback.type} className="glass-card border-0 fade-in">
+          {feedback.message}
+        </Alert>
+      )}
+
+      {/* Scan Form */}
+      <Card className="glass-card border-0 shadow-lg">
+        <Card.Body className="p-4">
+          <Form onSubmit={handleSubmit}>
+            <Row className="g-4">
+              <Col xs={12}>
+                <Form.Group controlId="targetUrl">
+                  <Form.Label className="fw-semibold">Target URL</Form.Label>
+                  <Form.Control
+                    type="url"
+                    placeholder="https://example.com"
+                    value={targetUrl}
+                    onChange={(event) => setTargetUrl(event.target.value)}
+                    required
+                    className="glass-input"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid rgba(102, 126, 234, 0.2)',
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                  />
+                  <Form.Text className="text-muted">
+                    <FaCheckCircle className="me-1" />
+                    Include the protocol (http or https)
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+
+              <Col xs={12}>
+                <Form.Group controlId="scanNotes">
+                  <Form.Label className="fw-semibold">Notes (optional)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    placeholder="Describe the goal of this scan..."
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid rgba(102, 126, 234, 0.2)',
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            {/* Tools Selection */}
+            <div className="mt-4">
+              <h4 className="mb-3 gradient-text">Select Security Tools</h4>
+              
+              {loadingTools ? (
+                <div className="text-center py-5">
+                  <div className="spinner-border text-primary" />
+                  <p className="mt-2 text-muted">Checking installed tools...</p>
                 </div>
-                <p className="mt-2 text-muted">Checking installed tools...</p>
-              </div>
-            ) : (
-              <>
-                {notInstalledTools.length > 0 && (
-                  <Alert variant="warning" className="mb-3">
-                    <strong>Some tools are not installed:</strong>{' '}
-                    {notInstalledTools.map(t => TOOL_DEFINITIONS[t]?.label || t).join(', ')}.
-                    <br />
-                    <small>Please install them to use in scans.</small>
-                  </Alert>
-                )}
-                {availableTools.length === 0 ? (
-                  <Alert variant="danger">
-                    No scanning tools are installed on the server. Please install at least one tool (nikto, gobuster, nuclei, sqlmap, xsstrike, or wpscan).
-                  </Alert>
-                ) : (
-                  <Row className="g-3">
+              ) : (
+                <>
+                  {notInstalledTools.length > 0 && (
+                    <Alert variant="warning" className="glass-card mb-3">
+                      <strong>Some tools are not installed:</strong>{' '}
+                      {notInstalledTools.map(t => TOOL_DEFINITIONS[t]?.label || t).join(', ')}
+                    </Alert>
+                  )}
+                  
+                  <Row className="g-3 fade-in-delay-1">
                     {availableTools.map((tool) => (
                       <Col xs={12} md={6} lg={4} key={tool.key}>
-                        <Card className={selectedTools.includes(tool.key) ? 'border-primary shadow-sm' : 'shadow-sm'}>
+                        <Card 
+                          className={`h-100 glass-card stat-card ${selectedTools.includes(tool.key) ? 'border-primary' : ''}`}
+                          style={{
+                            cursor: 'pointer',
+                            borderWidth: '2px',
+                            transition: 'all 0.3s ease'
+                          }}
+                          onClick={() => handleToolToggle(tool.key)}
+                        >
                           <Card.Body>
                             <div className="d-flex justify-content-between align-items-start">
-                              <div>
-                                <Card.Title>{tool.label}</Card.Title>
-                                <Card.Text className="small text-muted">{tool.description}</Card.Text>
+                              <div className="flex-grow-1">
+                                <Card.Title className="gradient-text mb-2">
+                                  {tool.label}
+                                </Card.Title>
+                                <Card.Text className="small text-muted">
+                                  {tool.description}
+                                </Card.Text>
                               </div>
                               <Form.Check
                                 type="switch"
                                 id={`select-${tool.key}`}
                                 checked={selectedTools.includes(tool.key)}
                                 onChange={() => handleToolToggle(tool.key)}
-                                label=""
+                                className="ms-2"
                               />
                             </div>
                           </Card.Body>
@@ -3103,38 +3542,60 @@ const DashboardPage = () => {
                       </Col>
                     ))}
                   </Row>
+                </>
+              )}
+            </div>
+
+            {/* Tool Options */}
+            {selectedTools.map((toolKey, index) => (
+              <div key={toolKey} className={`fade-in-delay-${Math.min(index + 2, 3)}`}>
+                <ToolOptionForm
+                  toolKey={toolKey}
+                  values={toolOptions[toolKey]}
+                  onChange={handleOptionChange}
+                />
+              </div>
+            ))}
+
+            {/* Submit Button */}
+            <div className="d-flex justify-content-end mt-4">
+              <Button 
+                type="submit" 
+                className="btn-gradient-primary px-5 py-3"
+                disabled={submitting}
+                size="lg"
+              >
+                {submitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" />
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    <FaRocket className="me-2" />
+                    Start Security Scan
+                  </>
                 )}
-              </>
-            )}
-          </div>
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
 
-          {selectedTools.map((toolKey) => (
-            <ToolOptionForm
-              key={toolKey}
-              toolKey={toolKey}
-              values={toolOptions[toolKey]}
-              onChange={handleOptionChange}
-            />
-          ))}
-
-          <div className="d-flex justify-content-end">
-            <Button type="submit" variant="primary" size="lg" disabled={submitting}>
-              {submitting ? 'Scanning...' : 'Start Scan'}
-            </Button>
-          </div>
-        </Form>
-      </div>
-
+      {/* Scan Progress */}
       {activeScanId && (
-        <ScanProgress 
-          scanId={activeScanId} 
-          onComplete={handleScanComplete}
-          request={request}
-        />
+        <div className="fade-in">
+          <ScanProgress 
+            scanId={activeScanId} 
+            onComplete={handleScanComplete}
+            request={request}
+          />
+        </div>
       )}
     </Stack>
   );
 };
+
 
 export default DashboardPage;
 
@@ -3142,7 +3603,7 @@ export default DashboardPage;
 
 
 ################################################################################
-## FILE 31: LoginPage.jsx
+## FILE 33: LoginPage.jsx
 ## Path: client/src/pages/LoginPage.jsx
 ################################################################################
 
@@ -3150,6 +3611,8 @@ import { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row, Alert } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaLock, FaEnvelope, FaShieldAlt, FaKey, FaUserShield } from 'react-icons/fa';
+import '../styles/auth.css';
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -3158,6 +3621,8 @@ const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showCurtain, setShowCurtain] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -3171,60 +3636,414 @@ const LoginPage = () => {
 
     try {
       await login(form);
-      const redirectTo = location.state?.from?.pathname || '/';
-      navigate(redirectTo, { replace: true });
+      
+      // Show curtain animation
+      setShowCurtain(true);
+      
+      // Wait for animation then navigate
+      setTimeout(() => {
+        const redirectTo = location.state?.from?.pathname || '/';
+        navigate(redirectTo, { replace: true });
+      }, 1000);
     } catch (err) {
       console.error('Login error:', err);
-      // Handle validation errors from express-validator
       if (err.payload?.errors && Array.isArray(err.payload.errors)) {
         const messages = err.payload.errors.map(e => e.msg).join(', ');
         setError(messages);
       } else {
-        setError(err.message || 'Login failed');
+        setError(err.message || 'Đăng nhập thất bại');
       }
-    } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Container className="d-flex align-items-center justify-content-center min-vh-100 bg-body-secondary">
-      <Row className="w-100 justify-content-center">
-        <Col xs={12} md={6} lg={4}>
+    <>
+      {/* Loading Curtain */}
+      {showCurtain && (
+        <div className="loading-curtain closing">
+          <div className="loading-spinner"></div>
+          <p className="text-white mt-4 fs-5 fw-semibold">Đang đăng nhập...</p>
+        </div>
+      )}
+
+      {/* Animated Background */}
+      <div className="auth-background">
+        {/* Floating Locks */}
+        <div className="floating-locks">
+          <FaLock className="lock-icon text-white" size={60} style={{ top: '10%' }} />
+          <FaShieldAlt className="lock-icon text-white" size={70} style={{ top: '20%' }} />
+          <FaKey className="lock-icon text-white" size={50} style={{ top: '30%' }} />
+          <FaUserShield className="lock-icon text-white" size={80} style={{ top: '40%' }} />
+          <FaLock className="lock-icon text-white" size={55} style={{ top: '50%' }} />
+        </div>
+
+        {/* Particles */}
+        <div className="particles">
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+        </div>
+
+        {/* Login Form */}
+        <Container className="position-relative" style={{ zIndex: 1 }}>
+          <Row className="min-vh-100 align-items-center justify-content-center">
+            <Col xs={12} md={6} lg={5} xl={4}>
+              <Card className="auth-card glass-card shadow-lg border-0 rounded-4">
+                <Card.Body className="p-5">
+                  {/* Icon & Title */}
+                  <div className="text-center mb-4">
+                    <div 
+                      className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 icon-pulse"
+                      style={{ 
+                        width: '90px', 
+                        height: '90px', 
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+                      }}
+                    >
+                      <FaShieldAlt size={40} className="text-white" />
+                    </div>
+                    <h2 className="fw-bold mb-2" style={{ 
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}>
+                      Welcome Back!
+                    </h2>
+                    <p className="text-muted mb-0">Đăng nhập để tiếp tục với ReconWeb</p>
+                  </div>
+
+                  {error && (
+                    <Alert variant="danger" className="rounded-3 border-0" style={{ 
+                      animation: 'slideInUp 0.3s ease-out' 
+                    }}>
+                      <div className="d-flex align-items-center">
+                        <FaLock className="me-2" />
+                        {error}
+                      </div>
+                    </Alert>
+                  )}
+
+                  <Form onSubmit={handleSubmit}>
+                    {/* Email Field */}
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaEnvelope className="me-2 text-primary" />
+                        Email
+                      </Form.Label>
+                      <div className="position-relative">
+                        <Form.Control
+                          type="email"
+                          name="email"
+                          placeholder="example@email.com"
+                          value={form.email}
+                          onChange={handleChange}
+                          required
+                          className="auth-input py-3 rounded-3"
+                        />
+                      </div>
+                    </Form.Group>
+
+                    {/* Password Field */}
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaLock className="me-2 text-primary" />
+                        Mật khẩu
+                      </Form.Label>
+                      <div className="position-relative">
+                        <Form.Control
+                          type="password"
+                          name="password"
+                          placeholder="••••••••"
+                          value={form.password}
+                          onChange={handleChange}
+                          required
+                          className="auth-input py-3 rounded-3"
+                        />
+                      </div>
+                    </Form.Group>
+
+                    {/* Remember Me & Forgot Password */}
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <Form.Check
+                        type="checkbox"
+                        id="rememberMe"
+                        label="Ghi nhớ đăng nhập"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="text-dark"
+                      />
+                      <Link 
+                        to="#" 
+                        className="text-decoration-none fw-semibold"
+                        style={{ color: '#667eea' }}
+                      >
+                        Quên mật khẩu?
+                      </Link>
+                    </div>
+
+                    {/* Submit Button */}
+                    <Button 
+                      type="submit" 
+                      className="auth-button w-100 py-3 rounded-3 fw-semibold border-0 position-relative" 
+                      style={{ 
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        fontSize: '16px'
+                      }}
+                      disabled={submitting}
+                    >
+                      {submitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" />
+                          Đang đăng nhập...
+                        </>
+                      ) : (
+                        <>
+                          <FaShieldAlt className="me-2" />
+                          ĐĂNG NHẬP
+                        </>
+                      )}
+                    </Button>
+                  </Form>
+
+                  {/* Register Link */}
+                  <div className="text-center mt-4">
+                    <span className="text-muted">Chưa có tài khoản? </span>
+                    <Link 
+                      to="/register" 
+                      className="fw-bold text-decoration-none"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      Đăng ký ngay
+                    </Link>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="text-center mt-4 pt-3 border-top">
+                    <small className="text-muted">
+                      <FaLock className="me-1" />
+                      Bảo mật bởi ReconWeb Security
+                    </small>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </>
+  );
+};
+
+export default LoginPage;
+
+
+
+################################################################################
+## FILE 34: ProfilePage.jsx
+## Path: client/src/pages/ProfilePage.jsx
+################################################################################
+
+// client/src/pages/ProfilePage.jsx
+import { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { useAuth } from '../context/AuthContext';
+import { FaUser, FaEnvelope, FaCalendar, FaSave, FaUserEdit } from 'react-icons/fa';
+
+const ProfilePage = () => {
+  const { user, request, setError } = useAuth();
+  const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setErrorMsg] = useState('');
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    email: user?.email || ''
+  });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name,
+        email: user.email
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess('');
+    setErrorMsg('');
+
+    try {
+      const response = await request('/auth/update-profile', {
+        method: 'PUT',
+        body: formData
+      });
+
+      setSuccess('Profile updated successfully!');
+      setEditing(false);
+      
+      // Refresh user data
+      const updatedUser = await request('/auth/me');
+      // Update context if needed
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Container className="py-4">
+      <h1 className="mb-4">
+        <FaUser className="me-2" />
+        My Profile
+      </h1>
+
+      {error && <Alert variant="danger" dismissible onClose={() => setErrorMsg('')}>{error}</Alert>}
+      {success && <Alert variant="success" dismissible onClose={() => setSuccess('')}>{success}</Alert>}
+
+      <Row>
+        <Col lg={8}>
           <Card className="shadow-sm">
+            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Profile Information</h5>
+              {!editing && (
+                <Button 
+                  variant="light" 
+                  size="sm"
+                  onClick={() => setEditing(true)}
+                >
+                  <FaUserEdit className="me-1" />
+                  Edit Profile
+                </Button>
+              )}
+            </Card.Header>
             <Card.Body>
-              <h2 className="text-center mb-4">Welcome back</h2>
-              {error ? <Alert variant="danger">{error}</Alert> : null}
               <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="loginEmail">
-                  <Form.Label>Email address</Form.Label>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <FaUser className="me-2" />
+                    Full Name
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    disabled={!editing}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <FaEnvelope className="me-2" />
+                    Email Address
+                  </Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
-                    placeholder="you@example.com"
-                    value={form.email}
+                    value={formData.email}
                     onChange={handleChange}
+                    disabled={!editing}
                     required
                   />
+                  <Form.Text className="text-muted">
+                    Email changes may require verification
+                  </Form.Text>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="loginPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Button type="submit" variant="primary" className="w-100" disabled={submitting}>
-                  {submitting ? 'Signing in…' : 'Sign in'}
-                </Button>
+
+                {editing && (
+                  <div className="d-flex gap-2">
+                    <Button 
+                      type="submit" 
+                      variant="primary"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <Spinner animation="border" size="sm" className="me-2" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <FaSave className="me-2" />
+                          Save Changes
+                        </>
+                      )}
+                    </Button>
+                    <Button 
+                      variant="secondary"
+                      onClick={() => {
+                        setEditing(false);
+                        setFormData({
+                          name: user.name,
+                          email: user.email
+                        });
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                )}
               </Form>
-              <p className="mt-3 mb-0 text-center">
-                Need an account? <Link to="/register">Register</Link>
-              </p>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col lg={4}>
+          <Card className="shadow-sm mb-3">
+            <Card.Header className="bg-light">
+              <h6 className="mb-0">Account Details</h6>
+            </Card.Header>
+            <Card.Body>
+              <div className="mb-2">
+                <strong>Account Created:</strong>
+                <div className="text-muted">
+                  <FaCalendar className="me-2" />
+                  {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                </div>
+              </div>
+              <div className="mb-2">
+                <strong>Current Plan:</strong>
+                <div className="text-muted">
+                  {user?.subscription?.plan?.toUpperCase() || 'FREE'}
+                </div>
+              </div>
+              <div>
+                <strong>Account Status:</strong>
+                <div className="text-success">Active</div>
+              </div>
+            </Card.Body>
+          </Card>
+
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h6 className="mb-3">Quick Actions</h6>
+              <div className="d-grid gap-2">
+                <Button variant="outline-primary" href="/settings" size="sm">
+                  Change Password
+                </Button>
+                <Button variant="outline-secondary" href="/subscription" size="sm">
+                  Manage Subscription
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>
@@ -3233,13 +4052,12 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
-
+export default ProfilePage;
 
 
 
 ################################################################################
-## FILE 32: RegisterPage.jsx
+## FILE 35: RegisterPage.jsx
 ## Path: client/src/pages/RegisterPage.jsx
 ################################################################################
 
@@ -3247,6 +4065,8 @@ import { useState } from 'react';
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { FaUserPlus, FaEnvelope, FaLock, FaUser, FaShieldAlt, FaKey, FaUserShield } from 'react-icons/fa';
+import '../styles/auth.css';
 
 const RegisterPage = () => {
   const { register } = useAuth();
@@ -3254,6 +4074,7 @@ const RegisterPage = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [showCurtain, setShowCurtain] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -3267,75 +4088,188 @@ const RegisterPage = () => {
 
     try {
       await register(form);
-      navigate('/', { replace: true });
+      
+      setShowCurtain(true);
+      
+      setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 1000);
     } catch (err) {
       console.error('Registration error:', err);
-      // Handle validation errors from express-validator
       if (err.payload?.errors && Array.isArray(err.payload.errors)) {
         const messages = err.payload.errors.map(e => e.msg).join(', ');
         setError(messages);
       } else {
-        setError(err.message || 'Registration failed');
+        setError(err.message || 'Đăng ký thất bại');
       }
-    } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Container className="d-flex align-items-center justify-content-center min-vh-100 bg-body-secondary">
-      <Row className="w-100 justify-content-center">
-        <Col xs={12} md={6} lg={4}>
-          <Card className="shadow-sm">
-            <Card.Body>
-              <h2 className="text-center mb-4">Create account</h2>
-              {error ? <Alert variant="danger">{error}</Alert> : null}
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="registerName">
-                  <Form.Label>Full name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    placeholder="Nguyen Van A"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="registerEmail">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="registerPassword">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="At least 8 characters"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-                <Button type="submit" variant="primary" className="w-100" disabled={submitting}>
-                  {submitting ? 'Creating account…' : 'Register'}
-                </Button>
-              </Form>
-              <p className="mt-3 mb-0 text-center">
-                Already have an account? <Link to="/login">Sign in</Link>
-              </p>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <>
+      {showCurtain && (
+        <div className="loading-curtain closing">
+          <div className="loading-spinner"></div>
+          <p className="text-white mt-4 fs-5 fw-semibold">Đang tạo tài khoản...</p>
+        </div>
+      )}
+
+      <div className="auth-background">
+        <div className="floating-locks">
+          <FaLock className="lock-icon text-white" size={60} style={{ top: '10%' }} />
+          <FaShieldAlt className="lock-icon text-white" size={70} style={{ top: '20%' }} />
+          <FaKey className="lock-icon text-white" size={50} style={{ top: '30%' }} />
+          <FaUserShield className="lock-icon text-white" size={80} style={{ top: '40%' }} />
+          <FaUserPlus className="lock-icon text-white" size={55} style={{ top: '50%' }} />
+        </div>
+
+        <div className="particles">
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+          <div className="particle"></div>
+        </div>
+
+        <Container className="position-relative" style={{ zIndex: 1 }}>
+          <Row className="min-vh-100 align-items-center justify-content-center">
+            <Col xs={12} md={6} lg={5} xl={4}>
+              <Card className="auth-card glass-card shadow-lg border-0 rounded-4">
+                <Card.Body className="p-5">
+                  <div className="text-center mb-4">
+                    <div 
+                      className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 icon-pulse"
+                      style={{ 
+                        width: '90px', 
+                        height: '90px', 
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+                      }}
+                    >
+                      <FaUserPlus size={40} className="text-white" />
+                    </div>
+                    <h2 className="fw-bold mb-2" style={{ 
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}>
+                      Join ReconWeb
+                    </h2>
+                    <p className="text-muted mb-0">Tạo tài khoản để bắt đầu</p>
+                  </div>
+
+                  {error && (
+                    <Alert variant="danger" className="rounded-3 border-0">
+                      <div className="d-flex align-items-center">
+                        <FaLock className="me-2" />
+                        {error}
+                      </div>
+                    </Alert>
+                  )}
+
+                  <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaUser className="me-2 text-primary" />
+                        Họ và tên
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="name"
+                        placeholder="Nguyễn Văn A"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                        className="auth-input py-3 rounded-3"
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaEnvelope className="me-2 text-primary" />
+                        Email
+                      </Form.Label>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                        placeholder="example@email.com"
+                        value={form.email}
+                        onChange={handleChange}
+                        required
+                        className="auth-input py-3 rounded-3"
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-4">
+                      <Form.Label className="fw-semibold text-dark">
+                        <FaLock className="me-2 text-primary" />
+                        Mật khẩu
+                      </Form.Label>
+                      <Form.Control
+                        type="password"
+                        name="password"
+                        placeholder="Ít nhất 8 ký tự"
+                        value={form.password}
+                        onChange={handleChange}
+                        required
+                        className="auth-input py-3 rounded-3"
+                      />
+                      <Form.Text className="text-muted">
+                        <small>Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ và số</small>
+                      </Form.Text>
+                    </Form.Group>
+
+                    <Button 
+                      type="submit" 
+                      className="auth-button w-100 py-3 rounded-3 fw-semibold border-0" 
+                      style={{ 
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        fontSize: '16px'
+                      }}
+                      disabled={submitting}
+                    >
+                      {submitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" />
+                          Đang tạo tài khoản...
+                        </>
+                      ) : (
+                        <>
+                          <FaUserPlus className="me-2" />
+                          ĐĂNG KÝ NGAY
+                        </>
+                      )}
+                    </Button>
+                  </Form>
+
+                  <div className="text-center mt-4">
+                    <span className="text-muted">Đã có tài khoản? </span>
+                    <Link 
+                      to="/login" 
+                      className="fw-bold text-decoration-none"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      Đăng nhập
+                    </Link>
+                  </div>
+
+                  <div className="text-center mt-4 pt-3 border-top">
+                    <small className="text-muted">
+                      <FaShieldAlt className="me-1" />
+                      Bảo mật và an toàn với ReconWeb
+                    </small>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </>
   );
 };
 
@@ -3343,9 +4277,8 @@ export default RegisterPage;
 
 
 
-
 ################################################################################
-## FILE 33: ScanDetailsPage.jsx
+## FILE 36: ScanDetailsPage.jsx
 ## Path: client/src/pages/ScanDetailsPage.jsx
 ################################################################################
 
@@ -3498,7 +4431,7 @@ export default ScanDetailsPage;
 
 
 ################################################################################
-## FILE 34: ScanHistoryPage.jsx
+## FILE 37: ScanHistoryPage.jsx
 ## Path: client/src/pages/ScanHistoryPage.jsx
 ################################################################################
 
@@ -3689,7 +4622,284 @@ export default ScanHistoryPage;
 
 
 ################################################################################
-## FILE 35: SubscriptionPage.jsx
+## FILE 38: SettingsPage.jsx
+## Path: client/src/pages/SettingsPage.jsx
+################################################################################
+
+// client/src/pages/SettingsPage.jsx
+import { useState } from 'react';
+import { Container, Row, Col, Card, Form, Button, Alert, Spinner, Tabs, Tab } from 'react-bootstrap';
+import { useAuth } from '../context/AuthContext';
+import { FaCog, FaLock, FaBell, FaShieldAlt } from 'react-icons/fa';
+
+const SettingsPage = () => {
+  const { request } = useAuth();
+  const [activeTab, setActiveTab] = useState('security');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+
+  // Password change state
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+
+  // Notification settings
+  const [notifications, setNotifications] = useState({
+    emailNotifications: true,
+    scanComplete: true,
+    vulnerabilityAlerts: true,
+    weeklyReport: false
+  });
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess('');
+    setError('');
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setError('New passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    if (passwordForm.newPassword.length < 8) {
+      setError('Password must be at least 8 characters');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await request('/auth/change-password', {
+        method: 'POST',
+        body: {
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        }
+      });
+
+      setSuccess('Password changed successfully!');
+      setPasswordForm({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+    } catch (err) {
+      setError(err.message || 'Failed to change password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNotificationUpdate = async () => {
+    setLoading(true);
+    setSuccess('');
+    setError('');
+
+    try {
+      await request('/auth/update-notifications', {
+        method: 'PUT',
+        body: notifications
+      });
+
+      setSuccess('Notification preferences updated!');
+    } catch (err) {
+      setError(err.message || 'Failed to update preferences');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Container className="py-4">
+      <h1 className="mb-4">
+        <FaCog className="me-2" />
+        Settings
+      </h1>
+
+      {error && <Alert variant="danger" dismissible onClose={() => setError('')}>{error}</Alert>}
+      {success && <Alert variant="success" dismissible onClose={() => setSuccess('')}>{success}</Alert>}
+
+      <Row>
+        <Col lg={12}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <Tabs
+                activeKey={activeTab}
+                onSelect={(k) => setActiveTab(k)}
+                className="mb-3"
+              >
+                {/* Security Tab */}
+                <Tab 
+                  eventKey="security" 
+                  title={
+                    <>
+                      <FaLock className="me-1" /> Security
+                    </>
+                  }
+                >
+                  <h5 className="mb-3">Change Password</h5>
+                  <Form onSubmit={handlePasswordChange}>
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Current Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            value={passwordForm.currentPassword}
+                            onChange={(e) => setPasswordForm({
+                              ...passwordForm,
+                              currentPassword: e.target.value
+                            })}
+                            required
+                          />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>New Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            value={passwordForm.newPassword}
+                            onChange={(e) => setPasswordForm({
+                              ...passwordForm,
+                              newPassword: e.target.value
+                            })}
+                            required
+                            minLength={8}
+                          />
+                          <Form.Text className="text-muted">
+                            At least 8 characters, including letters and numbers
+                          </Form.Text>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>Confirm New Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            value={passwordForm.confirmPassword}
+                            onChange={(e) => setPasswordForm({
+                              ...passwordForm,
+                              confirmPassword: e.target.value
+                            })}
+                            required
+                          />
+                        </Form.Group>
+
+                        <Button 
+                          type="submit" 
+                          variant="primary"
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <>
+                              <Spinner animation="border" size="sm" className="me-2" />
+                              Updating...
+                            </>
+                          ) : (
+                            <>
+                              <FaShieldAlt className="me-2" />
+                              Update Password
+                            </>
+                          )}
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Tab>
+
+                {/* Notifications Tab */}
+                <Tab 
+                  eventKey="notifications" 
+                  title={
+                    <>
+                      <FaBell className="me-1" /> Notifications
+                    </>
+                  }
+                >
+                  <h5 className="mb-3">Notification Preferences</h5>
+                  <Form>
+                    <Form.Check
+                      type="switch"
+                      id="emailNotifications"
+                      label="Enable email notifications"
+                      checked={notifications.emailNotifications}
+                      onChange={(e) => setNotifications({
+                        ...notifications,
+                        emailNotifications: e.target.checked
+                      })}
+                      className="mb-3"
+                    />
+
+                    <Form.Check
+                      type="switch"
+                      id="scanComplete"
+                      label="Notify when scan completes"
+                      checked={notifications.scanComplete}
+                      onChange={(e) => setNotifications({
+                        ...notifications,
+                        scanComplete: e.target.checked
+                      })}
+                      className="mb-3"
+                    />
+
+                    <Form.Check
+                      type="switch"
+                      id="vulnerabilityAlerts"
+                      label="Alert on critical vulnerabilities"
+                      checked={notifications.vulnerabilityAlerts}
+                      onChange={(e) => setNotifications({
+                        ...notifications,
+                        vulnerabilityAlerts: e.target.checked
+                      })}
+                      className="mb-3"
+                    />
+
+                    <Form.Check
+                      type="switch"
+                      id="weeklyReport"
+                      label="Send weekly security report"
+                      checked={notifications.weeklyReport}
+                      onChange={(e) => setNotifications({
+                        ...notifications,
+                        weeklyReport: e.target.checked
+                      })}
+                      className="mb-3"
+                    />
+
+                    <Button 
+                      variant="primary"
+                      onClick={handleNotificationUpdate}
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <Spinner animation="border" size="sm" className="me-2" />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save Preferences'
+                      )}
+                    </Button>
+                  </Form>
+                </Tab>
+              </Tabs>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default SettingsPage;
+
+
+
+################################################################################
+## FILE 39: SubscriptionPage.jsx
 ## Path: client/src/pages/SubscriptionPage.jsx
 ################################################################################
 
@@ -3953,7 +5163,7 @@ export default SubscriptionPage;
 
 
 ################################################################################
-## FILE 36: apiClient.js
+## FILE 40: apiClient.js
 ## Path: client/src/services/apiClient.js
 ################################################################################
 
@@ -4020,7 +5230,587 @@ export const apiRequest = async (path, { method = 'GET', body, token, headers = 
 
 
 ################################################################################
-## FILE 37: tailwind.config.js
+## FILE 41: auth.css
+## Path: client/src/styles/auth.css
+################################################################################
+
+/* Animated Background */
+.auth-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  overflow: hidden;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating Locks Animation */
+.floating-locks {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lock-icon {
+  position: absolute;
+  opacity: 0.1;
+  animation: float 20s infinite ease-in-out;
+}
+
+.lock-icon:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 25s;
+}
+
+.lock-icon:nth-child(2) {
+  left: 30%;
+  animation-delay: 3s;
+  animation-duration: 20s;
+}
+
+.lock-icon:nth-child(3) {
+  left: 50%;
+  animation-delay: 6s;
+  animation-duration: 22s;
+}
+
+.lock-icon:nth-child(4) {
+  left: 70%;
+  animation-delay: 9s;
+  animation-duration: 18s;
+}
+
+.lock-icon:nth-child(5) {
+  left: 85%;
+  animation-delay: 12s;
+  animation-duration: 24s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Card Entrance Animation */
+.auth-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icon Pulse Animation */
+.icon-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Input Focus Effect */
+.auth-input {
+  transition: all 0.3s ease;
+  border: 2px solid #e0e0e0;
+}
+
+.auth-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Button Hover Effect */
+.auth-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.auth-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.auth-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+/* Loading Curtain Animation */
+.loading-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: curtainClose 1s ease-in-out forwards;
+}
+
+@keyframes curtainClose {
+  0% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+}
+
+.loading-curtain.closing {
+  animation: curtainClose 0.8s ease-in-out forwards;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Particle Effect */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: particleFloat 15s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+  width: 4px;
+  height: 4px;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  width: 6px;
+  height: 6px;
+  left: 40%;
+  animation-delay: 2s;
+}
+
+.particle:nth-child(3) {
+  width: 5px;
+  height: 5px;
+  left: 60%;
+  animation-delay: 4s;
+}
+
+.particle:nth-child(4) {
+  width: 7px;
+  height: 7px;
+  left: 80%;
+  animation-delay: 6s;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100px) translateX(50px);
+    opacity: 0;
+  }
+}
+
+/* Glass Morphism Effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+
+
+################################################################################
+## FILE 42: theme.css
+## Path: client/src/styles/theme.css
+################################################################################
+
+/* client/src/styles/theme.css */
+
+/* ============================================
+   GLOBAL THEME VARIABLES
+   ============================================ */
+:root {
+  /* Primary Gradient Colors */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  --gradient-secondary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gradient-warning: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%);
+  
+  /* Glass Morphism */
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  
+  /* Dark Glass */
+  --glass-dark-bg: rgba(26, 32, 44, 0.95);
+  --glass-dark-border: rgba(255, 255, 255, 0.1);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.20);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* ============================================
+   ANIMATED GRADIENT BACKGROUND
+   ============================================ */
+.gradient-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ============================================
+   FLOATING PARTICLES
+   ============================================ */
+.particles-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: particleFloat 15s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+  width: 4px;
+  height: 4px;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 20s;
+}
+
+.particle:nth-child(2) {
+  width: 6px;
+  height: 6px;
+  left: 30%;
+  animation-delay: 2s;
+  animation-duration: 18s;
+}
+
+.particle:nth-child(3) {
+  width: 5px;
+  height: 5px;
+  left: 50%;
+  animation-delay: 4s;
+  animation-duration: 22s;
+}
+
+.particle:nth-child(4) {
+  width: 7px;
+  height: 7px;
+  left: 70%;
+  animation-delay: 6s;
+  animation-duration: 19s;
+}
+
+.particle:nth-child(5) {
+  width: 4px;
+  height: 4px;
+  left: 85%;
+  animation-delay: 8s;
+  animation-duration: 21s;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(100vh) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% {
+    transform: translateY(-100px) translateX(50px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   GLASS MORPHISM CARDS
+   ============================================ */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+}
+
+.glass-card-dark {
+  background: var(--glass-dark-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-dark-border);
+  color: white;
+}
+
+/* ============================================
+   GRADIENT BUTTONS
+   ============================================ */
+.btn-gradient-primary {
+  background: var(--gradient-primary);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 12px;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-gradient-primary::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-gradient-primary:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-gradient-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  color: white;
+}
+
+.btn-gradient-success {
+  background: var(--gradient-success);
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-gradient-danger {
+  background: var(--gradient-danger);
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+
+/* ============================================
+   ANIMATED STATS CARDS
+   ============================================ */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: all 0.6s;
+}
+
+.stat-card:hover::after {
+  top: -100%;
+  right: -100%;
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* ============================================
+   FADE IN ANIMATIONS
+   ============================================ */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-delay-1 { animation-delay: 0.1s; }
+.fade-in-delay-2 { animation-delay: 0.2s; }
+.fade-in-delay-3 { animation-delay: 0.3s; }
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) {
+  .glass-card {
+    border-radius: 12px;
+  }
+  
+  .btn-gradient-primary {
+    padding: 10px 24px;
+  }
+}
+
+
+
+################################################################################
+## FILE 43: tailwind.config.js
 ## Path: client/tailwind.config.js
 ################################################################################
 
@@ -4043,7 +5833,7 @@ export default {
 
 
 ################################################################################
-## FILE 38: vite.config.js
+## FILE 44: vite.config.js
 ## Path: client/vite.config.js
 ################################################################################
 
@@ -4059,7 +5849,7 @@ export default defineConfig({
 
 
 ################################################################################
-## FILE 39: package-lock.json
+## FILE 45: package-lock.json
 ## Path: package-lock.json
 ################################################################################
 
@@ -4068,7 +5858,7 @@ export default defineConfig({
 
 
 ################################################################################
-## FILE 40: package.json
+## FILE 46: package.json
 ## Path: package.json
 ################################################################################
 
@@ -4077,7 +5867,7 @@ export default defineConfig({
 
 
 ################################################################################
-## FILE 41: .dockerignore
+## FILE 47: .dockerignore
 ## Path: server/.dockerignore
 ################################################################################
 
@@ -4086,7 +5876,7 @@ export default defineConfig({
 
 
 ################################################################################
-## FILE 42: .env
+## FILE 48: .env
 ## Path: server/.env
 ################################################################################
 
@@ -4099,7 +5889,7 @@ CLIENT_ORIGIN=http://localhost:5173
 
 
 ################################################################################
-## FILE 43: .env.example
+## FILE 49: .env.example
 ## Path: server/.env.example
 ################################################################################
 
@@ -4124,7 +5914,7 @@ CLIENT_ORIGIN=http://localhost:5173
 
 
 ################################################################################
-## FILE 44: package-lock.json
+## FILE 50: package-lock.json
 ## Path: server/package-lock.json
 ################################################################################
 
@@ -4133,7 +5923,7 @@ CLIENT_ORIGIN=http://localhost:5173
 
 
 ################################################################################
-## FILE 45: package.json
+## FILE 51: package.json
 ## Path: server/package.json
 ################################################################################
 
@@ -4142,7 +5932,7 @@ CLIENT_ORIGIN=http://localhost:5173
 
 
 ################################################################################
-## FILE 46: db.js
+## FILE 52: db.js
 ## Path: server/src/config/db.js
 ################################################################################
 
@@ -4168,7 +5958,7 @@ module.exports = connectDB;
 
 
 ################################################################################
-## FILE 47: authController.js
+## FILE 53: authController.js
 ## Path: server/src/controllers/authController.js
 ################################################################################
 
@@ -4257,17 +6047,118 @@ const me = async (req, res, next) => {
   }
 };
 
+// Update profile
+const updateProfile = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email } = req.body;
+    const userId = req.user.id;
+
+    // Check if email is already taken by another user
+    if (email) {
+      const existingUser = await User.findOne({ 
+        email: email.toLowerCase(),
+        _id: { $ne: userId }
+      });
+      
+      if (existingUser) {
+        return res.status(409).json({ message: 'Email already in use' });
+      }
+    }
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email.toLowerCase();
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: user.toSafeObject()
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Change password
+const changePassword = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Verify current password
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    // Hash and update new password
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update notification preferences (placeholder)
+const updateNotifications = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const notifications = req.body;
+
+    // You can store this in User model or separate NotificationSettings model
+    // For now, just return success
+    // await User.findByIdAndUpdate(userId, { notifications });
+
+    res.json({ 
+      message: 'Notification preferences updated',
+      notifications 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   me,
+  updateProfile,
+  changePassword,
+  updateNotifications
 };
 
 
 
 
 ################################################################################
-## FILE 48: scanController.js
+## FILE 54: scanController.js
 ## Path: server/src/controllers/scanController.js
 ################################################################################
 
@@ -4437,7 +6328,7 @@ module.exports = {
 
 
 ################################################################################
-## FILE 49: index.js
+## FILE 55: index.js
 ## Path: server/src/index.js
 ################################################################################
 
@@ -4504,7 +6395,7 @@ bootstrap();
 
 
 ################################################################################
-## FILE 50: authMiddleware.js
+## FILE 56: authMiddleware.js
 ## Path: server/src/middleware/authMiddleware.js
 ################################################################################
 
@@ -4558,7 +6449,7 @@ module.exports = (req, res, next) => {
 
 
 ################################################################################
-## FILE 51: CodeReview.js
+## FILE 57: CodeReview.js
 ## Path: server/src/models/CodeReview.js
 ################################################################################
 
@@ -4660,7 +6551,7 @@ module.exports = mongoose.model('CodeReview', codeReviewSchema);
 
 
 ################################################################################
-## FILE 52: Scan.js
+## FILE 58: Scan.js
 ## Path: server/src/models/Scan.js
 ################################################################################
 
@@ -4747,16 +6638,17 @@ module.exports = mongoose.model('Scan', scanSchema);
 
 
 ################################################################################
-## FILE 53: User.js
+## FILE 59: User.js
 ## Path: server/src/models/User.js
 ################################################################################
 
+// server/src/models/User.js
 const mongoose = require('mongoose');
 
 const subscriptionSchema = new mongoose.Schema({
   plan: {
     type: String,
-    enum: ['free', 'vip_monthly', 'vip_annual'],
+    enum: ['free', 'pro', 'vip'],  // ← Cập nhật enum cho khớp
     default: 'free'
   },
   status: {
@@ -4765,7 +6657,7 @@ const subscriptionSchema = new mongoose.Schema({
     default: 'active'
   },
   startDate: Date,
-  expiresAt: Date,
+  expiresAt: Date,  // ← Đổi tên từ 'endDate' sang 'expiresAt' nếu cần
   autoRenew: {
     type: Boolean,
     default: true
@@ -4775,8 +6667,8 @@ const subscriptionSchema = new mongoose.Schema({
 const usageSchema = new mongoose.Schema({
   scansThisMonth: { type: Number, default: 0 },
   codeReviewsToday: { type: Number, default: 0 },
-  lastScanReset: { type: Date, default: Date.now },
-  lastReviewReset: { type: Date, default: Date.now }
+  scansResetDate: { type: Date, default: Date.now },      // ← Thêm field này
+  codeReviewsResetDate: { type: Date, default: Date.now } // ← Thêm field này
 }, { _id: false });
 
 const userSchema = new mongoose.Schema(
@@ -4823,12 +6715,12 @@ module.exports = mongoose.model('User', userSchema);
 
 
 
-
 ################################################################################
-## FILE 54: authRoutes.js
+## FILE 60: authRoutes.js
 ## Path: server/src/routes/authRoutes.js
 ################################################################################
 
+// server/src/routes/authRoutes.js
 const { Router } = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
@@ -4863,13 +6755,41 @@ router.post(
 
 router.get('/me', authMiddleware, authController.me);
 
+// New routes
+router.put(
+  '/update-profile',
+  authMiddleware,
+  [
+    body('name').optional().trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
+    body('email').optional().isEmail().withMessage('Invalid email address').normalizeEmail(),
+  ],
+  authController.updateProfile
+);
+
+router.post(
+  '/change-password',
+  authMiddleware,
+  [
+    body('currentPassword').notEmpty().withMessage('Current password is required'),
+    body('newPassword')
+      .isLength({ min: 8 })
+      .withMessage('New password must be at least 8 characters')
+      .matches(/[a-z]/i)
+      .withMessage('Password must contain a letter')
+      .matches(/[0-9]/)
+      .withMessage('Password must contain a number'),
+  ],
+  authController.changePassword
+);
+
+router.put('/update-notifications', authMiddleware, authController.updateNotifications);
+
 module.exports = router;
 
 
 
-
 ################################################################################
-## FILE 55: codeReviewRoutes.js
+## FILE 61: codeReviewRoutes.js
 ## Path: server/src/routes/codeReviewRoutes.js
 ################################################################################
 
@@ -4958,7 +6878,7 @@ module.exports = router;
 
 
 ################################################################################
-## FILE 56: remediationRoutes.js
+## FILE 62: remediationRoutes.js
 ## Path: server/src/routes/remediationRoutes.js
 ################################################################################
 
@@ -5039,7 +6959,7 @@ module.exports = router;
 
 
 ################################################################################
-## FILE 57: scanRoutes.js
+## FILE 63: scanRoutes.js
 ## Path: server/src/routes/scanRoutes.js
 ################################################################################
 
@@ -5103,7 +7023,7 @@ module.exports = router;
 
 
 ################################################################################
-## FILE 58: subscriptionRoutes.js
+## FILE 64: subscriptionRoutes.js
 ## Path: server/src/routes/subscriptionRoutes.js
 ################################################################################
 
@@ -5209,7 +7129,7 @@ module.exports = router;
 
 
 ################################################################################
-## FILE 59: codeReviewService.js
+## FILE 65: codeReviewService.js
 ## Path: server/src/services/codeReviewService.js
 ################################################################################
 
@@ -6725,7 +8645,7 @@ module.exports = {
 
 
 ################################################################################
-## FILE 60: pdfGenerator.js
+## FILE 66: pdfGenerator.js
 ## Path: server/src/services/pdfGenerator.js
 ################################################################################
 
@@ -7005,7 +8925,7 @@ module.exports = {
 
 
 ################################################################################
-## FILE 61: remediationService.js
+## FILE 67: remediationService.js
 ## Path: server/src/services/remediationService.js
 ################################################################################
 
@@ -7438,7 +9358,7 @@ module.exports = {
 
 
 ################################################################################
-## FILE 62: resultParser.js
+## FILE 68: resultParser.js
 ## Path: server/src/services/resultParser.js
 ################################################################################
 
@@ -7930,7 +9850,7 @@ module.exports = {
 
 
 ################################################################################
-## FILE 63: scanService.js
+## FILE 69: scanService.js
 ## Path: server/src/services/scanService.js
 ################################################################################
 
@@ -8564,8 +10484,9 @@ const getSupportedTools = () => [...SUPPORTED_TOOLS];
  */
 const isToolInstalled = (toolName) => {
   try {
-    // Sử dụng EXTENDED_PATH để tìm tool
-    execSync(`which ${toolName}`, { 
+    // Windows dùng 'where', Linux/Mac dùng 'which'
+    const command = os.platform() === 'win32' ? 'where' : 'which';
+    execSync(`${command} ${toolName}`, { 
       stdio: 'ignore',
       env: { ...process.env, PATH: EXTENDED_PATH }
     });
@@ -8602,7 +10523,7 @@ module.exports = {
 
 
 ################################################################################
-## FILE 64: subscriptionService.js
+## FILE 70: subscriptionService.js
 ## Path: server/src/services/subscriptionService.js
 ################################################################################
 

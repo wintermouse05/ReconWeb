@@ -1,9 +1,10 @@
+// server/src/models/User.js
 const mongoose = require('mongoose');
 
 const subscriptionSchema = new mongoose.Schema({
   plan: {
     type: String,
-    enum: ['free', 'vip_monthly', 'vip_annual'],
+    enum: ['free', 'pro', 'vip'],  // ← Cập nhật enum cho khớp
     default: 'free'
   },
   status: {
@@ -12,7 +13,7 @@ const subscriptionSchema = new mongoose.Schema({
     default: 'active'
   },
   startDate: Date,
-  expiresAt: Date,
+  expiresAt: Date,  // ← Đổi tên từ 'endDate' sang 'expiresAt' nếu cần
   autoRenew: {
     type: Boolean,
     default: true
@@ -22,8 +23,8 @@ const subscriptionSchema = new mongoose.Schema({
 const usageSchema = new mongoose.Schema({
   scansThisMonth: { type: Number, default: 0 },
   codeReviewsToday: { type: Number, default: 0 },
-  lastScanReset: { type: Date, default: Date.now },
-  lastReviewReset: { type: Date, default: Date.now }
+  scansResetDate: { type: Date, default: Date.now },      // ← Thêm field này
+  codeReviewsResetDate: { type: Date, default: Date.now } // ← Thêm field này
 }, { _id: false });
 
 const userSchema = new mongoose.Schema(

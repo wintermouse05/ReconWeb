@@ -27,7 +27,6 @@ const AboutPage = () => {
       id: 'MSSV: 23127509',
       github: 'https://github.com/wintermouse05'
     },
-    // Thêm thành viên khác ở đây
   ];
 
   const references = [
@@ -40,17 +39,24 @@ const AboutPage = () => {
   ];
 
   return (
-    <Container className="py-5">
+    <Container className="py-5 about-page">
       <div className="text-center mb-5">
-        <FaShieldAlt size={64} className="text-primary mb-3" />
-        <h1 className="mb-3">About ReconWeb</h1>
-        <p className="lead text-muted">
+        <FaShieldAlt 
+          size={64} 
+          className="mb-3" 
+          style={{ 
+            color: 'white',
+            filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3))'
+          }} 
+        />
+        <h1 className="mb-3 text-white text-shadow">About ReconWeb</h1>
+        <p className="lead text-white text-shadow">
           Web Vulnerability Scanning Platform for Educational Purposes
         </p>
       </div>
 
       {/* University Information */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <div className="d-flex align-items-center mb-3">
             <FaUniversity size={32} className="text-primary me-3" />
@@ -85,7 +91,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Team Members */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <div className="d-flex align-items-center mb-4">
             <FaUsers size={32} className="text-primary me-3" />
@@ -94,7 +100,7 @@ const AboutPage = () => {
           <Row>
             {teamMembers.map((member, index) => (
               <Col md={6} lg={4} key={index} className="mb-3">
-                <Card className="h-100 border">
+                <Card className="h-100 border shadow-sm" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
                   <Card.Body>
                     <h5 className="mb-2">{member.name}</h5>
                     <p className="text-muted mb-2">{member.role}</p>
@@ -119,7 +125,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Project Information */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <h3 className="mb-3">Về dự án</h3>
           <p>
@@ -140,7 +146,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Technologies */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <h3 className="mb-3">Công nghệ sử dụng</h3>
           <Row>
@@ -167,7 +173,7 @@ const AboutPage = () => {
       </Card>
 
       {/* References */}
-      <Card className="shadow-sm mb-4">
+      <Card className="shadow-lg mb-4 glass-card">
         <Card.Body>
           <div className="d-flex align-items-center mb-4">
             <FaGithub size={32} className="text-primary me-3" />
@@ -179,7 +185,7 @@ const AboutPage = () => {
           <Row>
             {references.map((ref, index) => (
               <Col md={6} lg={4} key={index} className="mb-3">
-                <Card className="border h-100">
+                <Card className="border h-100 shadow-sm" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
                   <Card.Body className="d-flex align-items-center justify-content-between">
                     <span><strong>{ref.name}</strong></span>
                     <a 
@@ -199,7 +205,7 @@ const AboutPage = () => {
       </Card>
 
       {/* Contact */}
-      <Card className="shadow-sm bg-light">
+      <Card className="shadow-lg bg-light glass-card">
         <Card.Body className="text-center">
           <FaEnvelope size={32} className="text-primary mb-3" />
           <h5>Liên hệ</h5>
@@ -220,12 +226,18 @@ const AboutPage = () => {
       </Card>
 
       {/* Disclaimer */}
-      <div className="text-center mt-5 text-muted small">
-        <p>
-          <strong>Disclaimer:</strong> Công cụ này chỉ dành cho mục đích giáo dục và nghiên cứu. 
-          Chỉ sử dụng trên các hệ thống bạn có quyền kiểm tra.
-        </p>
-        <p>&copy; {new Date().getFullYear()} ReconWeb - HCMUS Software Engineering Project</p>
+      <div className="text-center mt-5">
+        <Card className="glass-card shadow-sm">
+          <Card.Body>
+            <p className="mb-2">
+              <strong>Disclaimer:</strong> Công cụ này chỉ dành cho mục đích giáo dục và nghiên cứu. 
+              Chỉ sử dụng trên các hệ thống bạn có quyền kiểm tra.
+            </p>
+            <p className="mb-0 text-muted">
+              &copy; {new Date().getFullYear()} ReconWeb - HCMUS Software Engineering Project
+            </p>
+          </Card.Body>
+        </Card>
       </div>
     </Container>
   );

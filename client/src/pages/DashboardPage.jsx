@@ -1,3 +1,4 @@
+// client/src/pages/DashboardPage.jsx - Chỉ thêm styling, logic giữ nguyên
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Form, Row, Stack } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import ToolOptionForm from '../components/ToolOptionForm';
 import ScanProgress from '../components/ScanProgress';
 import { SUPPORTED_TOOLS, TOOL_DEFINITIONS } from '../constants/tools';
 import { apiRequest } from '../services/apiClient';
+import { FaRocket, FaHistory, FaCheckCircle } from 'react-icons/fa';
 
 const buildInitialSelection = (installedTools = []) =>
   SUPPORTED_TOOLS.filter((tool) => 
@@ -156,88 +158,138 @@ const DashboardPage = () => {
     }
   };
 
-  return (
-    <Stack gap={4}>
-      <div className="bg-white shadow-sm p-4 rounded-3">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-          <div>
-            <h1 className="mb-1">Automation Dashboard</h1>
-            <p className="mb-0 text-muted">Configure and run vulnerability scans using open-source tools.</p>
-          </div>
-          <Button as={Link} to="/history" variant="outline-primary">
-            View Scan History
-          </Button>
-        </div>
-        {feedback.message ? <Alert variant={feedback.type}>{feedback.message}</Alert> : null}
-        <Form onSubmit={handleSubmit}>
-          <Row className="g-4">
-            <Col xs={12}>
-              <Form.Group controlId="targetUrl">
-                <Form.Label>Target URL</Form.Label>
-                <Form.Control
-                  type="url"
-                  placeholder="https://example.com"
-                  value={targetUrl}
-                  onChange={(event) => setTargetUrl(event.target.value)}
-                  required
-                />
-                <Form.Text>Include the protocol (http or https) for the target website.</Form.Text>
-              </Form.Group>
+   return (
+    <Stack gap={4} className="fade-in">
+      {/* Header Card */}
+      <Card className="glass-card border-0 shadow-lg">
+        <Card.Body className="p-4">
+          <Row className="align-items-center">
+            <Col md={8}>
+              <h1 className="mb-1 gradient-text">
+                <FaRocket className="me-2" />
+                Security Scanner
+              </h1>
+              <p className="text-muted mb-0">
+                Configure and run vulnerability scans using open-source tools
+              </p>
             </Col>
-            <Col xs={12}>
-              <Form.Group controlId="scanNotes">
-                <Form.Label>Notes (optional)</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  placeholder="Describe the goal of this scan or additional context."
-                  value={notes}
-                  onChange={(event) => setNotes(event.target.value)}
-                />
-              </Form.Group>
+            <Col md={4} className="text-md-end">
+              <Button 
+                as={Link} 
+                to="/history" 
+                variant="outline-primary"
+                className="btn-gradient-primary"
+              >
+                <FaHistory className="me-2" />
+                View Scan History
+              </Button>
             </Col>
           </Row>
+        </Card.Body>
+      </Card>
 
-          <div className="mt-4">
-            <h4 className="mb-3">Select Tools</h4>
-            {loadingTools ? (
-              <div className="text-center py-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
+      {/* Feedback Messages */}
+      {feedback.message && (
+        <Alert variant={feedback.type} className="glass-card border-0 fade-in">
+          {feedback.message}
+        </Alert>
+      )}
+
+      {/* Scan Form */}
+      <Card className="glass-card border-0 shadow-lg">
+        <Card.Body className="p-4">
+          <Form onSubmit={handleSubmit}>
+            <Row className="g-4">
+              <Col xs={12}>
+                <Form.Group controlId="targetUrl">
+                  <Form.Label className="fw-semibold">Target URL</Form.Label>
+                  <Form.Control
+                    type="url"
+                    placeholder="https://example.com"
+                    value={targetUrl}
+                    onChange={(event) => setTargetUrl(event.target.value)}
+                    required
+                    className="glass-input"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid rgba(102, 126, 234, 0.2)',
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                  />
+                  <Form.Text className="text-muted">
+                    <FaCheckCircle className="me-1" />
+                    Include the protocol (http or https)
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+
+              <Col xs={12}>
+                <Form.Group controlId="scanNotes">
+                  <Form.Label className="fw-semibold">Notes (optional)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    placeholder="Describe the goal of this scan..."
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid rgba(102, 126, 234, 0.2)',
+                      borderRadius: '8px',
+                      padding: '12px'
+                    }}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            {/* Tools Selection */}
+            <div className="mt-4">
+              <h4 className="mb-3 gradient-text">Select Security Tools</h4>
+              
+              {loadingTools ? (
+                <div className="text-center py-5">
+                  <div className="spinner-border text-primary" />
+                  <p className="mt-2 text-muted">Checking installed tools...</p>
                 </div>
-                <p className="mt-2 text-muted">Checking installed tools...</p>
-              </div>
-            ) : (
-              <>
-                {notInstalledTools.length > 0 && (
-                  <Alert variant="warning" className="mb-3">
-                    <strong>Some tools are not installed:</strong>{' '}
-                    {notInstalledTools.map(t => TOOL_DEFINITIONS[t]?.label || t).join(', ')}.
-                    <br />
-                    <small>Please install them to use in scans.</small>
-                  </Alert>
-                )}
-                {availableTools.length === 0 ? (
-                  <Alert variant="danger">
-                    No scanning tools are installed on the server. Please install at least one tool (nikto, gobuster, nuclei, sqlmap, xsstrike, or wpscan).
-                  </Alert>
-                ) : (
-                  <Row className="g-3">
+              ) : (
+                <>
+                  {notInstalledTools.length > 0 && (
+                    <Alert variant="warning" className="glass-card mb-3">
+                      <strong>Some tools are not installed:</strong>{' '}
+                      {notInstalledTools.map(t => TOOL_DEFINITIONS[t]?.label || t).join(', ')}
+                    </Alert>
+                  )}
+                  
+                  <Row className="g-3 fade-in-delay-1">
                     {availableTools.map((tool) => (
                       <Col xs={12} md={6} lg={4} key={tool.key}>
-                        <Card className={selectedTools.includes(tool.key) ? 'border-primary shadow-sm' : 'shadow-sm'}>
+                        <Card 
+                          className={`h-100 glass-card stat-card ${selectedTools.includes(tool.key) ? 'border-primary' : ''}`}
+                          style={{
+                            cursor: 'pointer',
+                            borderWidth: '2px',
+                            transition: 'all 0.3s ease'
+                          }}
+                          onClick={() => handleToolToggle(tool.key)}
+                        >
                           <Card.Body>
                             <div className="d-flex justify-content-between align-items-start">
-                              <div>
-                                <Card.Title>{tool.label}</Card.Title>
-                                <Card.Text className="small text-muted">{tool.description}</Card.Text>
+                              <div className="flex-grow-1">
+                                <Card.Title className="gradient-text mb-2">
+                                  {tool.label}
+                                </Card.Title>
+                                <Card.Text className="small text-muted">
+                                  {tool.description}
+                                </Card.Text>
                               </div>
                               <Form.Check
                                 type="switch"
                                 id={`select-${tool.key}`}
                                 checked={selectedTools.includes(tool.key)}
                                 onChange={() => handleToolToggle(tool.key)}
-                                label=""
+                                className="ms-2"
                               />
                             </div>
                           </Card.Body>
@@ -245,37 +297,59 @@ const DashboardPage = () => {
                       </Col>
                     ))}
                   </Row>
+                </>
+              )}
+            </div>
+
+            {/* Tool Options */}
+            {selectedTools.map((toolKey, index) => (
+              <div key={toolKey} className={`fade-in-delay-${Math.min(index + 2, 3)}`}>
+                <ToolOptionForm
+                  toolKey={toolKey}
+                  values={toolOptions[toolKey]}
+                  onChange={handleOptionChange}
+                />
+              </div>
+            ))}
+
+            {/* Submit Button */}
+            <div className="d-flex justify-content-end mt-4">
+              <Button 
+                type="submit" 
+                className="btn-gradient-primary px-5 py-3"
+                disabled={submitting}
+                size="lg"
+              >
+                {submitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" />
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    <FaRocket className="me-2" />
+                    Start Security Scan
+                  </>
                 )}
-              </>
-            )}
-          </div>
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
 
-          {selectedTools.map((toolKey) => (
-            <ToolOptionForm
-              key={toolKey}
-              toolKey={toolKey}
-              values={toolOptions[toolKey]}
-              onChange={handleOptionChange}
-            />
-          ))}
-
-          <div className="d-flex justify-content-end">
-            <Button type="submit" variant="primary" size="lg" disabled={submitting}>
-              {submitting ? 'Scanning...' : 'Start Scan'}
-            </Button>
-          </div>
-        </Form>
-      </div>
-
+      {/* Scan Progress */}
       {activeScanId && (
-        <ScanProgress 
-          scanId={activeScanId} 
-          onComplete={handleScanComplete}
-          request={request}
-        />
+        <div className="fade-in">
+          <ScanProgress 
+            scanId={activeScanId} 
+            onComplete={handleScanComplete}
+            request={request}
+          />
+        </div>
       )}
     </Stack>
   );
 };
+
 
 export default DashboardPage;

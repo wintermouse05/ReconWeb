@@ -139,7 +139,7 @@ const CodeReviewPage = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">
+      <h1 className="mb-4 text-white text-shadow">
         <FaCode className="me-2" />
         AI Code Security Review
       </h1>
@@ -155,11 +155,22 @@ const CodeReviewPage = () => {
         </Alert>
       )}
 
-      <Tabs activeKey={activeTab} onSelect={setActiveTab} className="mb-4">
-        <Tab eventKey="review" title={<><FaShieldAlt className="me-1" /> New Review</>}>
+      <Tabs 
+        activeKey={activeTab} 
+        onSelect={setActiveTab} 
+        className="mb-4"
+      >
+        <Tab 
+          eventKey="review" 
+          title={
+            <span className="d-flex align-items-center">
+              <FaShieldAlt className="me-1" /> New Review
+            </span>
+          }
+        >
           <Row>
             <Col lg={6}>
-              <Card className="mb-4">
+              <Card className="mb-4 glass-card shadow-lg">
                 <Card.Header>
                   <h5 className="mb-0">Submit Code for Review</h5>
                 </Card.Header>
@@ -203,7 +214,7 @@ const CodeReviewPage = () => {
                       type="submit" 
                       variant="primary" 
                       size="lg" 
-                      className="w-100"
+                      className="w-100 btn-gradient-primary"
                       disabled={reviewing || !canReview.allowed}
                     >
                       {reviewing ? (
@@ -225,7 +236,7 @@ const CodeReviewPage = () => {
 
             <Col lg={6}>
               {result && (
-                <Card className="mb-4">
+                <Card className="mb-4 glass-card shadow-lg">
                   <Card.Header className="d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Security Review Results</h5>
                     {getRiskBadge(result.overallRisk)}
@@ -283,7 +294,7 @@ const CodeReviewPage = () => {
               )}
 
               {!result && !reviewing && (
-                <Card className="text-center py-5">
+                <Card className="text-center py-5 glass-card shadow-lg">
                   <Card.Body>
                     <FaBug size={48} className="text-muted mb-3" />
                     <h5>Ready to Review</h5>
@@ -297,10 +308,17 @@ const CodeReviewPage = () => {
           </Row>
         </Tab>
 
-        <Tab eventKey="history" title={<><FaHistory className="me-1" /> History</>}>
+        <Tab 
+          eventKey="history" 
+          title={
+            <span className="d-flex align-items-center">
+              <FaHistory className="me-1" /> History
+            </span>
+          }
+        >
           {loading ? (
             <div className="text-center py-5">
-              <Spinner animation="border" />
+              <Spinner animation="border" style={{ color: 'white' }} />
             </div>
           ) : history.length === 0 ? (
             <Alert variant="info">No code reviews yet. Submit your first code review above!</Alert>
@@ -336,15 +354,22 @@ const CodeReviewPage = () => {
           )}
         </Tab>
 
-        <Tab eventKey="stats" title={<><FaChartBar className="me-1" /> Statistics</>}>
+        <Tab 
+          eventKey="stats" 
+          title={
+            <span className="d-flex align-items-center">
+              <FaChartBar className="me-1" /> Statistics
+            </span>
+          }
+        >
           {loading ? (
             <div className="text-center py-5">
-              <Spinner animation="border" />
+              <Spinner animation="border" style={{ color: 'white' }} />
             </div>
           ) : stats ? (
             <Row>
               <Col md={3}>
-                <Card className="text-center mb-3">
+                <Card className="text-center mb-3 glass-card shadow">
                   <Card.Body>
                     <h2>{stats.totalReviews}</h2>
                     <p className="text-muted mb-0">Total Reviews</p>
@@ -352,7 +377,7 @@ const CodeReviewPage = () => {
                 </Card>
               </Col>
               <Col md={3}>
-                <Card className="text-center mb-3">
+                <Card className="text-center mb-3 glass-card shadow">
                   <Card.Body>
                     <h2>{stats.completedReviews}</h2>
                     <p className="text-muted mb-0">Completed</p>
@@ -360,7 +385,7 @@ const CodeReviewPage = () => {
                 </Card>
               </Col>
               <Col md={3}>
-                <Card className="text-center mb-3 border-danger">
+                <Card className="text-center mb-3 glass-card shadow border-danger">
                   <Card.Body>
                     <h2 className="text-danger">{stats.criticalVulns}</h2>
                     <p className="text-muted mb-0">Critical Issues</p>
@@ -368,7 +393,7 @@ const CodeReviewPage = () => {
                 </Card>
               </Col>
               <Col md={3}>
-                <Card className="text-center mb-3 border-warning">
+                <Card className="text-center mb-3 glass-card shadow border-warning">
                   <Card.Body>
                     <h2 className="text-warning">{stats.highVulns}</h2>
                     <p className="text-muted mb-0">High Issues</p>

@@ -1,0 +1,508 @@
+/* client/src/styles/theme.css */
+
+/* ============================================
+   GLOBAL THEME VARIABLES
+   ============================================ */
+:root {
+  /* Primary Gradient Colors */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  --gradient-secondary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gradient-warning: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%);
+  
+  /* Glass Morphism - IMPROVED CONTRAST */
+  --glass-bg: rgba(255, 255, 255, 0.98);
+  --glass-bg-dark: rgba(26, 32, 44, 0.98);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  
+  /* Dark Glass - IMPROVED */
+  --glass-dark-bg: rgba(26, 32, 44, 0.98);
+  --glass-dark-border: rgba(255, 255, 255, 0.15);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.20);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* ============================================
+   ANIMATED GRADIENT BACKGROUND
+   ============================================ */
+.gradient-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ============================================
+   FLOATING PARTICLES
+   ============================================ */
+.particles-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: particleFloat 15s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+  width: 4px;
+  height: 4px;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 20s;
+}
+
+.particle:nth-child(2) {
+  width: 6px;
+  height: 6px;
+  left: 30%;
+  animation-delay: 2s;
+  animation-duration: 18s;
+}
+
+.particle:nth-child(3) {
+  width: 5px;
+  height: 5px;
+  left: 50%;
+  animation-delay: 4s;
+  animation-duration: 22s;
+}
+
+.particle:nth-child(4) {
+  width: 7px;
+  height: 7px;
+  left: 70%;
+  animation-delay: 6s;
+  animation-duration: 19s;
+}
+
+.particle:nth-child(5) {
+  width: 4px;
+  height: 4px;
+  left: 85%;
+  animation-delay: 8s;
+  animation-duration: 21s;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(100vh) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% {
+    transform: translateY(-100px) translateX(50px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   GLASS MORPHISM CARDS - IMPROVED CONTRAST
+   ============================================ */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  color: #1a202c; /* Dark text for better contrast */
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+}
+
+.glass-card-dark {
+  background: var(--glass-dark-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-dark-border);
+  color: white;
+}
+
+/* ============================================
+   TEXT CONTRAST IMPROVEMENTS
+   ============================================ */
+/* Ensure text is readable on gradient backgrounds */
+.text-on-gradient {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Page titles on gradient backgrounds */
+h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+}
+
+/* Headers directly on gradient background should be white with shadow */
+body > div > main > div > h1,
+body > div > main > div > div > h1,
+.container > h1 {
+  color: white !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+}
+
+/* Card text should be dark for contrast */
+.card-body, .card-text {
+  color: #2d3748 !important;
+}
+
+.card-header {
+  color: #1a202c !important;
+  font-weight: 600;
+}
+
+/* Muted text should still be readable */
+.text-muted {
+  color: #718096 !important;
+}
+
+/* Small text on gradient */
+body > div > main small,
+.container > small {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   DROPDOWN MENU FIXES
+   ============================================ */
+/* Fix dropdown z-index and appearance */
+.dropdown-menu {
+  z-index: 9999 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+  margin-top: 8px !important;
+  min-width: 250px !important;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #2d3748 !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  transform: translateX(4px);
+}
+
+.dropdown-menu .dropdown-item.disabled {
+  color: #a0aec0 !important;
+  background: transparent !important;
+}
+
+.dropdown-divider {
+  border-top: 1px solid rgba(102, 126, 234, 0.2) !important;
+  margin: 8px 0 !important;
+}
+
+/* Navbar dropdown toggle */
+.navbar .dropdown-toggle::after {
+  display: none;
+}
+
+.navbar .nav-link {
+  position: relative;
+}
+
+/* ============================================
+   NAVBAR IMPROVEMENTS
+   ============================================ */
+.navbar {
+  z-index: 1000 !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  transition: color 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: white !important;
+}
+
+/* User profile button in navbar */
+.navbar .btn-gradient-primary {
+  z-index: 1001;
+}
+
+/* ============================================
+   GRADIENT BUTTONS
+   ============================================ */
+.btn-gradient-primary {
+  background: var(--gradient-primary);
+  border: none;
+  color: white !important;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 12px;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-gradient-primary::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-gradient-primary:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-gradient-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  color: white !important;
+}
+
+.btn-gradient-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-gradient-success {
+  background: var(--gradient-success);
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-gradient-danger {
+  background: var(--gradient-danger);
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+
+/* Outline buttons on gradient background */
+.btn-outline-light {
+  color: white !important;
+  border: 2px solid white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background: white !important;
+  color: #667eea !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   BADGES IMPROVEMENTS
+   ============================================ */
+.badge {
+  font-weight: 600 !important;
+  padding: 0.5em 0.85em !important;
+  border-radius: 6px !important;
+  font-size: 0.85em !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================
+   ANIMATED STATS CARDS
+   ============================================ */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: all 0.6s;
+}
+
+.stat-card:hover::after {
+  top: -100%;
+  right: -100%;
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* ============================================
+   FADE IN ANIMATIONS
+   ============================================ */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-delay-1 { animation-delay: 0.1s; }
+.fade-in-delay-2 { animation-delay: 0.2s; }
+.fade-in-delay-3 { animation-delay: 0.3s; }
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) {
+  .glass-card {
+    border-radius: 12px;
+  }
+  
+  .btn-gradient-primary {
+    padding: 10px 24px;
+  }
+  
+  .dropdown-menu {
+    min-width: 200px !important;
+  }
+}
+
+/* ============================================
+   ABOUT PAGE SPECIFIC FIXES
+   ============================================ */
+/* Make sure cards on About page have good contrast */
+.about-page .glass-card,
+#root > div > main > div > div > .card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #1a202c !important;
+}
+
+.about-page .glass-card .card-header,
+#root > div > main > div > div > .card .card-header {
+  background: rgba(102, 126, 234, 0.1) !important;
+  color: #1a202c !important;
+  font-weight: 600;
+}
+
+/* ============================================
+   HOVER EFFECTS
+   ============================================ */
+.hover-text-white:hover {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+/* Glass input focus effect */
+.glass-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.z-top {
+  z-index: 9999;
+}
