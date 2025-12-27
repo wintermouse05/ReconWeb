@@ -203,7 +203,7 @@ const RegisterPage = () => {
             <Alert variant="info" className="mt-4 border-0">
               <FaCheckCircle className="me-2" />
               <small>
-                <strong>Ngày cập nhật:</strong> {new Date().toLocaleDateString()}
+                <strong>Ngày cập nhật:</strong> {new Date().toLocaleDateString()} <br></br>
                 <strong>Phiên bản:</strong> 1.0.1
               </small>
             </Alert>
