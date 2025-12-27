@@ -203,8 +203,8 @@ const RegisterPage = () => {
             <Alert variant="info" className="mt-4 border-0">
               <FaCheckCircle className="me-2" />
               <small>
-                <strong>Ngày cập nhật:</strong> 27/12/2024<br/>
-                <strong>Phiên bản:</strong> 1.0
+                <strong>Ngày cập nhật:</strong> {new Date().toLocaleDateString()}
+                <strong>Phiên bản:</strong> 1.0.1
               </small>
             </Alert>
           </div>
@@ -237,218 +237,229 @@ const RegisterPage = () => {
         </div>
 
         <Container className="position-relative" style={{ zIndex: 1 }}>
-          <Row className="min-vh-100 align-items-center justify-content-center py-5">
-            <Col xs={12} md={6} lg={5} xl={4}>
-              <Card className="auth-card glass-card shadow-lg border-0 rounded-4">
-                <Card.Body className="p-5">
-                  <div className="text-center mb-4">
-                    <div 
-                      className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 icon-pulse"
-                      style={{ 
-                        width: '90px', 
-                        height: '90px', 
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
-                      }}
-                    >
-                      <FaUserPlus size={40} className="text-white" />
-                    </div>
-                    <h2 className="fw-bold mb-2" style={{ 
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}>
-                      Join ReconWeb
-                    </h2>
-                    <p className="text-muted mb-0">Tạo tài khoản để bắt đầu</p>
-                  </div>
+  <Row className="min-vh-100 align-items-center justify-content-center py-5">
+    <Col xs={12} md={6} lg={5} xl={4}>
+      <Card 
+        className="auth-card glass-card shadow-lg border-0 rounded-4"
+        style={{ 
+          maxHeight: '90vh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <Card.Body 
+          className="p-4 p-md-5"
+          style={{ 
+            overflowY: 'auto',
+            overflowX: 'hidden'
+          }}
+        >
+          <div className="text-center mb-4">
+            {/* Icon và Title */}
+            <div 
+              className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 icon-pulse"
+              style={{ 
+                width: '80px',  // ← Giảm từ 90px
+                height: '80px', 
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+              }}
+            >
+              <FaUserPlus size={35} className="text-white" /> {/* ← Giảm từ 40 */}
+            </div>
+            <h2 className="fw-bold mb-2" style={{ 
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '1.75rem'  // ← Giảm size
+            }}>
+              Join ReconWeb
+            </h2>
+            <p className="text-muted mb-0 small">Tạo tài khoản để bắt đầu</p>
+          </div>
 
-                  {error && (
-                    <Alert variant="danger" className="rounded-3 border-0">
-                      <div className="d-flex align-items-center">
-                        <FaExclamationTriangle className="me-2" />
-                        {error}
-                      </div>
-                    </Alert>
-                  )}
+          {/* Error Alert */}
+          {error && (
+            <Alert variant="danger" className="rounded-3 border-0 py-2">
+              <div className="d-flex align-items-center">
+                <FaExclamationTriangle className="me-2" />
+                <small>{error}</small>
+              </div>
+            </Alert>
+          )}
 
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold text-dark">
-                        <FaUser className="me-2 text-primary" />
-                        Họ và tên
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        placeholder="Nhập họ và tên đầy đủ"
-                        value={form.name}
-                        onChange={handleChange}
-                        required
-                        className="auth-input py-3 rounded-3"
-                      />
-                      
-                    </Form.Group>
+          {/* Form */}
+          <Form onSubmit={handleSubmit}>
+            {/* Các form groups - giữ nguyên */}
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-semibold text-dark small">
+                <FaUser className="me-2 text-primary" />
+                Họ và tên
+              </Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                placeholder="Nhập họ và tên đầy đủ"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="auth-input py-2 rounded-3"  // ← Giảm padding
+              />
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold text-dark">
-                        <FaEnvelope className="me-2 text-primary" />
-                        Email
-                      </Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        placeholder="Nhập địa chỉ email"
-                        value={form.email}
-                        onChange={handleChange}
-                        required
-                        className="auth-input py-3 rounded-3"
-                      />
-                      <Form.Text className="text-muted">
-                        <small>Email dùng để đăng nhập và nhận thông báo</small>
-                      </Form.Text>
-                    </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-semibold text-dark small">
+                <FaEnvelope className="me-2 text-primary" />
+                Email
+              </Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                placeholder="Nhập địa chỉ email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="auth-input py-2 rounded-3"
+              />
+              <Form.Text className="text-muted">
+                <small>Email dùng để đăng nhập và nhận thông báo</small>
+              </Form.Text>
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold text-dark">
-                        <FaLock className="me-2 text-primary" />
-                        Mật khẩu
-                      </Form.Label>
-                      <Form.Control
-                        type="password"
-                        name="password"
-                        placeholder="Tạo mật khẩu mạnh"
-                        value={form.password}
-                        onChange={handleChange}
-                        required
-                        className="auth-input py-3 rounded-3"
-                      />
-                      <Form.Text className="text-muted">
-                        <small>Ít nhất 8 ký tự, bao gồm chữ và số</small>
-                      </Form.Text>
-                    </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-semibold text-dark small">
+                <FaLock className="me-2 text-primary" />
+                Mật khẩu
+              </Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="Tạo mật khẩu mạnh"
+                value={form.password}
+                onChange={handleChange}
+                required
+                className="auth-input py-2 rounded-3"
+              />
+              <Form.Text className="text-muted">
+                <small>Ít nhất 8 ký tự, bao gồm chữ và số</small>
+              </Form.Text>
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold text-dark">
-                        <FaKey className="me-2 text-primary" />
-                        Xác nhận mật khẩu
-                      </Form.Label>
-                      <Form.Control
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Nhập lại mật khẩu"
-                        value={form.confirmPassword}
-                        onChange={handleChange}
-                        required
-                        className={`auth-input py-3 rounded-3 ${
-                          form.confirmPassword && !passwordMatch ? 'is-invalid' : ''
-                        } ${
-                          form.confirmPassword && passwordMatch ? 'is-valid' : ''
-                        }`}
-                      />
-                      {form.confirmPassword && !passwordMatch && (
-                        <Form.Text className="text-danger d-flex align-items-center mt-2">
-                          <FaExclamationTriangle className="me-1" />
-                          <small>Mật khẩu không khớp!</small>
-                        </Form.Text>
-                      )}
-                      {form.confirmPassword && passwordMatch && (
-                        <Form.Text className="text-success d-flex align-items-center mt-2">
-                          <FaCheckCircle className="me-1" />
-                          <small>Mật khẩu khớp</small>
-                        </Form.Text>
-                      )}
-                      {!form.confirmPassword && (
-                        <Form.Text className="text-muted">
-                          <small>Nhập lại mật khẩu để xác nhận</small>
-                        </Form.Text>
-                      )}
-                    </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-semibold text-dark small">
+                <FaKey className="me-2 text-primary" />
+                Xác nhận mật khẩu
+              </Form.Label>
+              <Form.Control
+                type="password"
+                name="confirmPassword"
+                placeholder="Nhập lại mật khẩu"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                required
+                className={`auth-input py-2 rounded-3 ${
+                  form.confirmPassword && !passwordMatch ? 'is-invalid' : ''
+                } ${
+                  form.confirmPassword && passwordMatch ? 'is-valid' : ''
+                }`}
+              />
+              {form.confirmPassword && !passwordMatch && (
+                <Form.Text className="text-danger d-flex align-items-center mt-1">
+                  <FaExclamationTriangle className="me-1" />
+                  <small>Mật khẩu không khớp!</small>
+                </Form.Text>
+              )}
+              {form.confirmPassword && passwordMatch && (
+                <Form.Text className="text-success d-flex align-items-center mt-1">
+                  <FaCheckCircle className="me-1" />
+                  <small>Mật khẩu khớp</small>
+                </Form.Text>
+              )}
+            </Form.Group>
 
-                    <Form.Group className="mb-4">
-                      <Form.Check
-                        type="checkbox"
-                        id="agreedToPolicy"
-                        name="agreedToPolicy"
-                        checked={form.agreedToPolicy}
-                        onChange={handleChange}
-                        required
-                        label={
-                          <span className="text-dark">
-                            Tôi đồng ý với{' '}
-                            <Button
-                              variant="link"
-                              className="p-0 text-decoration-none fw-bold"
-                              style={{ 
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                border: 'none'
-                              }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setShowPolicyModal(true);
-                              }}
-                            >
-                              Chính sách bảo mật
-                            </Button>
-                          </span>
-                        }
-                      />
-                      <Form.Text className="text-muted ms-4">
-                        <small>Bạn phải đồng ý để tiếp tục đăng ký</small>
-                      </Form.Text>
-                    </Form.Group>
-
-                    <Button 
-                      type="submit" 
-                      className="auth-button w-100 py-3 rounded-3 fw-semibold border-0" 
-                      style={{ 
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        fontSize: '16px'
-                      }}
-                      disabled={submitting || !passwordMatch || !form.agreedToPolicy}
-                    >
-                      {submitting ? (
-                        <>
-                          <span className="spinner-border spinner-border-sm me-2" />
-                          Đang tạo tài khoản...
-                        </>
-                      ) : (
-                        <>
-                          <FaUserPlus className="me-2" />
-                          ĐĂNG KÝ NGAY
-                        </>
-                      )}
-                    </Button>
-                  </Form>
-
-                  <div className="text-center mt-4">
-                    <span className="text-muted">Đã có tài khoản? </span>
-                    <Link 
-                      to="/login" 
-                      className="fw-bold text-decoration-none"
+            <Form.Group className="mb-3">
+              <Form.Check
+                type="checkbox"
+                id="agreedToPolicy"
+                name="agreedToPolicy"
+                checked={form.agreedToPolicy}
+                onChange={handleChange}
+                required
+                label={
+                  <span className="text-dark small">
+                    Tôi đồng ý với{' '}
+                    <Button
+                      variant="link"
+                      className="p-0 text-decoration-none fw-bold"
                       style={{ 
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
+                        WebkitTextFillColor: 'transparent',
+                        border: 'none',
+                        fontSize: '0.9rem'
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowPolicyModal(true);
                       }}
                     >
-                      Đăng nhập
-                    </Link>
-                  </div>
+                      Chính sách bảo mật
+                    </Button>
+                  </span>
+                }
+              />
+            </Form.Group>
 
-                  <div className="text-center mt-4 pt-3 border-top">
-                    <small className="text-muted">
-                      <FaShieldAlt className="me-1" />
-                      Bảo mật và an toàn với ReconWeb
-                    </small>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+            <Button 
+              type="submit" 
+              className="auth-button w-100 py-2 rounded-3 fw-semibold border-0"  // ← Giảm padding
+              style={{ 
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                fontSize: '15px'  // ← Giảm size
+              }}
+              disabled={submitting || !passwordMatch || !form.agreedToPolicy}
+            >
+              {submitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" />
+                  Đang tạo tài khoản...
+                </>
+              ) : (
+                <>
+                  <FaUserPlus className="me-2" />
+                  ĐĂNG KÝ NGAY
+                </>
+              )}
+            </Button>
+          </Form>
+
+          <div className="text-center mt-3">
+            <small className="text-muted">Đã có tài khoản? </small>
+            <Link 
+              to="/login" 
+              className="fw-bold text-decoration-none"
+              style={{ 
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontSize: '0.9rem'
+              }}
+            >
+              Đăng nhập
+            </Link>
+          </div>
+
+          <div className="text-center mt-3 pt-2 border-top">
+            <small className="text-muted">
+              <FaShieldAlt className="me-1" />
+              Bảo mật và an toàn với ReconWeb
+            </small>
+          </div>
+        </Card.Body>
+      </Card>
+    </Col>
+  </Row>
+</Container>
       </div>
     </>
   );
