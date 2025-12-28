@@ -1,10 +1,11 @@
-// client/src/pages/DashboardPage.jsx - Chỉ thêm styling, logic giữ nguyên
+// client/src/pages/DashboardPage.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Alert, Badge, Button, Card, Col, Form, Row, Stack } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ToolOptionForm from '../components/ToolOptionForm';
 import ScanProgress from '../components/ScanProgress';
+import MultiJsonImport from '../components/MultiJsonImport';
 import { SUPPORTED_TOOLS, TOOL_DEFINITIONS } from '../constants/tools';
 import { apiRequest } from '../services/apiClient';
 import { FaRocket, FaHistory, FaCheckCircle } from 'react-icons/fa';
@@ -51,7 +52,6 @@ const DashboardPage = () => {
         setSelectedTools(buildInitialSelection(data.installed || []));
       } catch (error) {
         console.error('Failed to fetch installed tools:', error);
-        // Fallback to all tools if API fails
         setInstalledTools(SUPPORTED_TOOLS);
         setSelectedTools(buildInitialSelection(SUPPORTED_TOOLS));
       } finally {
@@ -87,6 +87,48 @@ const DashboardPage = () => {
         [optionName]: value,
       },
     }));
+  };
+
+  // Handle JSON Import
+  const handleJsonImport = (allConfigs) => {
+    // Update tool options from imported configs
+    Object.entries(allConfigs).forEach(([toolKey, config]) => {
+      // Remove "tool" field from config if exists
+      const { tool, ...cleanConfig } = config;
+      
+      // Update options for this tool
+      setToolOptions((prev) => ({
+        ...prev,
+        [toolKey]: {
+          ...prev[toolKey],
+          ...cleanConfig
+        }
+      }));
+    });
+
+    setFeedback({ 
+      type: 'success', 
+      message: `Configuration imported successfully for ${Object.keys(allConfigs).length} tool(s)!` 
+    });
+
+    // Auto-hide success message after 5 seconds
+    setTimeout(() => {
+      setFeedback({ type: null, message: null });
+    }, 5000);
+  };
+
+  // Handle Tools Toggle from Import
+  const handleToolsToggle = (tools) => {
+    // Enable imported tools
+    setSelectedTools((prev) => {
+      const newTools = [...prev];
+      tools.forEach((tool) => {
+        if (!newTools.includes(tool) && installedTools.includes(tool)) {
+          newTools.push(tool);
+        }
+      });
+      return newTools;
+    });
   };
 
   const prepareToolPayload = (toolKey) => {
@@ -149,7 +191,6 @@ const DashboardPage = () => {
     setSubmitting(false);
     if (completedScan.status === 'completed') {
       setFeedback({ type: 'success', message: 'Scan completed successfully!' });
-      // Redirect to scan details sau 2 giây
       setTimeout(() => {
         navigate(`/scans/${completedScan._id}`);
       }, 2000);
@@ -158,7 +199,7 @@ const DashboardPage = () => {
     }
   };
 
-   return (
+  return (
     <Stack gap={4} className="fade-in">
       {/* Header Card */}
       <Card className="glass-card border-0 shadow-lg">
@@ -190,7 +231,7 @@ const DashboardPage = () => {
 
       {/* Feedback Messages */}
       {feedback.message && (
-        <Alert variant={feedback.type} className="glass-card border-0 fade-in">
+        <Alert variant={feedback.type} className="glass-card border-0 fade-in" dismissible onClose={() => setFeedback({ type: null, message: null })}>
           {feedback.message}
         </Alert>
       )}
@@ -201,27 +242,31 @@ const DashboardPage = () => {
           <Form onSubmit={handleSubmit}>
             <Row className="g-4">
               <Col xs={12}>
-                <Form.Group controlId="targetUrl">
-                  <Form.Label className="fw-semibold">Target URL</Form.Label>
-                  <Form.Control
-                    type="url"
-                    placeholder="https://example.com"
-                    value={targetUrl}
-                    onChange={(event) => setTargetUrl(event.target.value)}
-                    required
-                    className="glass-input"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.9)',
-                      border: '1px solid rgba(102, 126, 234, 0.2)',
-                      borderRadius: '8px',
-                      padding: '12px'
-                    }}
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <Form.Label className="fw-semibold mb-0">Target URL</Form.Label>
+                  <MultiJsonImport 
+                    onImportSuccess={handleJsonImport}
+                    onToolsToggle={handleToolsToggle}
                   />
-                  <Form.Text className="text-muted">
-                    <FaCheckCircle className="me-1" />
-                    Include the protocol (http or https)
-                  </Form.Text>
-                </Form.Group>
+                </div>
+                <Form.Control
+                  type="url"
+                  placeholder="https://example.com"
+                  value={targetUrl}
+                  onChange={(event) => setTargetUrl(event.target.value)}
+                  required
+                  className="glass-input"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    border: '1px solid rgba(102, 126, 234, 0.2)',
+                    borderRadius: '8px',
+                    padding: '12px'
+                  }}
+                />
+                <Form.Text className="text-muted">
+                  <FaCheckCircle className="me-1" />
+                  Include the protocol (http or https)
+                </Form.Text>
               </Col>
 
               <Col xs={12}>
@@ -350,6 +395,5 @@ const DashboardPage = () => {
     </Stack>
   );
 };
-
 
 export default DashboardPage;
