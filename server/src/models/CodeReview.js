@@ -29,10 +29,10 @@ const owaspIssueSchema = new mongoose.Schema({
   name: String, // e.g., "Injection"
   issueCount: Number,
   issues: [{
-    type: String,
-    severity: String,
-    line: Number,
-    cwe: String
+    type: { type: String }, // vulnerability type (e.g., "Xss", "SQLi")
+    severity: { type: String },
+    line: { type: Number },
+    cwe: { type: String }
   }]
 }, { _id: false });
 

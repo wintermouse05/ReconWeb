@@ -161,6 +161,47 @@ const SECURITY_PATTERNS = {
       owasp: 'A03:2021',
       description: 'Reflected XSS: User input directly in response.',
       recommendation: 'Encode output using context-appropriate encoding.'
+    },
+    // Universal XSS patterns (cross-language)
+    {
+      pattern: /<a\s+[^>]*href\s*=\s*["'][^"']*#\{/gi,
+      severity: 'high',
+      cwe: 'CWE-79',
+      owasp: 'A03:2021',
+      description: 'XSS: Variable interpolation in HTML href attribute (Ruby/template syntax).',
+      recommendation: 'Sanitize or URL-encode variables before embedding in href attributes.'
+    },
+    {
+      pattern: /["']<html>.*#\{|["']<body>.*#\{|self\.body\s*=\s*["']<html>/gi,
+      severity: 'high',
+      cwe: 'CWE-79',
+      owasp: 'A03:2021',
+      description: 'XSS: HTML content with variable interpolation in response body.',
+      recommendation: 'Use HTML entity encoding for dynamic content in HTML responses.'
+    },
+    {
+      pattern: /href\s*=\s*["'`]\s*#\{|href\s*=\s*["'`]\$\{/gi,
+      severity: 'high',
+      cwe: 'CWE-79',
+      owasp: 'A03:2021',
+      description: 'XSS/Open Redirect: Dynamic URL in href attribute without validation.',
+      recommendation: 'Validate URLs against an allowlist before using in redirects.'
+    },
+    {
+      pattern: /<a[^>]*>\s*.*redirect|redirected.*<\/a>/gi,
+      severity: 'medium',
+      cwe: 'CWE-601',
+      owasp: 'A03:2021',
+      description: 'Potential open redirect: Link text suggests redirection.',
+      recommendation: 'Ensure redirect URLs are validated against an allowlist.'
+    },
+    {
+      pattern: /=\s*["'`]<[^>]+>.*#\{.*<\/[^>]+>["'`]/gi,
+      severity: 'high',
+      cwe: 'CWE-79',
+      owasp: 'A03:2021',
+      description: 'XSS: HTML string with embedded variable interpolation.',
+      recommendation: 'Use templating engine with auto-escaping or encode all dynamic values.'
     }
   ],
 
@@ -1158,6 +1199,38 @@ const LANGUAGE_PATTERNS = {
       cwe: 'CWE-78',
       description: 'Ruby command execution with interpolation.',
       recommendation: 'Use array form: system("command", arg1, arg2)'
+    },
+    {
+      pattern: /<a\s+[^>]*href\s*=\s*["'][^"']*#\{|<script[^>]*>.*#\{|<img\s+[^>]*src\s*=\s*["'][^"']*#\{/gi,
+      type: 'xss_html_interpolation',
+      severity: 'high',
+      cwe: 'CWE-79',
+      description: 'XSS: Ruby string interpolation in HTML href/src/script - user input injected directly into HTML.',
+      recommendation: 'Use ERB with proper escaping: <%= url %> or CGI.escapeHTML(). Never interpolate user input directly into HTML.'
+    },
+    {
+      pattern: /["']<[^>]*#\{[^}]*\}[^<]*>["']/gi,
+      type: 'xss_html_interpolation',
+      severity: 'high',
+      cwe: 'CWE-79',
+      description: 'XSS: Ruby string interpolation inside HTML tag - potential injection.',
+      recommendation: 'Escape user input with CGI.escapeHTML() or use ERB templates with auto-escaping.'
+    },
+    {
+      pattern: /redirect.*["'].*#\{|Location.*#\{/gi,
+      type: 'open_redirect',
+      severity: 'medium',
+      cwe: 'CWE-601',
+      description: 'Open Redirect: User-controlled URL in redirect without validation.',
+      recommendation: 'Validate redirect URLs against allowlist before redirecting.'
+    },
+    {
+      pattern: /self\.body\s*=\s*["']<.*#\{/gi,
+      type: 'xss_response_body',
+      severity: 'high',
+      cwe: 'CWE-79',
+      description: 'XSS: Variable interpolation in HTTP response body HTML.',
+      recommendation: 'Escape all dynamic content in response body with proper HTML encoding.'
     }
   ],
 
